@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>customElements property</title>
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1" />
+    <style>
+      wx-button {
+        margin: 8px;
+      }
+      .wx-button-sp-area {
+        width: 60%;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body style="text-align: center">
+    <h1 style="color: green">模拟小程序组件</h1>
+    <button onclick="Geeks();">click here</button>
+    <p id="arr"></p>
+    <wx-button type="primary">页面主操作 Normal</wx-button>
+    <wx-button type="warn" disabled="true">警告类操作 Disabled</wx-button>
+    <div class="wx-button-sp-area">
+      <wx-button type="primary" plain="true">按钮</wx-button>
+      <wx-button class="mini-btn" type="warn" size="mini">按钮</wx-button>
+    </div>
+    <div id="app"></div>
+    <script src="./test.js" defer="defer"></script>
+  </body>
+</html>
