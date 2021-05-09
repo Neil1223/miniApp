@@ -5,7 +5,7 @@ declare const VERSION: string;
 declare const KipleViewJSBridge: ViewJSBridge;
 declare const KipleServiceJSBridge: ServiceJSBridge;
 
-interface HTMLElement {
+declare interface HTMLElement {
   __hasTapEvent?: boolean;
 }
 
