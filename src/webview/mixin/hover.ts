@@ -5,34 +5,23 @@
 // 如何让properties 挂载到this上
 const Hover = (Base: typeof HTMLElement) => {
   class Hover extends Base {
+    static get is() {
+      return 'wx-hover';
+    }
     private hovering = false;
     private _hoverTouch = false;
     private _hoverStartTimer: any;
-    __data = {};
-    static properties = {
-      hoverClass: { type: String, value: 'none' },
-      hoverStopPropagation: { type: Boolean, value: false },
-      hoverStartTime: { type: Number, value: 50 }, // hover 延时生效事件
-      hoverStayTime: { type: Number, value: 400 }, // hover 效果，延时消失时间
-    };
+    static get properties() {
+      return {
+        hoverClass: { type: String, value: 'none' },
+        hoverStopPropagation: { type: Boolean, value: false },
+        hoverStartTime: { type: Number, value: 50 }, // hover 延时生效事件
+        hoverStayTime: { type: Number, value: 400 }, // hover 效果，延时消失时间
+      };
+    }
     constructor() {
       super();
-      this._bindHover();
-      const curClass = this.constructor as any;
-      for (const key in curClass.properties) {
-        // 通过 Object.defineProperty 进行属性值的复制
-        this.__data[key] = curClass.properties[key].value;
-        if (!this[key]) {
-          Object.defineProperty(this, key, {
-            get: function () {
-              return this.getAttribute(key) || this.__data[key];
-            },
-            set: (e) => {
-              this.setAttribute(key, e);
-            },
-          });
-        }
-      }
+      this._bindHover(); // 应该想微信小程序一样，不能在这里绑定hover监听，需要根据 observer 进行监听{ hoverClass:{ observer: "_hoverClassChange" }}
     }
     private _bindHover = () => {
       this.addEventListener('touchstart', this._hoverTouchStart.bind(this));
