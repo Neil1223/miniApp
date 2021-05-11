@@ -1,12 +1,10 @@
+import Base from '@/webview/mixin/base';
 import Hover from '@/webview/mixin/hover';
-import Property from '@/webview/mixin/property';
 import template from './index.tpl';
 
-const PolymerElement = Property(HTMLElement);
-
-class Button extends Hover(PolymerElement) {
+class Button extends Hover(Base) {
   static is = 'wx-button';
-  static get properties() {
+  static get properties(): any {
     return {
       type: { type: String, value: 'default', reflectToAttribute: true },
       size: { type: String, value: 'default', reflectToAttribute: true },
@@ -28,9 +26,6 @@ class Button extends Hover(PolymerElement) {
     const templateNode = document.createElement('template');
     templateNode.innerHTML = template;
     shadowRoot.appendChild(templateNode.content.cloneNode(true));
-  }
-  disconnectedCallback() {
-    console.log('移除元素');
   }
 }
 
