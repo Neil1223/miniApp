@@ -5,21 +5,19 @@ import template from './index.tpl';
 const PolymerElement = Property(HTMLElement);
 
 class Button extends Hover(PolymerElement) {
-  static get is() {
-    return 'wx-button';
-  }
+  static is = 'wx-button';
   static get properties() {
     return {
-      type: { type: String, value: 'default' },
-      size: { type: String, value: 'default' },
-      disabled: { type: Boolean, value: false },
-      plain: { type: Boolean, value: false },
-      loading: { type: Boolean, value: false },
+      type: { type: String, value: 'default', reflectToAttribute: true },
+      size: { type: String, value: 'default', reflectToAttribute: true },
+      disabled: { type: Boolean, value: false, reflectToAttribute: true },
+      plain: { type: Boolean, value: false, reflectToAttribute: true },
+      loading: { type: Boolean, value: false, reflectToAttribute: true },
       formType: { type: String, value: '' },
       openType: { type: String, value: '' },
       hoverStartTime: { type: Number, value: 20 },
       hoverStayTime: { type: Number, value: 70 },
-      hoverClass: { type: String, value: 'button-hover' },
+      hoverClass: { type: String, value: 'button-hover', observer: '_hoverClassChange' },
     };
   }
   constructor() {
@@ -31,17 +29,8 @@ class Button extends Hover(PolymerElement) {
     templateNode.innerHTML = template;
     shadowRoot.appendChild(templateNode.content.cloneNode(true));
   }
-  connectedCallback() {
-    console.log('button init');
-  }
   disconnectedCallback() {
     console.log('移除元素');
-  }
-  static get observedAttributes() {
-    return ['type'];
-  }
-  attributeChangedCallback(name: string, oldValue: any, newValue: any) {
-    console.log('==type change==', name, oldValue, newValue);
   }
 }
 

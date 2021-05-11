@@ -1,13 +1,9 @@
 /**
  * 仅供 Button,View,Navigator 使用，提供 hover-class 效果
  */
-// 如何让上一层的 properties，覆盖这一层的 properties
-// 如何让properties 挂载到this上
 const Hover = (Base: typeof HTMLElement) => {
   class Hover extends Base {
-    static get is() {
-      return 'wx-hover';
-    }
+    static is = 'wx-hover';
     private hovering = false;
     private _hoverTouch = false;
     private _hoverStartTimer: any;
@@ -21,8 +17,17 @@ const Hover = (Base: typeof HTMLElement) => {
     }
     constructor() {
       super();
-      this._bindHover(); // 应该想微信小程序一样，不能在这里绑定hover监听，需要根据 observer 进行监听{ hoverClass:{ observer: "_hoverClassChange" }}
     }
+    _hoverClassChange = (oldValue: string, newValue: string) => {
+      console.log('---------_hoverClassChange------', oldValue, newValue);
+      if (newValue && oldValue && newValue === 'none') {
+        this._unbindHover();
+      }
+      if (newValue && newValue !== 'none') {
+        this._unbindHover();
+        this._bindHover();
+      }
+    };
     private _bindHover = () => {
       this.addEventListener('touchstart', this._hoverTouchStart.bind(this));
       this.addEventListener('touchend', this._hoverTouchEnd.bind(this));

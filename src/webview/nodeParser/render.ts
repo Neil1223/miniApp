@@ -17,7 +17,8 @@ const setProperty = (dom: HTMLElement, key: string, value: any) => {
       dom.style.cssText = value;
     }
   } else if (value) {
-    dom.setAttribute(key, value);
+    // 直接朝dome中进行赋值，可以使用Object.defineProperty在元素中进行监听需要的属性变化
+    dom[key] = value;
   }
 };
 
