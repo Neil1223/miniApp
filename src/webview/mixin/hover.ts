@@ -19,7 +19,6 @@ const Hover = (Base: typeof HTMLElement) => {
       super();
     }
     _hoverClassChange = (oldValue: string, newValue: string) => {
-      console.log('---------_hoverClassChange------', oldValue, newValue);
       if (newValue && oldValue && newValue === 'none') {
         this._unbindHover();
       }
@@ -41,18 +40,19 @@ const Hover = (Base: typeof HTMLElement) => {
       this.removeEventListener('touchmove', this._hoverCancel.bind(this));
     };
     private _hoverTouchStart = () => {
-      if (!this.hoverClass || this.hoverClass === 'none' || this.disabled) {
+      const _this: any = this;
+      if (!_this.hoverClass || _this.hoverClass === 'none' || _this.disabled) {
         return;
       }
       this._hoverTouch = true;
       this._hoverStartTimer = setTimeout(() => {
         this.hovering = true;
-        this.setAttribute('class', this.hoverClass);
+        this.setAttribute('class', _this.hoverClass);
         if (!this._hoverTouch) {
           // 防止在 hoverStartTime 时间内触发了 touchend,touchcancel,touchmove
           this._hoverReset();
         }
-      }, this.hoverStartTime);
+      }, _this.hoverStartTime);
     };
     private _hoverTouchEnd = () => {
       this._hoverTouch = false;
@@ -66,15 +66,15 @@ const Hover = (Base: typeof HTMLElement) => {
       // cancel 的时候，直接移除 hover 效果
       this.hovering = false;
       clearTimeout(this._hoverStartTimer);
-      this.classList.toggle(this.hoverClass, false);
+      this.classList.toggle((this as any).hoverClass, false);
     };
     private _hoverReset = () => {
       requestAnimationFrame(() => {
         clearTimeout(this._hoverStartTimer);
         this._hoverStartTimer = setTimeout(() => {
           this.hovering = false;
-          this.classList.toggle(this.hoverClass, false);
-        }, this.hoverStayTime);
+          this.classList.toggle((this as any).hoverClass, false);
+        }, (this as any).hoverStayTime);
       });
     };
   }
