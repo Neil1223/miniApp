@@ -20,4 +20,6 @@ interface Window {
     publishHandler: ViewJSBridge['publishHandler'];
     subscribeHandler: ViewJSBridge['subscribeHandler'];
   };
+  define: Function;
+  require: Function;
 }

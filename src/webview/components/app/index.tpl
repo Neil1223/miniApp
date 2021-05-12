@@ -1,0 +1,1 @@
+<slot id="main"></slot>

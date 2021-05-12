@@ -7,6 +7,7 @@ const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
 
 const provides = {
+  // console: [resolveApp('src/core/helpers/console'), 'default'],
   KipleViewJSBridge: [resolveApp('src/webview/bridge/index')],
   KipleServiceJSBridge: [resolveApp('src/service/bridge/index')],
 };
@@ -15,13 +16,12 @@ module.exports = {
   mode: 'production',
   devtool: 'source-map',
   entry: {
-    webview: resolveApp('src/webview/nodeParser/index.ts'),
-    service: resolveApp('src/kiple.ts'),
+    service: resolveApp('src/test.ts'),
   },
   output: {
     path: resolveApp('dist'),
     filename: '[name].[hash].js',
-    libraryTarget: 'umd',
+    libraryTarget: 'amd',
     globalObject: 'this',
   },
   resolve: {
@@ -50,28 +50,4 @@ module.exports = {
       },
     ],
   },
-  devServer: {
-    hot: true,
-    historyApiFallback: true,
-    contentBase: path.join(__dirname, '../dist'),
-    disableHostCheck: true,
-    // progress: true,
-    compress: true,
-    host: '0.0.0.0',
-    port: 3004,
-  },
-  plugins: [
-    new webpack.ProvidePlugin(provides),
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: path.join(__dirname, '../test.html'),
-      inject: true,
-      minify: {
-        html5: true,
-        removeComments: true,
-        minifyCSS: true,
-        scriptLoading: 'blocking',
-      },
-    }),
-  ],
 };

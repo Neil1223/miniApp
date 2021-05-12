@@ -1,4 +1,5 @@
 import { getCurrentPages } from '@/core/page';
+import { emit } from '@/util/customEvent';
 
 interface PageEvent {
   eventName: string;
@@ -16,4 +17,10 @@ const onWebviewEvent = (args: PageEvent, pageId: number) => {
 
 export default function initSubscribe(subscribe: ServiceJSBridge['subscribe']) {
   subscribe('PAGE_EVENT', onWebviewEvent);
+  subscribe('onAppEnterBackground', () => {
+    emit('onAppEnterBackground');
+  });
+  subscribe('onAppEnterForeground', () => {
+    emit('onAppEnterForeground');
+  });
 }

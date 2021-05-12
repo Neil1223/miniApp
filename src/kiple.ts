@@ -2,6 +2,7 @@ import api from './service/api/index';
 import apiNames from '.././lib/apis.js';
 import { wrapperUnimplemented, wrapper } from './core/helpers/api';
 import { promisify } from './core/helpers/promise';
+import { define, require } from './core/helpers/require';
 import * as pageFunction from './core/page';
 
 const kiple = Object.create(null);
@@ -21,7 +22,7 @@ class KipleApp {
 
   _init() {
     (window as any).kiple = kiple;
-    Object.assign(window, pageFunction);
+    Object.assign(window, pageFunction, { define, require });
     window.viewJSBridge = {
       subscribe: KipleViewJSBridge.subscribe,
       publishHandler: KipleViewJSBridge.publishHandler,

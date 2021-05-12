@@ -6,11 +6,12 @@ import packageJson from '../package.json';
 
 const extensions = ['.js', '.ts'];
 
+// 编译使用 rollup 进行编译可能会很快
 const config = {
-  input: 'src/kiple.ts',
+  input: 'src/test.js',
   output: {
     file: 'jsBridge.js',
-    format: 'iife',
+    format: 'amd',
   },
   plugins: [
     resolve(),

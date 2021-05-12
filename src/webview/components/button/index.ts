@@ -4,6 +4,7 @@ import template from './index.tpl';
 
 class Button extends Hover(Base) {
   static is = 'wx-button';
+  static template = template;
   static get properties(): any {
     return {
       type: { type: String, value: 'default', reflectToAttribute: true },
@@ -20,12 +21,6 @@ class Button extends Hover(Base) {
   }
   constructor() {
     super();
-    console.log('render-Button', Button.properties);
-    const shadowRoot = this.attachShadow({ mode: 'open' });
-    // 创建模板
-    const templateNode = document.createElement('template');
-    templateNode.innerHTML = template;
-    shadowRoot.appendChild(templateNode.content.cloneNode(true));
   }
 }
 

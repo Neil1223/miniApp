@@ -1,3 +1,4 @@
+import { on } from '@/util/customEvent';
 import { isPlainObject } from '@/util/util';
 import { IPageOptions, IAppOptions, IAppPage } from './index.d';
 
@@ -8,13 +9,38 @@ let globApp: any = null;
 const AppPages: IAppPage[] = [];
 
 class WrapperApp {
-  constructor(options: IAppOptions) {}
+  [x: string]: any;
+  constructor(options: IAppOptions) {
+    for (const key in options) {
+      if (key !== 'globalData') {
+        if (typeof options[key] === 'function') {
+          this[key] = options[key];
+        }
+      } else {
+        this[key] = JSON.parse(JSON.stringify(options[key]));
+      }
+    }
+    this.init();
+    this.onLaunch && this.onLaunch();
+    this.onShow && this.onShow();
+    // 需要处理show和hide的的监听和事件触发
+  }
+  init() {
+    on('onAppEnterBackground', () => {
+      this.onHide && this.onHide();
+    });
+    on('onAppEnterForeground', () => {
+      this.onShow && this.onShow();
+    });
+  }
 }
 
 class WrapperPage {
   __webviewId__: number;
   route: string;
   data: any;
+  onLoad: any;
+  onShow: any;
   constructor(options: IPageOptions, route: string) {
     this.__webviewId__ = curWebviewId;
     this.route = route;
@@ -28,8 +54,7 @@ class WrapperPage {
       }
     }
   }
-  private setData(data) {
-    console.log('这里会触发render');
+  public setData(data: Object) {
     Object.assign(this.data, data);
     KipleServiceJSBridge.publishHandler('reRenderPage', this.data, this.route);
   }

@@ -13,6 +13,12 @@ const BaseWrapper = (Parent: typeof HTMLElement) => {
     }
     constructor() {
       super();
+      // 开启 attachShadow
+      const shadowRoot = this.attachShadow({ mode: 'open' });
+      // 创建模板
+      const templateNode = document.createElement('template');
+      templateNode.innerHTML = (this.constructor as any).template;
+      shadowRoot.appendChild(templateNode.content.cloneNode(true));
     }
   }
 
