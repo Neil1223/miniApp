@@ -8,7 +8,7 @@ import { CreateIVirtualDomFunc } from './render.d';
  * @param key {string} 属性名
  * @param value {any} 属性值
  */
-const setProperty = (dom: HTMLElement, key: string, value: any) => {
+export const setProperty = (dom: HTMLElement, key: string, value: any) => {
   if (/(bind|catch):?(.+)/.test(key)) {
     applyEvent(dom, key, value);
   } else if (key == 'style' && value) {

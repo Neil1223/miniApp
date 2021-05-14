@@ -1,7 +1,8 @@
+import { diff } from '../nodeParser/diff/diff';
 import { createDomTree } from '../nodeParser/render';
 
 /**
- * 记录已经在 View 层创建的 Page
+ * 记录已经在 View 层创建的Page
  */
 const AppPages: Page[] = [];
 let __webviewId__ = 0;
@@ -15,21 +16,20 @@ class Page {
   constructor(__webviewId__: number) {
     this.__webviewId__ = __webviewId__;
   }
-  render = () => {
-    if (this.__VirtualDom__) {
-      this.__DOMTree__ = createDomTree(this.__VirtualDom__);
-      if (this.__DOMTree__) {
-        this.root.appendChild(this.__DOMTree__);
-      }
+  render = (data: Object) => {
+    this.__VirtualDom__ = window.app[this.__route__].render(data);
+    this.__DOMTree__ = createDomTree(this.__VirtualDom__);
+    if (this.__DOMTree__) {
+      this.root.appendChild(this.__DOMTree__);
     }
   };
-  reRender = () => {
-    if (!this.__VirtualDom__) {
-      return;
-    }
-    const newDomTree = createDomTree(this.__VirtualDom__);
+  reRender = (data: Object) => {
+    const newVirtualDom = window.app[this.__route__].render(data);
+    const newDomTree = createDomTree(newVirtualDom);
     if (newDomTree && this.__DOMTree__) {
       this.root.replaceChild(newDomTree, this.__DOMTree__);
+      console.log('=========diff======', diff(this.__VirtualDom__, newVirtualDom));
+      this.__VirtualDom__ = newVirtualDom;
       this.__DOMTree__ = newDomTree;
     }
   };
@@ -63,13 +63,12 @@ export const renderPage = (args: { data: Object; route: string }, webviewId: num
   if (!page) {
     throw Error(`Page not register for webviewId:${webviewId}`);
   }
+  page.__route__ = route;
   if (!page.__DOMTree__) {
-    page.__VirtualDom__ = window.app[route].render(data);
-    page.render();
+    page.render(data);
   } else {
     console.info('should diff dom and render it');
-    page.__VirtualDom__ = window.app[route].render(data);
-    page.reRender();
+    page.reRender(data);
   }
 };
 

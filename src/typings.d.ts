@@ -12,7 +12,7 @@ declare interface HTMLElement {
 interface IVirtualDom {
   tag: string | CreateIVirtualDomFunc;
   props: { [key: string]: any };
-  children: any[];
+  children: IVirtualDom[];
 }
 
 interface Window {

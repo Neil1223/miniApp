@@ -3,7 +3,7 @@ const PagesIndex = (pageData) => {
   return core.createElement(
     'div',
     {
-      class: 'asd',
+      className: 'pageIndex',
     },
     core.createElement(
       'span',
