@@ -1,11 +1,11 @@
 import { on } from '@/util/customEvent';
 import { isPlainObject } from '@/util/util';
+import { require as customRequire } from '../helpers/require';
 import { IPageOptions, IAppOptions, IAppPage } from './index.d';
 
 const PageConfig = {};
 let globPageRegisterPath = '';
-let curWebviewId = 1;
-let globApp: any = null;
+let globApp: WrapperApp;
 const AppPages: IAppPage[] = [];
 
 class WrapperApp {
@@ -21,16 +21,18 @@ class WrapperApp {
       }
     }
     this.init();
-    this.onLaunch && this.onLaunch();
-    this.onShow && this.onShow();
-    // 需要处理show和hide的的监听和事件触发
+    this.__callPageLifeTime__('onLaunch');
+    this.__callPageLifeTime__('onShow');
+  }
+  __callPageLifeTime__(name: string) {
+    this[name] && this[name]();
   }
   init() {
     on('onAppEnterBackground', () => {
-      this.onHide && this.onHide();
+      this.__callPageLifeTime__('onHide');
     });
     on('onAppEnterForeground', () => {
-      this.onShow && this.onShow();
+      this.__callPageLifeTime__('onShow');
     });
   }
 }
@@ -39,10 +41,8 @@ class WrapperPage {
   __webviewId__: number;
   route: string;
   data: any;
-  onLoad: any;
-  onShow: any;
-  constructor(options: IPageOptions, route: string) {
-    this.__webviewId__ = curWebviewId;
+  constructor(options: IPageOptions, route: string, __webviewId__: number) {
+    this.__webviewId__ = __webviewId__;
     this.route = route;
     for (const key in options) {
       if (key !== 'data') {
@@ -54,9 +54,14 @@ class WrapperPage {
       }
     }
   }
+  __callPageLifeTime__(name: string, query?: any) {
+    this[name] && this[name](query);
+  }
   public setData(data: Object) {
+    // TODO: 1. 需要合并 setDate??是否会影响webview之间通讯的性能 2. 进行diff render
     Object.assign(this.data, data);
-    KipleServiceJSBridge.publishHandler('reRenderPage', this.data, this.route);
+    const sendData = { data: this.data, route: this.route };
+    KipleServiceJSBridge.publishHandler('RENDER_PAGE', sendData, this.__webviewId__);
   }
 }
 
@@ -73,32 +78,43 @@ export const App = (options: IAppOptions) => {
  * @param {IPageOptions} Options
  */
 export const Page = (options: IPageOptions) => {
+  if (!checkPageInPagesJson(globPageRegisterPath)) {
+    throw Error(`Page register error. ${globPageRegisterPath} has not been declared in pages.json.`);
+  }
   if (!isPlainObject(options)) {
     throw Error(`Page's option should be an object.please see ${globPageRegisterPath}.js`);
   }
-  console.log(`Add page: ${globPageRegisterPath}`);
+  console.info(`Add page: ${globPageRegisterPath}`);
   PageConfig[globPageRegisterPath] = options;
-};
-
-export const loadSprint = (path: string) => {
-  globPageRegisterPath = path;
 };
 
 export const getApp = () => globApp;
 
 export const getCurrentPages = () => AppPages.map((item) => item.page);
 
-// 路由跳转的时候需要调用这个函数，暂时可以将这个暴露出来，进行测试
-// 组件注册后，如何通知页面进行渲染
-export const registerPage = (path: string) => {
+export const checkPageInPagesJson = (e: string) => window.__wxConfig.pages.includes(e);
+
+/**
+ * 修改当前的正在注册的page的路由路径
+ * 需要判断当前路径是否是已经在config的pages里面，存在的话才进行修改
+ */
+export const setGlobPageRegisterPath = (e: string) => {
+  if (checkPageInPagesJson(e)) {
+    globPageRegisterPath = e;
+  }
+};
+
+export const registerPage = (route: string, webviewId: number, query: Object) => {
   console.log('create page start.');
-  console.log('===', PageConfig[path]);
-  const pageInstance = new WrapperPage(PageConfig[path], path);
-  const appPage = { page: pageInstance, path, webviewId: curWebviewId };
+  if (!PageConfig[route]) {
+    customRequire(route);
+  }
+  const pageInstance = new WrapperPage(PageConfig[route], route, webviewId);
+  const appPage = { page: pageInstance, route, webviewId: webviewId };
   AppPages.push(appPage);
-  pageInstance.onLoad && pageInstance.onLoad();
-  pageInstance.onShow && pageInstance.onShow();
-  curWebviewId++;
-  KipleServiceJSBridge.publishHandler('renderPage', pageInstance.data, path);
+  pageInstance.__callPageLifeTime__('onLoad', query);
+  const data = { data: pageInstance.data, route };
+  KipleServiceJSBridge.publishHandler('RENDER_PAGE', data, webviewId);
+  pageInstance.__callPageLifeTime__('onShow');
   console.log('create page end.');
 };

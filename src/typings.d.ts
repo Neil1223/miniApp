@@ -9,6 +9,12 @@ declare interface HTMLElement {
   __hasTapEvent?: boolean;
 }
 
+interface IVirtualDom {
+  tag: string | CreateIVirtualDomFunc;
+  props: { [key: string]: any };
+  children: any[];
+}
+
 interface Window {
   serviceJSBridge: {
     subscribe: ServiceJSBridge['subscribe'];
@@ -22,4 +28,9 @@ interface Window {
   };
   define: Function;
   require: Function;
+  app: { [key: string]: { render: (data: Object) => IVirtualDom } };
+  __wxConfig: {
+    entryPagePath: string;
+    pages: string[];
+  };
 }

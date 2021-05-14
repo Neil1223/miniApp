@@ -20,7 +20,7 @@ export const publishHandler = (event: string, args: any, pageId: number) => {
  * @param pageId
  */
 export const subscribeHandler = (event: string, args: any, pageId: number) => {
-  console.log('接收到view层发送的事件', event, args, pageId);
+  console.log(`Invoke custom event \`${event}\` in page: ${pageId}`);
   emit('view.' + event, args, pageId);
 };
 

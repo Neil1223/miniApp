@@ -25,6 +25,6 @@ export interface IAppOptions {
 
 export interface IAppPage {
   page: any; // 页面逻辑
-  path: string; // 页面路径
+  route: string; // 页面路径
   webviewId: number;
 }

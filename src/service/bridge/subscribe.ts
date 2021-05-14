@@ -1,4 +1,4 @@
-import { getCurrentPages } from '@/core/page';
+import { getCurrentPages, registerPage } from '@/core/page';
 import { emit } from '@/util/customEvent';
 
 interface PageEvent {
@@ -7,7 +7,7 @@ interface PageEvent {
 }
 
 const onWebviewEvent = (args: PageEvent, pageId: number) => {
-  console.log(`Invoke event ${args.eventName} in page: ${pageId}`);
+  console.log(`Invoke event \`${args.eventName}\` in page: ${pageId}`);
   const pages = getCurrentPages();
   const curPage = pages.find((item) => item.__webviewId__ === pageId);
   if (curPage) {
@@ -16,10 +16,17 @@ const onWebviewEvent = (args: PageEvent, pageId: number) => {
 };
 
 export default function initSubscribe(subscribe: ServiceJSBridge['subscribe']) {
+  // 监听到页面触发事件
   subscribe('PAGE_EVENT', onWebviewEvent);
+  // 监听到注册页面
+  subscribe('registerPage', (args: { route: string; query: Object }, pageId: number) => {
+    registerPage(args.route, pageId, args.query);
+  });
+  // app 进入后台
   subscribe('onAppEnterBackground', () => {
     emit('onAppEnterBackground');
   });
+  // app 进入前台
   subscribe('onAppEnterForeground', () => {
     emit('onAppEnterForeground');
   });

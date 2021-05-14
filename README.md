@@ -80,5 +80,20 @@
 3. app.js 的生命周期
 4. page的部分生命周期
 5. 路由跳转(先使用html节点全部替换)
+6. 系统log使用统一格式
+7. 处理用用启动
+  ```js
+  /**
+   * init 的逻辑
+   * 1. 通知 view 层执行初始化逻辑：获取入口的path
+   * 2. 生成 webviewId,初始值为0，现在变为1（+1），webviewId 是 view 层控制的
+   * 3. 根据 path 创建 Page, 将 Page 添加到 webview 的 AppPages 里面
+   * 5. 通知 service 层，注册 page，这个时候，如果 AppPages 有page直接使用，没有的话需要引入对应路由的逻辑代码，将将逻辑代码添加到 service 层里面的 AppPages 中
+   * 6. 执行 onload 生命周期
+   * 7. 通知 view 层渲染页面[RENDER_PAGE]，传递 {data,path},webviewId, view层可以根据data,webviewId,path，获得渲染函数，然后就可以结合data进行渲染了
+   * 8. 执行 onShow 生命周期
+   * 9. 思考： 创建预加载的 page（webview）应该是谁创建的，这个谁就是维护 webviewId 的那一方
+   */
+  ```
 
 ### api做参数检验

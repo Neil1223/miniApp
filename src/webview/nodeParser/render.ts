@@ -1,6 +1,6 @@
 import { isFn, isStr } from '@/util';
 import { applyEvent } from './event';
-import { CreateIVirtualDomFunc, IVirtualDom } from './render.d';
+import { CreateIVirtualDomFunc } from './render.d';
 
 /**
  * 设置组件的属性，绑定事件监听
@@ -26,7 +26,7 @@ const setProperty = (dom: HTMLElement, key: string, value: any) => {
  * 根据虚拟dom，生成真实dom
  * @param virtualDom 虚拟DOM树
  */
-const createDom = (virtualDom: IVirtualDom): HTMLElement | Text | null => {
+export const createDomTree = (virtualDom: IVirtualDom): HTMLElement | Text | null => {
   if (virtualDom && isStr(virtualDom.tag)) {
     const dom = document.createElement(virtualDom.tag as string);
     if (virtualDom.props) {
@@ -42,7 +42,7 @@ const createDom = (virtualDom: IVirtualDom): HTMLElement | Text | null => {
   } else if (virtualDom && isFn(virtualDom.tag)) {
     // 简单的处理函数组件，小程序只生成简单的函数组件，暂时不进行复杂的处理
     const _virtualDom = (virtualDom.tag as CreateIVirtualDomFunc)(virtualDom.props);
-    const dom = createDom(_virtualDom);
+    const dom = createDomTree(_virtualDom);
     return dom;
   } else if (virtualDom && !virtualDom.tag) {
     return document.createTextNode(String(virtualDom));
@@ -53,9 +53,9 @@ const createDom = (virtualDom: IVirtualDom): HTMLElement | Text | null => {
 /**
  * 根据虚拟dom，和父节点，渲染页面
  */
-export const render = (virtualDom: IVirtualDom, container: HTMLElement) => {
+export const render = (virtualDom: IVirtualDom, container: Element) => {
   // 根据虚拟DOM转换为真实DOM
-  const dom = createDom(virtualDom);
+  const dom = createDomTree(virtualDom);
   // 将真实DOM添加到容器DOM中
   if (dom) {
     container.appendChild(dom);

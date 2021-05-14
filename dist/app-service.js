@@ -5,7 +5,6 @@ define("data.js",function(require, module, exports){
     count:12,
   }
 });
-
 define("app.js", function(require, module, exports, window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,fetch,XMLHttpRequest,WebSocket,webkit,ttJSCore,Reporter,print){
   'use strict';
  
@@ -35,15 +34,19 @@ define("pages/index.js", function(require, module, exports, window,document,fram
      count: 10
    },
    onLoad: function onLoad() {
-     var _this = this;
-      _this.setData({
-        isLogin: 200
-      });
+    console.log('Page onLoad');
    },
    onShow: function onShow(){
-     console.log('onshow');
-   }
+     console.log('Page onShow');
+   },
+   addFunc() {
+    this.setData({ count: ++this.data.count });
+   },
+   subFunc() {
+    this.setData({ count: --this.data.count });
+   },
  });
 });
 
 require('app.js'); // 启动App
+initApp();

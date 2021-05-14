@@ -7,6 +7,7 @@ const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
 
 const provides = {
+  console: [resolveApp('src/util/console')],
   KipleViewJSBridge: [resolveApp('src/webview/bridge/index')],
   KipleServiceJSBridge: [resolveApp('src/service/bridge/index')],
 };
