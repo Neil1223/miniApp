@@ -11,21 +11,26 @@ export function patch(node: Node, patches: IPatches) {
   let patchHelper: IPatchHelper = {
     Index: 0,
   };
-  dfsPatch(node, patches, patchHelper);
+  setPatch(node, patches, patchHelper);
 }
 
-function dfsPatch(node: Node, patches: IPatches, patchHelper: IPatchHelper) {
+function setPatch(node: Node, patches: IPatches, patchHelper: IPatchHelper) {
   let currentPatch = patches[patchHelper.Index];
-  node.childNodes.forEach((child) => {
-    patchHelper.Index++;
-    dfsPatch(child, patches, patchHelper);
-  });
   if (currentPatch) {
     doPatch(node, currentPatch);
   }
+  // 当元素是移除或者替换的时候，就不需要遍历老的元素了，因为都是已经删除了的
+  if (currentPatch && currentPatch[0].type === PATCHES_TYPE.REPLACE) {
+    return;
+  }
+  node.childNodes.forEach((child) => {
+    patchHelper.Index++;
+    setPatch(child, patches, patchHelper);
+  });
 }
 
 const doPatch = (node: Node, patches: IPatch[]) => {
+  // 理论上 patches 应该只有一个子元素，因为 getPatches 中只会朝一个 Index 插入一条数据
   patches.forEach((patch) => {
     switch (patch.type) {
       case PATCHES_TYPE.ATTRS:
@@ -38,7 +43,7 @@ const doPatch = (node: Node, patches: IPatch[]) => {
         }
         break;
       case PATCHES_TYPE.TEXT:
-        patch.text && (node.textContent = patch.text);
+        patch.contentText && (node.textContent = patch.contentText);
         break;
       case PATCHES_TYPE.REPLACE:
         if (patch.node) {

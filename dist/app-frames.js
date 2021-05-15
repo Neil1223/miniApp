@@ -3,15 +3,10 @@ const PagesIndex = (pageData) => {
   return core.createElement(
     'div',
     {
-      className: 'pageIndex',
+      className: count > 10 ? 'ASD' : 'NEIL',
     },
-    core.createElement(
-      'span',
-      {
-        loading: 'false',
-      },
-      '12asd'
-    ),
+
+    core.createElement('span', null, count > 10 ? '大于10' : '小于等于10'),
     core.createElement('div', null, 'test-div'),
     core.createElement('div', null, '下面显示data中的count的值=>'),
     core.createElement('div', null, count),

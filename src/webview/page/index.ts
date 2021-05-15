@@ -1,4 +1,5 @@
 import { diff } from '../nodeParser/diff/diff';
+import { patch } from '../nodeParser/diff/patch';
 import { createDomTree } from '../nodeParser/render';
 
 /**
@@ -25,12 +26,12 @@ class Page {
   };
   reRender = (data: Object) => {
     const newVirtualDom = window.app[this.__route__].render(data);
-    const newDomTree = createDomTree(newVirtualDom);
-    if (newDomTree && this.__DOMTree__) {
-      this.root.replaceChild(newDomTree, this.__DOMTree__);
-      console.log('=========diff======', diff(this.__VirtualDom__, newVirtualDom));
+    if (this.__DOMTree__ && this.__VirtualDom__) {
+      // 这个方案是没有进行 key 的使用的 ！！！
+      const patches = diff(this.__VirtualDom__, newVirtualDom);
+      console.log('=========diff======', patches);
+      patch(this.__DOMTree__, patches);
       this.__VirtualDom__ = newVirtualDom;
-      this.__DOMTree__ = newDomTree;
     }
   };
 }

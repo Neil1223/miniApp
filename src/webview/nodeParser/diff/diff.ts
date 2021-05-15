@@ -6,16 +6,18 @@ export interface IPatch {
   type: string;
   nodeList?: IVirtualDom[]; // 当子元素长度大于原来的时候，需要添加剩余的所有子集
   attrs?: { [key: string]: string }; // 属性发生变化
-  text?: string; // 文字发生变化
+  contentText?: string; // 文字发生变化
   node?: IVirtualDom; // 原来节点和新的节点标签不一样
 }
 
+// 一层一层从前往后的记录dom树发生了的变化
+// 第二个子节点发生的变化，永远比第一个子节点的 key 值大
 export interface IPatches {
   [key: number]: IPatch[];
 }
 
 export const isTextNode = (child: any): boolean => {
-  return typeof child === 'object' && child.hasOwnProperty('tag') && child.hasOwnProperty('props') && child.hasOwnProperty('children') ? true : false;
+  return typeof child === 'object' && child.hasOwnProperty('tag') && child.hasOwnProperty('props') && child.hasOwnProperty('children') ? false : true;
 };
 
 const diffHelper = {
@@ -47,21 +49,11 @@ const diffHelper = {
       });
     }
     oldChild.forEach((children, index) => {
-      dfsWalk(children, newChild[index], ++diffHelper.Index, patches);
+      diffHelper.Index += 1; // 每次进行子节点的遍历，都需要修改节点的标记
+      getPatches(children, newChild[index], diffHelper.Index, patches);
     });
   },
-  dfsChildren: (oldChild: IVirtualDom) => {
-    // 感觉没用呢？
-    if (!isTextNode(oldChild)) {
-      oldChild.children.forEach((children) => {
-        ++diffHelper.Index;
-        diffHelper.dfsChildren(children);
-      });
-    }
-  },
 };
-
-// 这个方案是没有进行key的使用的 ！！！
 
 export const diff = (oldTree: IVirtualDom, newTree: IVirtualDom) => {
   // 当前节点的标志 每次调用Diff，从0重新计数
@@ -69,34 +61,30 @@ export const diff = (oldTree: IVirtualDom, newTree: IVirtualDom) => {
   let patches: IPatches = {};
 
   // 进行深度优先遍历
-  dfsWalk(oldTree, newTree, diffHelper.Index, patches);
+  getPatches(oldTree, newTree, diffHelper.Index, patches);
 
   // 返回补丁对象
   return patches;
 };
 
-function dfsWalk(oldNode: IVirtualDom, newNode: IVirtualDom, index: number, patches: IPatches) {
-  let currentPatches = [];
+function getPatches(oldNode: IVirtualDom, newNode: IVirtualDom, index: number, patches: IPatches) {
+  let currentPatches: IPatch[] = [];
   if (!newNode) {
     // 如果不存在新节点，发生了移除，产生一个关于 Remove 的 patch 补丁
     currentPatches.push({
       type: PATCHES_TYPE.REMOVE,
     });
-
-    // 删除了但依旧要遍历旧树的节点确保 Index 正确
-    diffHelper.dfsChildren(oldNode);
   } else if (isTextNode(oldNode) && isTextNode(newNode)) {
-    // 都是纯文本节点 如果内容不同，产生一个关于 textContent 的 patch
+    // 都是纯文本节点 如果内容不同，产生一个关于 contentText 的 patch
     if (oldNode !== newNode) {
       currentPatches.push({
         type: PATCHES_TYPE.TEXT,
-        text: newNode,
+        contentText: String(newNode),
       });
     }
   } else if (oldNode.tag === newNode.tag) {
     // 如果节点类型相同，比较属性差异，如若属性不同，产生一个关于属性的 patch 补丁
     let attrs = diffHelper.diffAttr(oldNode.props, newNode.props);
-
     // 有attr差异
     if (Object.keys(attrs).length > 0) {
       currentPatches.push({
@@ -113,8 +101,6 @@ function dfsWalk(oldNode: IVirtualDom, newNode: IVirtualDom, index: number, patc
       type: PATCHES_TYPE.REPLACE,
       node: newNode,
     });
-    // 替换了但依旧要遍历旧树的节点确保 Index 正确
-    diffHelper.dfsChildren(oldNode);
   }
 
   // 如果当前节点存在补丁，则将该补丁信息填入传入的patches对象中
