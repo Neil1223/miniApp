@@ -79,10 +79,10 @@ export const App = (options: IAppOptions) => {
  */
 export const Page = (options: IPageOptions) => {
   if (!checkPageInPagesJson(globPageRegisterPath)) {
-    throw Error(`Page register error. ${globPageRegisterPath} has not been declared in pages.json.`);
+    throw new Error(`Page register error. ${globPageRegisterPath} has not been declared in pages.json.`);
   }
   if (!isPlainObject(options)) {
-    throw Error(`Page's option should be an object.please see ${globPageRegisterPath}.js`);
+    throw new Error(`Page's option should be an object.please see ${globPageRegisterPath}.js`);
   }
   console.info(`Add page: ${globPageRegisterPath}`);
   PageConfig[globPageRegisterPath] = options;
@@ -109,6 +109,7 @@ export const registerPage = (route: string, webviewId: number, query: Object) =>
   if (!PageConfig[route]) {
     customRequire(route);
   }
+  // 需要check路由是否在pages里面
   const pageInstance = new WrapperPage(PageConfig[route], route, webviewId);
   const appPage = { page: pageInstance, route, webviewId: webviewId };
   AppPages.push(appPage);

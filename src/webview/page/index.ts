@@ -1,3 +1,4 @@
+import { parserUrl } from '@/util';
 import { diff } from '../nodeParser/diff/diff';
 import { patch } from '../nodeParser/diff/patch';
 import { createDomTree } from '../nodeParser/render';
@@ -21,15 +22,19 @@ class Page {
     this.__VirtualDom__ = window.app[this.__route__].render(data);
     this.__DOMTree__ = createDomTree(this.__VirtualDom__);
     if (this.__DOMTree__) {
-      this.root.appendChild(this.__DOMTree__);
+      const lastPage = AppPages[AppPages.length - 2];
+      if (lastPage && lastPage.__DOMTree__) {
+        this.root.replaceChild(this.__DOMTree__, lastPage.__DOMTree__);
+      } else {
+        this.root.appendChild(this.__DOMTree__);
+      }
     }
   };
   reRender = (data: Object) => {
-    const newVirtualDom = window.app[this.__route__].render(data);
+    const newVirtualDom = window.app[this.__route__].render(data || {});
     if (this.__DOMTree__ && this.__VirtualDom__) {
       // 这个方案是没有进行 key 的使用的 ！！！
       const patches = diff(this.__VirtualDom__, newVirtualDom);
-      console.log('=========diff======', patches);
       patch(this.__DOMTree__, patches);
       this.__VirtualDom__ = newVirtualDom;
     }
@@ -68,7 +73,6 @@ export const renderPage = (args: { data: Object; route: string }, webviewId: num
   if (!page.__DOMTree__) {
     page.render(data);
   } else {
-    console.info('should diff dom and render it');
     page.reRender(data);
   }
 };
@@ -83,5 +87,6 @@ export const initPage = (route?: string) => {
   }
   __webviewId__++;
   PageFactory.createPage(__webviewId__);
-  KipleViewJSBridge.publishHandler('registerPage', { route, query: {} }, __webviewId__);
+  route = route.split('?')[0];
+  KipleViewJSBridge.publishHandler('registerPage', parserUrl(route), __webviewId__);
 };

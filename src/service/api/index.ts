@@ -1,7 +1,8 @@
 import * as storages from './storage';
 import * as device from './device';
+import * as route from './route';
 
-const apis = { ...storages, ...device };
+const apis = { ...storages, ...device, ...route };
 
 export default apis;
 

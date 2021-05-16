@@ -45,6 +45,22 @@ define("pages/index.js", function(require, module, exports, window,document,fram
    subFunc() {
     this.setData({ count: --this.data.count });
    },
+   open(){
+    kiple.navigateTo({url:'pages/second',fail(e){console.log('===',e)}});
+   }
+ });
+});
+
+define("pages/second.js", function(require, module, exports, window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,fetch,XMLHttpRequest,WebSocket,webkit,ttJSCore,Reporter,print){
+  "use strict";
+ 
+ Page({
+   onLoad: function onLoad() {
+    console.log('Page onLoad');
+   },
+   back() {
+    kiple.navigateBack()
+   },
  });
 });
 
