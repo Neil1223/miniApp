@@ -1,4 +1,5 @@
 import { publishPageEvent } from '../bridge';
+import { PageFactory } from '../page';
 
 const EventNames = ['tap', 'longtap'];
 const PRESS_DELAY = 350; // 手指触摸后，超过 350ms 再离开, longtap事件
@@ -85,7 +86,8 @@ export const applyEvent = (element: HTMLElement, key: string, eventHandleName: s
   if (eventNames && EventNames.includes(eventNames[2])) {
     const eventName = eventNames[2];
     addListener(element, eventName, (res: any) => {
-      publishPageEvent(eventHandleName, res, 1);
+      const currentPageId = PageFactory.getCurrentWebviewId();
+      publishPageEvent(eventHandleName, res, currentPageId);
     });
   }
 };

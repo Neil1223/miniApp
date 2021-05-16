@@ -55,10 +55,11 @@ define("pages/second.js", function(require, module, exports, window,document,fra
   "use strict";
  
  Page({
-   onLoad: function onLoad() {
-    console.log('Page onLoad');
+   onLoad: function onLoad(e) {
+    console.log('Page onLoad,二级页面', e);
    },
    back() {
+     console.log('---')
     kiple.navigateBack()
    },
  });
