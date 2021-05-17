@@ -1,4 +1,5 @@
 declare module '*.tpl';
+declare module '*.html';
 
 declare const VERSION: string;
 
