@@ -1,4 +1,4 @@
-import { checkPageInPagesJson } from '@/core/page';
+import { checkPageInPagesJson } from '@/service/core/page';
 import { parserUrl } from '@/util';
 
 interface IRouteParams {

@@ -1,5 +1,6 @@
 import { render, createElement, createVirtualDom } from './render';
 import registerAllElement from '../components';
+import '../app';
 
 /**
  * ExParser 相当于 react 中的 react 和 react-dom ;

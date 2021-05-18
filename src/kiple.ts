@@ -1,10 +1,10 @@
 import api from './service/api/index';
 import apiNames from '.././lib/apis.js';
-import { wrapperUnimplemented, wrapper } from './core/helpers/api';
-import { promisify } from './core/helpers/promise';
-import { define, require } from './core/helpers/require';
-import { App, Page, getApp, getCurrentPages } from './core/page';
-import initApp from './core/helpers/initApp';
+import { wrapperUnimplemented, wrapper } from './service/core/helpers/api';
+import { promisify } from './service/core/helpers/promise';
+import { define, require } from './service/core/helpers/require';
+import { App, Page, getApp, getCurrentPages } from './service/core/page';
+import initApp from './service/core/helpers/initApp';
 
 const pageFunction = { App, Page, getApp, getCurrentPages };
 

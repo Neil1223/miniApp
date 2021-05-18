@@ -1,4 +1,4 @@
-import { getCurrentPages, registerPage } from '@/core/page';
+import { getCurrentPages, registerPage } from '@/service/core/page';
 import { emit } from '@/util/customEvent';
 
 interface PageEvent {
