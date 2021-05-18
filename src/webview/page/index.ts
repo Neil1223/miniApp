@@ -99,6 +99,7 @@ export const initPage = (route?: string) => {
   __webviewId__++;
   PageFactory.createPage(__webviewId__);
   route = route.split('?')[0];
+  __AppCssCode__[route] && __AppCssCode__[route]();
   KipleViewJSBridge.publishHandler('registerPage', parserUrl(route), __webviewId__);
 };
 
@@ -109,5 +110,11 @@ export const onRouteChange = (e: Object) => {
   if (lastPage && lastPage.__DOMTree__ && currentPage?.__DOMTree__) {
     lastPage.root.replaceChild(lastPage.__DOMTree__, currentPage.__DOMTree__);
     PageFactory.removePage(currentPage.__webviewId__);
+    var styles = document.querySelectorAll(`style[path="${currentPage.__route__}"]`);
+    if (styles.length) {
+      styles.forEach((style) => {
+        style.remove();
+      });
+    }
   }
 };

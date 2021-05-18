@@ -2,6 +2,7 @@ declare module '*.tpl';
 declare module '*.html';
 
 declare const VERSION: string;
+declare const __AppCssCode__: { [key: string]: Function };
 
 declare const KipleViewJSBridge: ViewJSBridge;
 declare const KipleServiceJSBridge: ServiceJSBridge;
