@@ -15,18 +15,32 @@ class Page {
   __DOMTree__: HTMLElement | Text | null = null;
   __VirtualDom__: IVirtualDom | null = null;
   root = document.querySelector('#app') || document.body;
+  pageContainer: HTMLElement | null;
   constructor(__webviewId__: number) {
     this.__webviewId__ = __webviewId__;
+    this.pageContainer = null;
+    this.createPageContainer();
   }
+  createPageContainer = () => {
+    const pageContainer = document.createElement('wx-page');
+    pageContainer.innerHTML = `
+      <wx-page-head>头部</wx-page-head>
+      <wx-page-body></wx-page-body>
+    `;
+    this.pageContainer = pageContainer;
+  };
   render = (data: Object) => {
     this.__VirtualDom__ = window.app[this.__route__].render(data);
     this.__DOMTree__ = createDomTree(this.__VirtualDom__);
-    if (this.__DOMTree__) {
+    if (this.__DOMTree__ && this.pageContainer) {
+      const pageBody = this.pageContainer.querySelector('wx-page-body');
+      pageBody && pageBody.appendChild(this.__DOMTree__);
       const lastPage = AppPages[AppPages.length - 2];
-      if (lastPage && lastPage.__DOMTree__) {
-        this.root.replaceChild(this.__DOMTree__, lastPage.__DOMTree__);
+      // 初次渲染 page， 如果存在上个page，那么就replace
+      if (lastPage && lastPage.pageContainer) {
+        this.root.replaceChild(this.pageContainer, lastPage.pageContainer);
       } else {
-        this.root.appendChild(this.__DOMTree__);
+        this.root.appendChild(this.pageContainer);
       }
     }
   };
@@ -40,7 +54,7 @@ class Page {
     }
   };
 }
-
+// 这里的page应该包含title，setNavigationBar 的相关API,就可以使用这里的代码进行生效
 export const PageFactory = {
   createPage: (webviewId: number) => {
     var page = new Page(webviewId);
@@ -107,8 +121,8 @@ export const onRouteChange = (e: Object) => {
   console.log(e, '==onRouteChange==');
   const currentPage = PageFactory.getCurrentPage();
   const lastPage = PageFactory.getLastPage(1);
-  if (lastPage && lastPage.__DOMTree__ && currentPage?.__DOMTree__) {
-    lastPage.root.replaceChild(lastPage.__DOMTree__, currentPage.__DOMTree__);
+  if (lastPage && lastPage.pageContainer && currentPage?.pageContainer) {
+    lastPage.root.replaceChild(lastPage.pageContainer, currentPage.pageContainer);
     PageFactory.removePage(currentPage.__webviewId__);
     var styles = document.querySelectorAll(`style[path="${currentPage.__route__}"]`);
     if (styles.length) {

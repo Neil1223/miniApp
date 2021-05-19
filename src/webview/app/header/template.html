@@ -1,0 +1,48 @@
+<style>
+  :host {
+    display: block;
+    box-sizing: border-box;
+  }
+  :host * {
+    box-sizing: border-box;
+  }
+  :host .uni-page-head {
+    height: 44px;
+    line-height: 30px;
+    position: fixed;
+    z-index: 998;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    background-color: #000;
+    color: #fff;
+    overflow: hidden;
+    padding: 7px 3px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  :host .uni-page-head-placeholder {
+    width: 100%;
+    height: 44px;
+  }
+  .uni-btn-icon {
+    overflow: hidden;
+    min-width: 1em;
+    color: #fff;
+    font: normal normal normal 14px/1 'unibtn';
+    font-size: 27px;
+  }
+  .uni-page-head-bd {
+    position: absolute;
+    left: 70px;
+    right: 70px;
+    text-align: center;
+  }
+</style>
+<div class="uni-page-head">
+  <div class="uni-page-head-back"><i class="uni-btn-icon">&#xe601;</i></div>
+  <div class="uni-page-head-bd">我是标题</div>
+  <div class="uni-page-head-extra"></div>
+</div>
+<div class="uni-page-head-placeholder"></div>

@@ -1,12 +1,12 @@
 import Base from '@/webview/mixin/base';
 import template from './template.html';
 
-class Page extends Base {
-  static is = 'wx-page';
+class Body extends Base {
+  static is = 'wx-page-body';
   static template = template;
   constructor() {
     super();
   }
 }
 
-export default Page;
+export default Body;

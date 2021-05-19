@@ -1,12 +1,12 @@
+import App from './app';
+import Body from './body';
+import PageHead from './header';
 import AppPage from './page';
 
-const components = [AppPage];
+const components = [App, AppPage, PageHead, Body];
 
 components.forEach((component) => {
   if (component.is) {
-    console.log('========', component.is);
     window.customElements.define(component.is, component);
   }
 });
-
-console.log('执行文件');
