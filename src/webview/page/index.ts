@@ -31,8 +31,16 @@ class Page {
   };
   render = (data: Object) => {
     this.__VirtualDom__ = window.app[this.__route__].render(data);
+    // 生成页面 dom 树
     this.__DOMTree__ = createDomTree(this.__VirtualDom__);
+    const curWindowStyle = Object.assign({}, window.__wxConfig.global.window, window.__wxConfig.page[this.__route__]);
+    console.log('=============', curWindowStyle);
     if (this.__DOMTree__ && this.pageContainer) {
+      // 修改页面 title
+      const header = this.pageContainer.querySelector('wx-page-head');
+      if (header) {
+        Object.assign(header, curWindowStyle);
+      }
       const pageBody = this.pageContainer.querySelector('wx-page-body');
       pageBody && pageBody.appendChild(this.__DOMTree__);
       const lastPage = AppPages[AppPages.length - 2];

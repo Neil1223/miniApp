@@ -8,8 +8,8 @@ interface IRouteParams {
 
 const shouldCheckUrlTypes = ['navigateTo', 'redirectTo', 'switchTab'];
 
-const onAppRoute = (type: string, args: IRouteParams) => {
-  const { url, delta } = args;
+const onAppRoute = (type: string, args?: IRouteParams) => {
+  const { url, delta } = args || {};
   const { route } = parserUrl(url || '');
   if (shouldCheckUrlTypes.includes(type)) {
     if (!checkPageInPagesJson(route)) {
@@ -38,7 +38,7 @@ export const navigateTo = (args: IRouteParams) => {
   return onAppRoute('navigateTo', args);
 };
 
-export const navigateBack = (args: IRouteParams) => {
+export const navigateBack = (args?: IRouteParams) => {
   return onAppRoute('navigateBack', args);
 };
 

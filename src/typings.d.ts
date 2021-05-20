@@ -17,6 +17,15 @@ interface IVirtualDom {
   children: IVirtualDom[];
 }
 
+interface IWindow {
+  backgroundColor: string;
+  backgroundTextStyle: string;
+  navigationBarBackgroundColor: string;
+  navigationBarTextStyle: 'black' | 'white';
+  navigationBarTitleText: string;
+  navigationStyle: 'default' | 'custom'; // custom 是取消原生导航栏
+}
+
 interface Window {
   serviceJSBridge: {
     subscribe: ServiceJSBridge['subscribe'];
@@ -34,5 +43,9 @@ interface Window {
   __wxConfig: {
     entryPagePath: string;
     pages: string[];
+    page: { [key: string]: IWindow };
+    global: {
+      window: IWindow;
+    };
   };
 }

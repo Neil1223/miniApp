@@ -1,5 +1,6 @@
 import { getCurrentPages, registerPage } from '@/service/core/page';
 import { emit } from '@/util/customEvent';
+import { navigateBack } from '../api/route';
 
 interface PageEvent {
   eventName: string;
@@ -21,6 +22,10 @@ export default function initSubscribe(subscribe: ServiceJSBridge['subscribe']) {
   // 监听到注册页面
   subscribe('registerPage', (args: { route: string; query: Object }, pageId: number) => {
     registerPage(args.route, pageId, args.query);
+  });
+  // 监听到自定义header的back事件
+  subscribe('navigateBack', (args: { route: string; query: Object }, pageId: number) => {
+    navigateBack();
   });
   // app 进入后台
   subscribe('onAppEnterBackground', () => {

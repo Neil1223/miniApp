@@ -35,7 +35,7 @@ const Property = (Base: typeof HTMLElement) => {
      */
     attributeChangedCallback(name: string, oldValue: any, newValue: any) {
       const observerFunc = this.__properties[name].observer;
-      observerFunc && this[observerFunc] && isFn(this[observerFunc]) && this[observerFunc](oldValue, newValue);
+      observerFunc && this[observerFunc] && isFn(this[observerFunc]) && this[observerFunc](oldValue, newValue, name);
     }
 
     private _initProperties() {
