@@ -41,6 +41,9 @@ class PageHead extends Base {
     }
   }
   connectedCallback() {
+    KipleViewJSBridge.on('onPageScroll', (e) => {
+      console.log('-------', e);
+    });
     document.addEventListener('visibilitychange', function () {
       if (document.visibilityState === 'visible') {
         KipleViewJSBridge.publishHandler('onAppEnterForeground', {}, 1);

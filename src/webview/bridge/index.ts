@@ -37,5 +37,7 @@ export function subscribe(event: string, callback: EventListener) {
   return on('service.' + event, callback);
 }
 
+export { on, emit };
+
 // 初始化需要订阅的函数
 initSubscribe(subscribe);

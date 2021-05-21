@@ -2,6 +2,7 @@ import { parserUrl } from '@/util';
 import { diff } from '../nodeParser/diff/diff';
 import { patch } from '../nodeParser/diff/patch';
 import { createDomTree } from '../nodeParser/render';
+import initScrollEvent from './scroll';
 
 /**
  * 记录已经在 View 层创建的Page
@@ -9,11 +10,14 @@ import { createDomTree } from '../nodeParser/render';
 const AppPages: Page[] = [];
 let __webviewId__ = 0;
 
-class Page {
+export class Page {
   __webviewId__: number;
   __route__: string = '';
   __DOMTree__: HTMLElement | Text | null = null;
   __VirtualDom__: IVirtualDom | null = null;
+  enableTransparentTitle: boolean = false;
+  enablePageScroll: boolean = false;
+  enablePageReachBottom: boolean = false;
   root = document.querySelector('#app') || document.body;
   pageContainer: HTMLElement | null;
   constructor(__webviewId__: number) {
@@ -29,12 +33,25 @@ class Page {
     `;
     this.pageContainer = pageContainer;
   };
-  render = (data: Object) => {
-    this.__VirtualDom__ = window.app[this.__route__].render(data);
-    // 生成页面 dom 树
+  initScrollEvent = () => initScrollEvent(this);
+  render = (options: { [key: string]: any }) => {
+    // 这里的 data 就是逻辑层的 pageOptions
+    this.__VirtualDom__ = window.app[this.__route__].render(options.data);
+    // 生成页面 Dom 树
     this.__DOMTree__ = createDomTree(this.__VirtualDom__);
+
+    if (options.onPageScroll) {
+      this.enablePageScroll = true;
+    }
+    if (options.onReachBottom) {
+      this.enablePageReachBottom = true;
+    }
+    // 获取 title 配置
     const curWindowStyle = Object.assign({}, window.__wxConfig.global.window, window.__wxConfig.page[this.__route__]);
-    console.log('=============', curWindowStyle);
+    console.log('-------', curWindowStyle, curWindowStyle.navigationStyle);
+    if (curWindowStyle.navigationStyle === 'transparent') {
+      this.enableTransparentTitle = true;
+    }
     if (this.__DOMTree__ && this.pageContainer) {
       // 修改页面 title
       const header = this.pageContainer.querySelector('wx-page-head');
@@ -51,9 +68,11 @@ class Page {
         this.root.appendChild(this.pageContainer);
       }
     }
+    // 当第一次渲染页面后，需要监听当前 page 的 scroll 事件
+    this.initScrollEvent();
   };
-  reRender = (data: Object) => {
-    const newVirtualDom = window.app[this.__route__].render(data || {});
+  reRender = (options: { [key: string]: any }) => {
+    const newVirtualDom = window.app[this.__route__].render(options.data || {});
     if (this.__DOMTree__ && this.__VirtualDom__) {
       // 这个方案是没有进行 key 的使用的 ！！！
       const patches = diff(this.__VirtualDom__, newVirtualDom);
@@ -67,6 +86,7 @@ export const PageFactory = {
   createPage: (webviewId: number) => {
     var page = new Page(webviewId);
     AppPages.push(page);
+    window.scrollTo(0, 0);
     return page;
   },
   removePage: (webviewId: number) => {
@@ -96,17 +116,17 @@ export const PageFactory = {
   },
 };
 
-export const renderPage = (args: { data: Object; route: string }, webviewId: number) => {
-  const { data, route } = args;
+export const renderPage = (args: { options: Object; route: string }, webviewId: number) => {
+  const { options, route } = args;
   const page = PageFactory.getPage(webviewId);
   if (!page) {
     throw Error(`Page not register for webviewId:${webviewId}`);
   }
   page.__route__ = route;
   if (!page.__DOMTree__) {
-    page.render(data);
+    page.render(options);
   } else {
-    page.reRender(data);
+    page.reRender(options);
   }
 };
 

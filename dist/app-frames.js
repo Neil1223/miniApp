@@ -15,11 +15,13 @@ const PagesIndex = (pageData) => {
     createElement('wx-view', null, count),
     createElement(
       'wx-button',
-      { size: 'mini', type: 'op', hoverClass: 'kkk', bindtap: 'addFunc', bindlongtap: 'subFunc', className: 'mini-btn', id: 'test' },
+      { size: 'mini', bindtap: 'addFunc', bindlongtap: 'subFunc', className: 'mini-btn', id: 'test' },
       '渲染button'
     ),
     createElement('wx-button', { size: 'mini', type: 'primary', bindtap: 'open' }, '跳转新页面'),
-    createElement('wx-view', null, true)
+    createElement('wx-view', { className: 'a' }),
+    createElement('wx-view', { className: 'b' }),
+    createElement('wx-view', { className: 'c' })
   );
 };
 
@@ -28,7 +30,8 @@ const PagesSecond = (pageData) => {
     'wx-view',
     { className: 'testClass' },
     createElement('h5', null, '这里是已经跳转了的页面'),
-    createElement('wx-button', { size: 'mini', type: 'primary', bindtap: 'back' }, '返回原来的页面')
+    createElement('wx-button', { size: 'mini', type: 'primary', bindtap: 'back' }, '返回原来的页面'),
+    createElement('wx-view', { className: 'a' })
   );
 };
 
@@ -69,15 +72,20 @@ const setCssToHead = (word, path) => {
   };
 };
 
+__AppCssCode__['pages/index'] = setCssToHead(
+  ['.a {height: 400px;background: #fff000;}\n.b {height: 400px;background: blue;}\n.c {height: 400px;background: red;} '],
+  'pages/index'
+);
+
 __AppCssCode__['pages/second'] = setCssToHead(
   [
     '.testClass {\n  margin-top: ',
     100,
     ';\n  height: ',
     300,
-    ';\n  width: 200px;\n  background: #fff000;\n}\n.btn-sets tt-button[bdfc14eb56] {\n  height: ',
-    80,
-    ';\n  line-height: ',
+    ';\n  width: 200px;\n  background: #fff000;\n}\n.a {\n  height: ',
+    1800,
+    ';\n  background: blue;opacity: 0.3;\n line-height: ',
     80,
     ';\n}\n',
   ],

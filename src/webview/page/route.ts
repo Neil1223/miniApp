@@ -13,6 +13,7 @@ const navigateBack = (delta: number = 1) => {
   const currentPage = PageFactory.getCurrentPage();
   const lastPage = PageFactory.getLastPage(delta);
   if (lastPage && lastPage.pageContainer && currentPage?.pageContainer) {
+    lastPage.initScrollEvent();
     lastPage.root.replaceChild(lastPage.pageContainer, currentPage.pageContainer);
     PageFactory.removePage(currentPage.__webviewId__);
     var styles = document.querySelectorAll(`style[path="${currentPage.__route__}"]`);

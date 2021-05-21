@@ -1,5 +1,4 @@
 import { renderPage, initPage } from '../page';
-import onShow from '../page/onShow';
 import onRouteChange from '../page/route';
 
 export default function initSubscribe(subscribe: ViewJSBridge['subscribe']) {
@@ -11,5 +10,4 @@ export default function initSubscribe(subscribe: ViewJSBridge['subscribe']) {
   subscribe('RENDER_PAGE', renderPage);
 
   subscribe('onRouteChange', onRouteChange);
-  subscribe('onPageShow', onShow);
 }

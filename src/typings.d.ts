@@ -23,7 +23,8 @@ interface IWindow {
   navigationBarBackgroundColor: string;
   navigationBarTextStyle: 'black' | 'white';
   navigationBarTitleText: string;
-  navigationStyle: 'default' | 'custom'; // custom 是取消原生导航栏
+  navigationStyle: 'default' | 'custom' | 'transparent'; // custom 是取消原生导航栏,transparent 是透明渐变导航
+  enablePullDownRefresh: boolean; // 开启下拉刷新
 }
 
 interface Window {

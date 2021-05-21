@@ -61,7 +61,7 @@ class WrapperPage {
   public setData(data: Object) {
     // TODO: 1. 需要合并 setDate??是否会影响webview之间通讯的性能 2. 进行diff render
     Object.assign(this.data, data);
-    const sendData = { data: this.data, route: this.route };
+    const sendData = { options: { data: this.data }, route: this.route };
     KipleServiceJSBridge.publishHandler('RENDER_PAGE', sendData, this.__webviewId__);
   }
 }
@@ -146,7 +146,7 @@ export const registerPage = (route: string, webviewId: number, query: Object) =>
   const appPage = { page: pageInstance, route, webviewId: webviewId };
   AppPages.push(appPage);
   pageInstance.__callPageLifeTime__('onLoad', query);
-  const data = { data: pageInstance.data, route };
+  const data = { options: pageInstance, route };
   KipleServiceJSBridge.publishHandler('RENDER_PAGE', data, webviewId);
   pageInstance.__callPageLifeTime__('onShow');
   console.log('create page end.');

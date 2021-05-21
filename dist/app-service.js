@@ -42,6 +42,9 @@ define("pages/index.js", function(require, module, exports, window,document,fram
    onHide: function onShow(){
      console.log('Page onHide');
    },
+   onPageScroll(e){
+     console.log('========监听到页面的滚动事件', e);
+   },
    addFunc() {
     this.setData({ count: ++this.data.count });
    },
