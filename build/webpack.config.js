@@ -17,7 +17,7 @@ module.exports = {
   devtool: 'source-map',
   entry: {
     webview: resolveApp('src/webview/nodeParser/index.ts'),
-    service: resolveApp('src/kiple.ts'),
+    service: resolveApp('src/service.ts'),
   },
   output: {
     path: resolveApp('dist'),

@@ -41,6 +41,7 @@ class WrapperPage {
   __webviewId__: number;
   route: string;
   data: any;
+  isTabBar: any;
   constructor(options: IPageOptions, route: string, __webviewId__: number) {
     this.__webviewId__ = __webviewId__;
     this.route = route;
@@ -101,6 +102,37 @@ export const checkPageInPagesJson = (e: string) => window.__wxConfig.pages.inclu
 export const setGlobPageRegisterPath = (e: string) => {
   if (checkPageInPagesJson(e)) {
     globPageRegisterPath = e;
+  }
+};
+
+/**
+ * 路由跳转后，触发page的生命周期函数. 路由跳转前的暂未处理
+ */
+export const callPageRouteHook = (type: string, options: any) => {
+  const { delta = 1 } = options;
+  const currentPages: WrapperPage[] = getCurrentPages();
+  const fromPage = currentPages[currentPages.length - 2];
+
+  switch (type) {
+    case 'navigateTo': // 前一个页面触发 onHide
+      fromPage && fromPage.__callPageLifeTime__('onHide');
+      break;
+    case 'redirectTo': // 前一个页面触发 onUnload
+      fromPage && fromPage.__callPageLifeTime__('onUnload');
+      break;
+    case 'switchTab': // 前一个页面时 tabBar 页面, 则触发 onHide 事件，非 tabBar 触发 onUnload
+      fromPage && fromPage.__callPageLifeTime__(fromPage.isTabBar ? 'onHide' : 'onUnload');
+      break;
+    case 'navigateBack': // 当删除的页面很多时，最后的多个页面触发 onUnload， 未删除的最后一个页面触发 onShow
+      for (let index = AppPages.length - delta; index < AppPages.length; index++) {
+        const lastPage = AppPages[index]?.page;
+        lastPage && lastPage.__callPageLifeTime__('onUnload');
+      }
+      AppPages.splice(AppPages.length - delta, delta);
+      AppPages[AppPages.length - 1] && AppPages[AppPages.length - 1].page.__callPageLifeTime__('onShow');
+      break;
+    default:
+      break;
   }
 };
 

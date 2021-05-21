@@ -1,4 +1,6 @@
-import { renderPage, initPage, onRouteChange } from '../page';
+import { renderPage, initPage } from '../page';
+import onShow from '../page/onShow';
+import onRouteChange from '../page/route';
 
 export default function initSubscribe(subscribe: ViewJSBridge['subscribe']) {
   subscribe('pageScrollTo', (e: any) => {
@@ -6,7 +8,8 @@ export default function initSubscribe(subscribe: ViewJSBridge['subscribe']) {
   });
 
   subscribe('CREATE_APP', initPage);
-  subscribe('PAGE_BACK', onRouteChange);
-
   subscribe('RENDER_PAGE', renderPage);
+
+  subscribe('onRouteChange', onRouteChange);
+  subscribe('onPageShow', onShow);
 }

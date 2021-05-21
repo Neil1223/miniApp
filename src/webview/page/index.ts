@@ -124,19 +124,3 @@ export const initPage = (route?: string) => {
   __AppCssCode__[route] && __AppCssCode__[route]();
   KipleViewJSBridge.publishHandler('registerPage', parserUrl(route), __webviewId__);
 };
-
-export const onRouteChange = (e: Object) => {
-  console.log(e, '==onRouteChange==');
-  const currentPage = PageFactory.getCurrentPage();
-  const lastPage = PageFactory.getLastPage(1);
-  if (lastPage && lastPage.pageContainer && currentPage?.pageContainer) {
-    lastPage.root.replaceChild(lastPage.pageContainer, currentPage.pageContainer);
-    PageFactory.removePage(currentPage.__webviewId__);
-    var styles = document.querySelectorAll(`style[path="${currentPage.__route__}"]`);
-    if (styles.length) {
-      styles.forEach((style) => {
-        style.remove();
-      });
-    }
-  }
-};

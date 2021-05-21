@@ -39,6 +39,9 @@ define("pages/index.js", function(require, module, exports, window,document,fram
    onShow: function onShow(){
      console.log('Page onShow');
    },
+   onHide: function onShow(){
+     console.log('Page onHide');
+   },
    addFunc() {
     this.setData({ count: ++this.data.count });
    },
@@ -58,9 +61,12 @@ define("pages/second.js", function(require, module, exports, window,document,fra
    onLoad: function onLoad(e) {
     console.log('Page onLoad,二级页面', e);
    },
+   onUnload(){
+    console.log('二级页面触发销毁事件');
+   },
    back() {
-     console.log('---')
-    kiple.navigateBack()
+     console.log('-手动触发back事件--')
+     kiple.navigateBack()
    },
  });
 });

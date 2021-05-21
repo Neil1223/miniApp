@@ -24,7 +24,7 @@ export default function initSubscribe(subscribe: ServiceJSBridge['subscribe']) {
     registerPage(args.route, pageId, args.query);
   });
   // 监听到自定义header的back事件
-  subscribe('navigateBack', (args: { route: string; query: Object }, pageId: number) => {
+  subscribe('navigateBack', () => {
     navigateBack();
   });
   // app 进入后台

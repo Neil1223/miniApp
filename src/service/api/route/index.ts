@@ -1,4 +1,4 @@
-import { checkPageInPagesJson } from '@/service/core/page';
+import { callPageRouteHook, checkPageInPagesJson } from '@/service/core/page';
 import { parserUrl } from '@/util';
 
 interface IRouteParams {
@@ -8,27 +8,21 @@ interface IRouteParams {
 
 const shouldCheckUrlTypes = ['navigateTo', 'redirectTo', 'switchTab'];
 
+// 我需要在这里触发page的hide，show的生命周期
 const onAppRoute = (type: string, args?: IRouteParams) => {
-  const { url, delta } = args || {};
+  const { url } = args || {};
   const { route } = parserUrl(url || '');
   if (shouldCheckUrlTypes.includes(type)) {
     if (!checkPageInPagesJson(route)) {
       throw new Error(`Page register error. ${route} has not been declared in pages.json.`);
     }
   }
-  // 路由跳转应该使用一个统一的 Handler，传递不同的参数
-  switch (type) {
-    case 'navigateTo':
-      location.hash = url || '';
-      KipleServiceJSBridge.publishHandler('CREATE_APP', url, 0);
-      break;
-    case 'navigateBack':
-      history.back();
-      KipleServiceJSBridge.publishHandler('PAGE_BACK', { type, delta }, 0);
-      break;
-    default:
-      break;
-  }
+  // 通知 view 层进行路由处理
+  KipleServiceJSBridge.publishHandler('onRouteChange', { type, options: args || {} }, 0);
+
+  // 通知 service 触发 Page 的生命周期函数
+  callPageRouteHook(type, args || {});
+
   return {
     errMsg: type + ':ok',
   };
