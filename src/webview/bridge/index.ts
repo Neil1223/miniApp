@@ -1,5 +1,11 @@
-import { emit, on } from '@/util/customEvent';
+import EventEmitter from '@/util/event';
 import initSubscribe from './subscribe';
+
+const customEmitter = new EventEmitter();
+
+export const on = customEmitter.on.bind(customEmitter);
+export const off = customEmitter.off.bind(customEmitter);
+export const emit = customEmitter.emit.bind(customEmitter);
 
 /**
  * 向 View 层发送事件(自定义事件)
@@ -36,8 +42,6 @@ export const publishPageEvent = (eventName: string, data: any, nodeId: number) =
 export function subscribe(event: string, callback: EventListener) {
   return on('service.' + event, callback);
 }
-
-export { on, emit };
 
 // 初始化需要订阅的函数
 initSubscribe(subscribe);

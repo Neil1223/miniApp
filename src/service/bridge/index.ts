@@ -1,7 +1,14 @@
 // 需要初始化一些需要监听的事件，当监听到
 
-import { emit, on } from '@/util/customEvent';
+// import { emit, on } from '@/util/customEvent';
+import EventEmitter from '@/util/event';
 import initSubscribe from './subscribe';
+
+const customEmitter = new EventEmitter();
+
+export const on = customEmitter.on.bind(customEmitter);
+export const off = customEmitter.off.bind(customEmitter);
+export const emit = customEmitter.emit.bind(customEmitter);
 
 /**
  * 向 Service 层发送事件

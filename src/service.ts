@@ -12,11 +12,6 @@ class KipleApp {
 
   _init() {
     Object.assign(window, pageFunction, { kiple }, { define, require, initApp });
-    window.viewJSBridge = {
-      subscribe: KipleViewJSBridge.subscribe,
-      publishHandler: KipleViewJSBridge.publishHandler,
-      subscribeHandler: KipleViewJSBridge.subscribeHandler,
-    };
 
     window.serviceJSBridge = {
       subscribe: KipleServiceJSBridge.subscribe,

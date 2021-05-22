@@ -1,4 +1,3 @@
-import { on } from '@/util/customEvent';
 import { isPlainObject } from '@/util/util';
 import { require as customRequire } from '../helpers/require';
 import { IPageOptions, IAppOptions, IAppPage } from './index.d';
@@ -28,10 +27,10 @@ class WrapperApp {
     this[name] && this[name]();
   }
   init() {
-    on('onAppEnterBackground', () => {
+    KipleServiceJSBridge.on('onAppEnterBackground', () => {
       this.__callPageLifeTime__('onHide');
     });
-    on('onAppEnterForeground', () => {
+    KipleServiceJSBridge.on('onAppEnterForeground', () => {
       this.__callPageLifeTime__('onShow');
     });
   }

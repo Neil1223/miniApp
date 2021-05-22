@@ -1,5 +1,4 @@
 import { getCurrentPages, registerPage } from '@/service/core/page';
-import { emit } from '@/util/customEvent';
 import { navigateBack } from '../api/route';
 
 interface PageEvent {
@@ -29,10 +28,10 @@ export default function initSubscribe(subscribe: ServiceJSBridge['subscribe']) {
   });
   // app 进入后台
   subscribe('onAppEnterBackground', () => {
-    emit('onAppEnterBackground');
+    KipleServiceJSBridge.emit('onAppEnterBackground');
   });
   // app 进入前台
   subscribe('onAppEnterForeground', () => {
-    emit('onAppEnterForeground');
+    KipleServiceJSBridge.emit('onAppEnterForeground');
   });
 }

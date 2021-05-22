@@ -16,7 +16,7 @@ module.exports = {
   mode: 'production',
   devtool: 'source-map',
   entry: {
-    webview: resolveApp('src/webview/nodeParser/index.ts'),
+    webview: resolveApp('src/webview.ts'),
     service: resolveApp('src/service.ts'),
   },
   output: {

@@ -35,15 +35,18 @@ class PageHead extends Base {
         break;
       case 'navigationStyle':
         newValue === 'custom' && this.remove();
+        newValue === 'transparent' && this.setTransparent();
         break;
       default:
         break;
     }
   }
-  connectedCallback() {
-    KipleViewJSBridge.on('onPageScroll', (e) => {
-      console.log('-------', e);
+  setTransparent() {
+    KipleViewJSBridge.on('onPageScroll', (e: any) => {
+      console.log('----333---', e);
     });
+  }
+  connectedCallback() {
     document.addEventListener('visibilitychange', function () {
       if (document.visibilityState === 'visible') {
         KipleViewJSBridge.publishHandler('onAppEnterForeground', {}, 1);

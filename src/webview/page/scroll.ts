@@ -6,7 +6,6 @@ let scrollListener: any = false;
 const initScrollEvent = (page: Page) => {
   // 当页面显示的时候，如果已经存在 scroll 事件监听，都需要移除它
   if (scrollListener) {
-    console.log('移除监听');
     document.removeEventListener('scroll', scrollListener);
   }
 
