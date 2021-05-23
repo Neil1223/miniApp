@@ -13,11 +13,7 @@ const PagesIndex = (pageData) => {
     createElement('wx-view', null, 'test-div'),
     createElement('wx-view', null, '下面显示data中的count的值=>'),
     createElement('wx-view', null, count),
-    createElement(
-      'wx-button',
-      { size: 'mini', bindtap: 'addFunc', bindlongtap: 'subFunc', className: 'mini-btn', id: 'test' },
-      '渲染button'
-    ),
+    createElement('wx-button', { size: 'mini', bindtap: 'addFunc', bindlongtap: 'subFunc', className: 'mini-btn', id: 'test' }, '渲染button'),
     createElement('wx-button', { size: 'mini', type: 'primary', bindtap: 'open' }, '跳转新页面'),
     createElement('wx-view', { className: 'a' }),
     createElement('wx-view', { className: 'b' }),
@@ -29,6 +25,7 @@ const PagesSecond = (pageData) => {
   return createElement(
     'wx-view',
     { className: 'testClass' },
+    createElement('img', { src: 'https://hellouniapp.dcloud.net.cn/static/shuijiao.jpg' }),
     createElement('h5', null, '这里是已经跳转了的页面'),
     createElement('wx-button', { size: 'mini', type: 'primary', bindtap: 'back' }, '返回原来的页面'),
     createElement('wx-view', { className: 'a' })
@@ -80,10 +77,10 @@ __AppCssCode__['pages/index'] = setCssToHead(
 __AppCssCode__['pages/second'] = setCssToHead(
   [
     '.testClass {\n  margin-top: ',
-    100,
+    0,
     ';\n  height: ',
     300,
-    ';\n  width: 200px;\n  background: #fff000;\n}\n.a {\n  height: ',
+    ';\n  background: #fff000;\n}\n.testClass img{width:100%;}\n.a {\n  height: ',
     1800,
     ';\n  background: blue;opacity: 0.3;\n line-height: ',
     80,
