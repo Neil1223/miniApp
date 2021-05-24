@@ -101,5 +101,6 @@
 3. 渐变的 title
 5. body 的高度控制，背景颜色控制
 6. 加载页面 css，计算 rpx.
+7. title 相关的 api
 
 ### api做参数检验

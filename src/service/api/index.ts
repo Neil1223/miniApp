@@ -4,8 +4,9 @@ import { wrapper, wrapperUnimplemented } from '../core/helpers/api';
 import * as storages from './storage';
 import * as device from './device';
 import * as route from './route';
+import * as ui from './ui';
 
-const apis = { ...storages, ...device, ...route };
+const apis = { ...storages, ...device, ...route, ...ui };
 
 const kiple = Object.create(null);
 

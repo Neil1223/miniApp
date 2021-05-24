@@ -6,6 +6,7 @@ declare const __AppCssCode__: { [key: string]: Function };
 
 declare const KipleViewJSBridge: ViewJSBridge;
 declare const KipleServiceJSBridge: ServiceJSBridge;
+declare const getCurrentPages: () => { __webviewId__: number }[];
 
 declare interface HTMLElement {
   __hasTapEvent?: boolean;

@@ -1,4 +1,5 @@
 import { parserUrl } from '@/util';
+import { PageHeadElement } from '../app/header';
 import { diff } from '../nodeParser/diff/diff';
 import { patch } from '../nodeParser/diff/patch';
 import { createDomTree } from '../nodeParser/render';
@@ -19,20 +20,18 @@ export class Page {
   enablePageScroll: boolean = false;
   enablePageReachBottom: boolean = false;
   root = document.querySelector('#app') || document.body;
-  pageContainer: HTMLElement | null;
+  pageContainer: HTMLElement;
+  navigationBar: PageHeadElement;
   constructor(__webviewId__: number) {
     this.__webviewId__ = __webviewId__;
-    this.pageContainer = null;
-    this.createPageContainer();
-  }
-  createPageContainer = () => {
+    // 创建 容器
     const pageContainer = document.createElement('wx-page');
-    pageContainer.innerHTML = `
-      <wx-page-head>头部</wx-page-head>
-      <wx-page-body></wx-page-body>
-    `;
+    this.navigationBar = document.createElement('wx-page-head') as PageHeadElement;
+    const pageBody = document.createElement('wx-page-body');
+    pageContainer.appendChild(this.navigationBar);
+    pageContainer.appendChild(pageBody);
     this.pageContainer = pageContainer;
-  };
+  }
   initScrollEvent = () => initScrollEvent(this);
   render = (options: { [key: string]: any }) => {
     // 这里的 data 就是逻辑层的 pageOptions
@@ -48,11 +47,10 @@ export class Page {
     }
     // 获取 title 配置
     const curWindowStyle = Object.assign({}, window.__wxConfig.global.window, window.__wxConfig.page[this.__route__]);
-    console.log('-------', curWindowStyle, curWindowStyle.navigationStyle);
     if (curWindowStyle.navigationStyle === 'transparent') {
       this.enableTransparentTitle = true;
     }
-    if (this.__DOMTree__ && this.pageContainer) {
+    if (this.__DOMTree__) {
       // 修改页面 title
       const header = this.pageContainer.querySelector('wx-page-head');
       if (header) {

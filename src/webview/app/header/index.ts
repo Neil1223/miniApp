@@ -2,6 +2,15 @@ import hexToRgba from '@/util/color';
 import Base from '@/webview/mixin/base';
 import template from './template.html';
 
+export interface PageHeadElement extends HTMLElement {
+  navigationBarTextStyle: string;
+  navigationBarBackgroundColor: string;
+  navigationBarTitleText: string;
+  navigationStyle: string;
+  coverage: number;
+  loading: boolean;
+}
+
 class PageHead extends Base {
   static is = 'wx-page-head';
   static template = template;
@@ -12,12 +21,15 @@ class PageHead extends Base {
       navigationBarTitleText: { type: String, value: '', observer: '_onNavigationBarChange' },
       navigationStyle: { type: String, value: 'default', observer: '_onNavigationBarChange' },
       coverage: { type: Number, value: 132 }, // 滑动时渐变的区域距离
+      loading: { type: Boolean, value: false, reflectToAttribute: true },
     };
   }
   placeholderView: HTMLElement;
   backBtn: HTMLElement;
   headView: HTMLElement;
   titleText: HTMLElement;
+  oldAlpha: any;
+  backgroundRGB: any;
   constructor() {
     super();
     this.backBtn = this.shadowRoot?.querySelector('.uni-page-head-back') as HTMLElement;
@@ -38,7 +50,12 @@ class PageHead extends Base {
         header.style.color = newValue;
         break;
       case 'navigationBarBackgroundColor':
-        header.style.backgroundColor = newValue;
+        if ((this as any).navigationStyle === 'transparent' && this.backgroundRGB) {
+          this.backgroundRGB = hexToRgba(newValue);
+          header.style.backgroundColor = `rgba(${this.backgroundRGB.r}, ${this.backgroundRGB.g}, ${this.backgroundRGB.b}, ${this.oldAlpha})`;
+        } else {
+          header.style.backgroundColor = newValue;
+        }
         break;
       case 'navigationBarTitleText':
         headerBody.innerText = newValue;
@@ -56,39 +73,31 @@ class PageHead extends Base {
     this.placeholderView.remove();
     // 父元素添加transparent属性
     this.headView.classList.toggle('uni-page-head-transparent', true);
-    this._A = 0;
-    this.backgroundRGB = hexToRgba(this.navigationBarBackgroundColor);
+    this.oldAlpha = 0;
+    this.backgroundRGB = hexToRgba((this as any).navigationBarBackgroundColor);
     this._onPageScroll({ scrollTop: 0 });
     KipleViewJSBridge.on('onPageScroll', this._onPageScroll.bind(this));
   }
   _onPageScroll({ scrollTop }: { scrollTop: number }) {
     const alpha = Math.min(scrollTop / (this as any).coverage, 1);
-    if (this._A === 1 && alpha === 1) {
+    if (this.oldAlpha === 1 && alpha === 1) {
       return;
     }
-    this._A = alpha;
+    this.oldAlpha = alpha;
     // 处理title整体的背景颜色
     this.headView.style.backgroundColor = `rgba(${this.backgroundRGB.r}, ${this.backgroundRGB.g}, ${this.backgroundRGB.b}, ${alpha})`;
     // 处理title 文字
     this.titleText.style.opacity = String(alpha);
     // 处理返回按钮的背景颜色
-    if (alpha > 0.5) {
-      this.backBtn.style.color = '#000';
-    } else {
-      this.backBtn.style.color = '#fff';
-    }
-    // 处理返回按钮的字体颜色
-    const color = this.navigationBarTextStyle === 'black' ? [0, 0, 0] : [255, 255, 255];
-    this.backBtn.style.backgroundColor = `rgba(${color.join(',')},${(1 - alpha) / 2})`;
-  }
-  connectedCallback() {
-    document.addEventListener('visibilitychange', function () {
-      if (document.visibilityState === 'visible') {
-        KipleViewJSBridge.publishHandler('onAppEnterForeground', {}, 1);
+    if ((this as any).navigationBarTextStyle === 'black') {
+      if (alpha > 0.5) {
+        this.backBtn.style.color = '#000';
       } else {
-        KipleViewJSBridge.publishHandler('onAppEnterBackground', {}, 1);
+        this.backBtn.style.color = '#fff';
       }
-    });
+    }
+    // 处理返回按钮的背景颜色
+    this.backBtn.style.backgroundColor = `rgba(0,0,0,${(1 - alpha) / 2})`;
   }
 }
 
