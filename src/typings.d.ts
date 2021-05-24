@@ -26,6 +26,7 @@ interface IWindow {
   navigationBarTitleText: string;
   navigationStyle: 'default' | 'custom' | 'transparent'; // custom 是取消原生导航栏,transparent 是透明渐变导航
   enablePullDownRefresh: boolean; // 开启下拉刷新
+  onReachBottomDistance:number; // 页面上拉触底事件触发时距页面底部距离, 默认 50px
 }
 
 interface Window {

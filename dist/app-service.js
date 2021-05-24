@@ -45,6 +45,12 @@ define("pages/index.js", function(require, module, exports, window,document,fram
    onPageScroll(e){
      console.log('========监听到页面的滚动事件', e);
    },
+   onPullDownRefresh(e){
+     console.log('触发下拉刷新',e)
+   },
+   onReachBottom(e){
+     console.log('触发加载更多....',e)
+   },
    addFunc() {
     this.setData({ count: ++this.data.count });
    },

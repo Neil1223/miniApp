@@ -22,17 +22,22 @@ export class Page {
   root = document.querySelector('#app') || document.body;
   pageContainer: HTMLElement;
   navigationBar: PageHeadElement;
+  webviewBody: HTMLElement;
   constructor(__webviewId__: number) {
     this.__webviewId__ = __webviewId__;
     // 创建 容器
     const pageContainer = document.createElement('wx-page');
     this.navigationBar = document.createElement('wx-page-head') as PageHeadElement;
-    const pageBody = document.createElement('wx-page-body');
+    this.webviewBody = document.createElement('wx-page-body');
     pageContainer.appendChild(this.navigationBar);
-    pageContainer.appendChild(pageBody);
+    pageContainer.appendChild(this.webviewBody);
     this.pageContainer = pageContainer;
   }
   initScrollEvent = () => initScrollEvent(this);
+  resetBackground = () => {
+    const curWindowStyle = Object.assign({}, window.__wxConfig.global.window, window.__wxConfig.page[this.__route__]);
+    document.body.style.backgroundColor = curWindowStyle.backgroundColor || '#ffffff';
+  };
   render = (options: { [key: string]: any }) => {
     // 这里的 data 就是逻辑层的 pageOptions
     this.__VirtualDom__ = window.app[this.__route__].render(options.data);
@@ -56,8 +61,7 @@ export class Page {
       if (header) {
         Object.assign(header, curWindowStyle);
       }
-      const pageBody = this.pageContainer.querySelector('wx-page-body');
-      pageBody && pageBody.appendChild(this.__DOMTree__);
+      this.webviewBody.appendChild(this.__DOMTree__);
       const lastPage = AppPages[AppPages.length - 2];
       // 初次渲染 page， 如果存在上个page，那么就replace
       if (lastPage && lastPage.pageContainer) {
@@ -68,6 +72,8 @@ export class Page {
     }
     // 当第一次渲染页面后，需要监听当前 page 的 scroll 事件
     this.initScrollEvent();
+    // 设置窗口颜色
+    this.resetBackground();
   };
   reRender = (options: { [key: string]: any }) => {
     const newVirtualDom = window.app[this.__route__].render(options.data || {});

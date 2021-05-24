@@ -78,9 +78,7 @@ __AppCssCode__['pages/second'] = setCssToHead(
   [
     '.testClass {\n  margin-top: ',
     0,
-    ';\n  height: ',
-    300,
-    ';\n  background: #fff000;\n}\n.testClass img{width:100%;}\n.a {\n  height: ',
+    ';\n}\n.testClass img{width:100%;}\n.a {\n  height: ',
     1800,
     ';\n  background: blue;opacity: 0.3;\n line-height: ',
     80,
