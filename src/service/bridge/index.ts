@@ -1,6 +1,3 @@
-// 需要初始化一些需要监听的事件，当监听到
-
-// import { emit, on } from '@/util/customEvent';
 import EventEmitter from '@/util/event';
 import initSubscribe from './subscribe';
 
