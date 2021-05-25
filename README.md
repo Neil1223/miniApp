@@ -103,4 +103,14 @@
 6. 加载页面 css，计算 rpx.
 7. title 相关的 api
 
+### 编译器（5.25）
+
+### 处理涉及到UI的API
+1. tabBar
+2. 图片预览
+3. showToast
+4. showActionSheet
+
 ### api做参数检验
+
+

@@ -60,6 +60,9 @@ define("pages/index.js", function(require, module, exports, window,document,fram
    subFunc() {
     this.setData({ count: --this.data.count });
    },
+   open2(){
+    kiple.navigateTo({url:'pages/custom',fail(e){console.log('===',e)}});
+   },
    open(){
     kiple.navigateTo({url:'pages/second',fail(e){console.log('===',e)}});
    }
@@ -76,6 +79,28 @@ define("pages/second.js", function(require, module, exports, window,document,fra
    onUnload(){
     console.log('二级页面触发销毁事件');
    },
+   back() {
+     console.log('-手动触发back事件--')
+     kiple.navigateBack()
+   },
+ });
+});
+
+define("pages/custom.js", function(require, module, exports, window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,fetch,XMLHttpRequest,WebSocket,webkit,ttJSCore,Reporter,print){
+  "use strict";
+ 
+ Page({
+   onLoad: function onLoad(e) {
+    console.log('Page onLoad,二级页面', e);
+   },
+   onUnload(){
+    console.log('二级页面触发销毁事件');
+   },
+   onPullDownRefresh(){
+    setTimeout(function () {
+       kiple.stopPullDownRefresh();
+    }, 1000);
+  },
    back() {
      console.log('-手动触发back事件--')
      kiple.navigateBack()

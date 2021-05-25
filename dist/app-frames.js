@@ -14,7 +14,8 @@ const PagesIndex = (pageData) => {
     createElement('wx-view', null, '下面显示data中的count的值=>'),
     createElement('wx-view', null, count),
     createElement('wx-button', { size: 'mini', bindtap: 'addFunc', bindlongtap: 'subFunc', className: 'mini-btn', id: 'test' }, '渲染button'),
-    createElement('wx-button', { size: 'mini', type: 'primary', bindtap: 'open' }, '跳转新页面'),
+    createElement('wx-button', { size: 'mini', type: 'primary', bindtap: 'open' }, '跳转渐变页面'),
+    createElement('wx-button', { size: 'mini', type: 'primary', bindtap: 'open2' }, '跳转无title页面'),
     createElement('wx-view', { className: 'a' }),
     createElement('wx-view', { className: 'b' }),
     createElement('wx-view', { className: 'c' })
@@ -32,9 +33,20 @@ const PagesSecond = (pageData) => {
   );
 };
 
+const PagesCustom = (pageData) => {
+  return createElement(
+    'wx-view',
+    { className: 'testClass' },
+    createElement('img', { src: 'https://hellouniapp.dcloud.net.cn/static/shuijiao.jpg' }),
+    createElement('h5', null, '这里是已经跳转了的页面'),
+    createElement('wx-button', { size: 'mini', type: 'primary', bindtap: 'back' }, '返回原来的页面')
+  );
+};
+
 window.app = {
   'pages/index': { render: PagesIndex }, // 这里的key=app-service里面的的pages/index.js
   'pages/second': { render: PagesSecond },
+  'pages/custom': { render: PagesCustom },
 };
 
 const BASE_DEVICE_WIDTH = 750;
