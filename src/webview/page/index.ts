@@ -1,4 +1,5 @@
 import { parserUrl } from '@/util';
+import { PageBodyElement } from '../app/body';
 import { PageHeadElement } from '../app/header';
 import { diff } from '../nodeParser/diff/diff';
 import { patch } from '../nodeParser/diff/patch';
@@ -22,13 +23,13 @@ export class Page {
   root = document.querySelector('#app') || document.body;
   pageContainer: HTMLElement;
   navigationBar: PageHeadElement;
-  webviewBody: HTMLElement;
+  webviewBody: PageBodyElement;
   constructor(__webviewId__: number) {
     this.__webviewId__ = __webviewId__;
     // 创建 容器
     const pageContainer = document.createElement('wx-page');
     this.navigationBar = document.createElement('wx-page-head') as PageHeadElement;
-    this.webviewBody = document.createElement('wx-page-body');
+    this.webviewBody = document.createElement('wx-page-body') as PageBodyElement;
     pageContainer.appendChild(this.navigationBar);
     pageContainer.appendChild(this.webviewBody);
     this.pageContainer = pageContainer;
@@ -38,29 +39,37 @@ export class Page {
     const curWindowStyle = Object.assign({}, window.__wxConfig.global.window, window.__wxConfig.page[this.__route__]);
     document.body.style.backgroundColor = curWindowStyle.backgroundColor || '#ffffff';
   };
+  setPullDownRefresh = (options: { [key: string]: any }, webviewConfig: IWindow) => {
+    if (options.onPullDownRefresh && webviewConfig.enablePullDownRefresh) {
+      this.webviewBody.enablePullDownRefresh = true;
+    }
+  };
   render = (options: { [key: string]: any }) => {
-    // 这里的 data 就是逻辑层的 pageOptions
-    this.__VirtualDom__ = window.app[this.__route__].render(options.data);
-    // 生成页面 Dom 树
-    this.__DOMTree__ = createDomTree(this.__VirtualDom__);
-
+    // 获取当前 webview 的 config
+    const curWindowStyle = Object.assign({}, window.__wxConfig.global.window, window.__wxConfig.page[this.__route__]);
     if (options.onPageScroll) {
       this.enablePageScroll = true;
     }
     if (options.onReachBottom) {
       this.enablePageReachBottom = true;
     }
-    // 获取 title 配置
-    const curWindowStyle = Object.assign({}, window.__wxConfig.global.window, window.__wxConfig.page[this.__route__]);
     if (curWindowStyle.navigationStyle === 'transparent') {
       this.enableTransparentTitle = true;
     }
+
+    // 当第一次渲染页面后，需要监听当前 page 的 scroll 事件
+    this.initScrollEvent();
+    // 设置窗口颜色
+    this.resetBackground();
+    // 设置title
+    Object.assign(this.navigationBar, curWindowStyle);
+    // 设置下拉刷新
+    this.setPullDownRefresh(options, curWindowStyle);
+
+    this.__VirtualDom__ = window.app[this.__route__].render(options.data);
+    // 生成页面 Dom 树
+    this.__DOMTree__ = createDomTree(this.__VirtualDom__);
     if (this.__DOMTree__) {
-      // 修改页面 title
-      const header = this.pageContainer.querySelector('wx-page-head');
-      if (header) {
-        Object.assign(header, curWindowStyle);
-      }
       this.webviewBody.appendChild(this.__DOMTree__);
       const lastPage = AppPages[AppPages.length - 2];
       // 初次渲染 page， 如果存在上个page，那么就replace
@@ -70,10 +79,6 @@ export class Page {
         this.root.appendChild(this.pageContainer);
       }
     }
-    // 当第一次渲染页面后，需要监听当前 page 的 scroll 事件
-    this.initScrollEvent();
-    // 设置窗口颜色
-    this.resetBackground();
   };
   reRender = (options: { [key: string]: any }) => {
     const newVirtualDom = window.app[this.__route__].render(options.data || {});
@@ -85,7 +90,10 @@ export class Page {
     }
   };
 }
-// 这里的page应该包含title，setNavigationBar 的相关API,就可以使用这里的代码进行生效
+
+/**
+ * 管理 View 层的 Page Stack.
+ */
 export const PageFactory = {
   createPage: (webviewId: number) => {
     var page = new Page(webviewId);

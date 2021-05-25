@@ -45,8 +45,11 @@ define("pages/index.js", function(require, module, exports, window,document,fram
    onPageScroll(e){
      console.log('========监听到页面的滚动事件', e);
    },
-   onPullDownRefresh(e){
-     console.log('触发下拉刷新',e)
+   onPullDownRefresh(){
+     console.log('触发下拉刷新')
+     setTimeout(function () {
+        kiple.stopPullDownRefresh();
+     }, 2000);
    },
    onReachBottom(e){
      console.log('触发加载更多....',e)

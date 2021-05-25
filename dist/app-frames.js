@@ -70,7 +70,7 @@ const setCssToHead = (word, path) => {
 };
 
 __AppCssCode__['pages/index'] = setCssToHead(
-  ['.a {height: 400px;background: #fff000;}\n.b {height: 400px;background: blue;}\n.c {height: 400px;background: red;} '],
+  ['.a {height: 400px;background: #3F536E;}\n.b {height: 400px;}\n.c {height: 400px;background: red;} '],
   'pages/index'
 );
 

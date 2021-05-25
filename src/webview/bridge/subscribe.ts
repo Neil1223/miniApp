@@ -12,4 +12,7 @@ export default function initSubscribe(subscribe: ViewJSBridge['subscribe']) {
 
   subscribe('onRouteChange', onRouteChange);
   subscribe('onNavigationBarChange', onNavigationBarChange);
+  subscribe('onPullDownRefreshChange', (data: { status: 'start' | 'stop' }, webviewId: number) => {
+    KipleViewJSBridge.emit(`onPullDownRefreshChange.${webviewId}`, data.status);
+  });
 }

@@ -24,7 +24,6 @@ export const publishHandler = (event: string, args: any, pageId: number) => {
  * @param pageId
  */
 export const subscribeHandler = (event: string, args: any, pageId: number) => {
-  console.log('接收到service层发送的事件', event, args, pageId);
   emit('service.' + event, args, pageId);
 };
 
