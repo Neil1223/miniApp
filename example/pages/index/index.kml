@@ -1,0 +1,6 @@
+<view class="container">
+  <button bindtap="bindViewTap">我是button</button>
+  <view class="motto">
+    {{motto}}
+  </view>
+</view>

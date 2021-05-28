@@ -7,41 +7,41 @@
 
 ### 运行时的框架
 1. 编译基础API，保存为文件 service.js
-  - 基础API
-  - 生命周期
-  - 和 webview.js 进行通讯
-  - 需要创建一个全局状态，保存Page.options,通过这个可以知道内存中含有多少个webview
+    - 基础API
+    - 生命周期
+    - 和 webview.js 进行通讯
+    - 需要创建一个全局状态，保存Page.options,通过这个可以知道内存中含有多少个webview
 2. 编译基础组件，保存为文件 webview.js
-  - 需要将组件编译为 AST, 进行保存
-  - 需要一个解析 AST 并进行渲染的函数
-  - 和 service.js 进行通讯
+    - 需要将组件编译为 AST, 进行保存
+    - 需要一个解析 AST 并进行渲染的函数
+    - 和 service.js 进行通讯
 3. 创建一个组件管理的框架
-  - 注册组件，创建组件，组件的diff
+    - 注册组件，创建组件，组件的diff
 4. 运行时的html执行顺序
-  - 加载空的page.html
-  - 加载框架
-    - 加载组件样式 webview.css(全局样式)
-    - 加载组件库 webview.js(组件及组件样式，进行page.html的初始化)
-    - 加载能力库 core.js(api)
-  - 加载 page-style.js(项目的样式文件,css等都会转换成js，然后使用js插入到元素的style标签中，rpx转换为number，然后根据页面大小转换为px,px不变，可以将这个文件和下一个文件合并)
-  - 加载 page-ui.js(项目的视图层代码，可以和上个文件进行合并)，这个文件中初始化页面
-  - 加载 page-server.js(项目的业务逻辑，项目配置等信息)
-  ```js
-  setTimeout(function () {
-    if (typeof jSCore === 'object' && typeof jSCore.onDocumentReady === 'function') {
-      jSCore.onDocumentReady();
-    } else {
-      console.log('初始化失败');
-    }
-  }, 0);
-  ```
+    - 加载空的page.html
+    - 加载框架
+      - 加载组件样式 webview.css(全局样式)
+      - 加载组件库 webview.js(组件及组件样式，进行page.html的初始化)
+      - 加载能力库 core.js(api)
+    - 加载 page-style.js(项目的样式文件,css等都会转换成js，然后使用js插入到元素的style标签中，rpx转换为number，然后根据页面大小转换为px,px不变，可以将这个文件和下一个文件合并)
+    - 加载 page-ui.js(项目的视图层代码，可以和上个文件进行合并)，这个文件中初始化页面
+    - 加载 page-server.js(项目的业务逻辑，项目配置等信息)
+    ```js
+    setTimeout(function () {
+      if (typeof jSCore === 'object' && typeof jSCore.onDocumentReady === 'function') {
+        jSCore.onDocumentReady();
+      } else {
+        console.log('初始化失败');
+      }
+    }, 0);
+    ```
 5. 运行js的顺序
-  - 加载完page-server.js后，开支执行App(options)，执行onDocumentReady，
-  - 先执行全局的函数
-  - 在执行页面函数，执行onLoad后，确定当前页面的data
-  - 获取当前页面的渲染函数，加上初始化的data
-  - 执行renderPage函数，传入render和data，父节点，渲染页面
-  - 当data发生改变，再次执行renderPage
+    - 加载完page-server.js后，开支执行App(options)，执行onDocumentReady，
+    - 先执行全局的函数
+    - 在执行页面函数，执行onLoad后，确定当前页面的data
+    - 获取当前页面的渲染函数，加上初始化的data
+    - 执行renderPage函数，传入render和data，父节点，渲染页面
+    - 当data发生改变，再次执行renderPage
   
 ### 编译器
 1. 需要一个config文件配置页面属性
@@ -104,6 +104,38 @@
 7. title 相关的 api
 
 ### 编译器（5.25）
+1. 项目结构
+    ```
+    ├── page                      # 页面的目录，包含所有的页面
+    │   ├── page1                 # 页面1,又4个部分组成
+    │   │   ├── index.js          # 当前页面逻辑（所有js都编译成 define 模式，路径是相根目录的路径）
+    │   │   ├── index.css         # 当前页面的样式(解析所有的css，含有rpx的单独拎出来，成为数组的一项)
+    │   │   ├── index.kml         # 当前页面的UI结构(直接生成节点树)
+    │   │   └── index.json        # 当前页面的自定义配置
+    │   ├── page2        
+    │   │   ├── test.js           # 当前页面逻辑（所有js都编译成define模式，路径是相根目录的路径）
+    │   │   ├── test.css          # 当前页面的样式(解析所有的css，含有rpx的单独拎出来，成为数组的一项)
+    │   │   ├── test.kml          # 当前页面的UI结构(直接生成节点树)
+    │   │   └── test.json         # 当前页面的自定义配置    
+    │   └── page ...              
+    ├── app.css                   # 全局样式
+    ├── app.js                    # 小程序逻辑
+    └── app.json                  # 小程序公共配置
+    ```
+2. 编译后生成的目录
+      ```
+      ├── app-frames.js           # 编译后的小程序渲染层
+      ├── app-service.js          # 编译后的小程序逻辑层
+      └── config.js               # 小程序的所有配置
+      ```
+3.  实现步骤
+    - 循环遍历 app.json, 知道整个项目有哪些页面
+    - 遍历每个page，需要编译同名称的.js,.css,.kml,.json文件
+    - 编译 .js 文件: 1. 将 es6 编译为es5; 2. 分析文件依赖，先将依赖的 .js 文件进行 define 包裹; 3. 将此.js 进行 define 包裹.
+    - 编译 .css 文件: 1. 分析文件依赖2. 通过正则将 rpx 抽出来，然后生成 `setCssToHead([],currentPath,...importPath)`;
+    - 编译 .kml 文件: 1. 直接生成 ast 树，然后踢出div等标签; 2. 根据 ast 树生成 createElement(xxx) 的树结构
+    - 编译 .json 文件: 合并到 config.js 中
+
 
 ### 处理涉及到UI的API
 1. tabBar

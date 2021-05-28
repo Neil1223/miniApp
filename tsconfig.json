@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "dist/dist",
-    "module": "esnext",
+    // "module": "esnext",
     "target": "esnext",
     "lib": ["esnext", "dom"],
     "sourceMap": true,
