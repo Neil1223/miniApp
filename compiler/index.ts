@@ -11,13 +11,15 @@ const appJson = JSON.parse(fs.readFileSync(appJsonPath).toString());
 
 const pages: string[] = appJson.pages;
 const appServiceData = {};
+const appViewData = {};
 
 try {
   pages.forEach((item) => {
     Object.assign(appServiceData, transformJsCode(item, resolveApp('example')));
+    Object.assign(appViewData, transformTemplate(item, resolveApp('example')));
   });
-  generateFrameFile(transformTemplate(pages[0], resolveApp('example')));
   generateServiceFile(appServiceData);
+  generateFrameFile(appViewData);
 } catch (error) {
   console.error('error:', error);
 }

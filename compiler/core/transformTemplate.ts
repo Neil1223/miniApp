@@ -107,11 +107,11 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
  * 2. 分析ast，得到该文件中引用了哪些外部js
  * 3. 先编译外部js在编译当前js
  */
-export const transformTemplate = (currentPath: string, resolvePath: string): string => {
+export const transformTemplate = (currentPath: string, resolvePath: string): { [key: string]: { moduleName: string; code: string } } => {
   let targetPath = !/.kml$/.test(currentPath) ? `${currentPath}.kml` : currentPath;
 
   if (hasRequired.includes(targetPath)) {
-    return '';
+    return {};
   }
 
   const enterPath = path.resolve(resolvePath, './', targetPath);
@@ -123,12 +123,19 @@ export const transformTemplate = (currentPath: string, resolvePath: string): str
 
   console.log(variates);
 
+  const moduleName = getUpperCasePath(currentPath);
+
   const result = `
-  var ${getUpperCasePath(currentPath)} = (pageData) => {
+  var ${moduleName} = (pageData) => {
     ${variates.map((item) => `var ${item} = pageData[item];\n`).join('')}
     return ${Array.isArray(code) ? code.join(',') : code}
   };
   `;
 
-  return result;
+  return {
+    [currentPath]: {
+      code: result,
+      moduleName,
+    },
+  };
 };
