@@ -3,6 +3,7 @@ import * as presetEnv from '@babel/preset-env';
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import transformRequireCode from '../plugins/transformRequireCode';
+import getIdentifier from '../plugins/getIdentifier';
 
 const generateJs = (path: string, code: string) => {
   /^\.\//.test(path) && (path = path.split('./')[1]);
@@ -44,4 +45,11 @@ export const transformJsCode = (currentPath: string, resolvePath: string) => {
   }
 
   return result;
+};
+
+export const getGlobalData = (text: string) => {
+  const identifiers: string[] = [];
+  babel.transformSync(text, { presets: [presetEnv], ast: true, plugins: [getIdentifier(identifiers)] });
+  console.log(identifiers);
+  return identifiers;
 };

@@ -1,6 +1,7 @@
 import * as fs from 'fs-extra';
-import generateServiceFile from './core/generateService';
+import { generateServiceFile, generateFrameFile } from './core/generateService';
 import { transformJsCode } from './core/transformJsCode';
+import { transformTemplate } from './core/transformTemplate';
 import { resolveApp } from './utils';
 
 const startTime = new Date().getTime();
@@ -15,9 +16,10 @@ try {
   pages.forEach((item) => {
     Object.assign(appServiceData, transformJsCode(item, resolveApp('example')));
   });
+  generateFrameFile(transformTemplate(pages[0], resolveApp('example')));
   generateServiceFile(appServiceData);
 } catch (error) {
-  console.error('error:', error.message || error);
+  console.error('error:', error);
 }
 
 const endTime = new Date().getTime();

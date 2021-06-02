@@ -1,6 +1,19 @@
 <view class="container">
-  <button bindtap="bindViewTap">我是button</button>
-  <view class="motto">
-    {{motto}}
-  </view>
+  <h5 class="{{ count > 10 ? 'yes' : 'no' }}-test">这里是page index页面</h5>
+  <text hidden="{{ true }}">"hello" '测试{{}}表达式'</text>
+  <view>{{ count > 10 ? '大于10' : '小于等于10' }}</view>
+  <view>{{ [1, 2, 3, 4, op] }}</view>
+  <view>{{ title.name || count }}</view>
+  <view>{{ a + b }} + {{ c }} + d</view>
+  <view>{{ length > 5 }}</view>
+  <view>{{ 'hello' + name }}</view>
+  <view></view>
+  <view>下面显示data中的count的值=></view>
+  <view> {{ count }}同步 </view>
+  <button size="mini" bindtap="addFunc" bindlongtap="subFunc">渲染button</button>
+  <button size="mini" type="primary" bindtap="bindViewTap">跳转渐变页面</button>
+  <button size="mini" type="primary" bindtap="open2">跳转无title页面</button>
+  <view class="a"></view>
+  <view class="b"></view>
+  <view class="c"></view>
 </view>

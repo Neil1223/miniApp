@@ -1,9 +1,10 @@
 import * as fs from 'fs-extra';
 import { resolveApp } from '../utils';
 
-const resultFile = resolveApp('dist/service-test.js');
+const serviceFile = resolveApp('dist/service-test.js');
+const frameFile = resolveApp('dist/frames-test.js');
 
-const generateServiceFile = (data: Object) => {
+export const generateServiceFile = (data: Object) => {
   let fileStr = '';
   for (const key in data) {
     if (data[key]) {
@@ -11,7 +12,9 @@ const generateServiceFile = (data: Object) => {
     }
   }
   fileStr += `\nrequire('app.js');\n initApp();`;
-  fs.outputFileSync(resultFile, fileStr);
+  fs.outputFileSync(serviceFile, fileStr);
 };
 
-export default generateServiceFile;
+export const generateFrameFile = (data: string) => {
+  fs.outputFileSync(frameFile, data);
+};
