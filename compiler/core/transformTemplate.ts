@@ -121,8 +121,6 @@ export const transformTemplate = (currentPath: string, resolvePath: string): { [
 
   const { code, variates } = generateFromAST(ast[0] as any); // 需要生成 code 和 code 中使用的变量
 
-  console.log(variates);
-
   const moduleName = getUpperCasePath(currentPath);
 
   const result = `

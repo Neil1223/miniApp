@@ -50,6 +50,5 @@ export const transformJsCode = (currentPath: string, resolvePath: string) => {
 export const getGlobalData = (text: string) => {
   const identifiers: string[] = [];
   babel.transformSync(text, { presets: [presetEnv], ast: true, plugins: [getIdentifier(identifiers)] });
-  console.log(identifiers);
   return identifiers;
 };

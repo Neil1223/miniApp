@@ -50,7 +50,7 @@ const setCssToHead = (word, path) => {
 };
 `;
 
-export const generateFrameFile = (data: { [key: string]: { moduleName: string; code: string } }) => {
+export const generateFrameFile = (data: { [key: string]: { moduleName: string; code: string } }, styles: { [key: string]: string }) => {
   let fileStr = `
 var createElement = window.core.createElement;
 var __AppCssCode__ = {};
@@ -65,6 +65,13 @@ var __AppCssCode__ = {};
   }
   fileStr += `window.app = {${pages.join(',')}}`;
   fileStr += test;
+
+  for (const key in styles) {
+    const style = styles[key];
+    if (style) {
+      fileStr += `__AppCssCode__['${key}'] = ${style};\n`;
+    }
+  }
 
   fs.outputFileSync(viewFile, fileStr);
 };

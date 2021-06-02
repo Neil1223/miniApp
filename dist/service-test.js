@@ -27,14 +27,16 @@ Page({
 });});
 define("pages/logs/logs.js", function(require, module, exports, window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,fetch,XMLHttpRequest,WebSocket,webkit,ttJSCore,Reporter,print){"use strict";
 
-var data = require('../index/data');
-
 Page({
-  data: {
-    logs: []
+  onLoad: function onLoad(e) {
+    console.log('Page onLoad,二级页面', e);
   },
-  onLoad: function onLoad() {
-    console.log('00000000000', data);
+  onUnload: function onUnload() {
+    console.log('二级页面触发销毁事件');
+  },
+  back: function back() {
+    console.log('-手动触发back事件--');
+    kiple.navigateBack();
   }
 });});
 
