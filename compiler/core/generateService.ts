@@ -3,6 +3,7 @@ import { resolveApp } from '../utils';
 
 const serviceFile = resolveApp('dist/service-test.js');
 const viewFile = resolveApp('dist/frames-test.js');
+const configFile = resolveApp('dist/app-config.js');
 
 export const generateServiceFile = (data: Object) => {
   let fileStr = '';
@@ -13,6 +14,14 @@ export const generateServiceFile = (data: Object) => {
   }
   fileStr += `\nrequire('app.js');\n initApp();`;
   fs.outputFileSync(serviceFile, fileStr);
+};
+
+export const generateConfigFile = (data: { [key: string]: any }) => {
+  data.entryPagePath = data.entryPagePath ? data.entryPagePath : data.pages[0];
+  data.global = { window: data.window };
+  delete data.window;
+  const fileStr = `window.__wxConfig = ${JSON.stringify(data)}`;
+  fs.outputFileSync(configFile, fileStr);
 };
 
 const test = `

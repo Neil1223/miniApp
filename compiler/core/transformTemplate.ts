@@ -115,6 +115,9 @@ export const transformTemplate = (currentPath: string, resolvePath: string): { [
   }
 
   const enterPath = path.resolve(resolvePath, './', targetPath);
+  if (!fs.existsSync(enterPath)) {
+    return {};
+  }
   const enterCode = fs.readFileSync(enterPath).toString();
 
   const ast = htmlparser2.parseDOM(enterCode);
@@ -125,7 +128,7 @@ export const transformTemplate = (currentPath: string, resolvePath: string): { [
 
   const result = `
   var ${moduleName} = (pageData) => {
-    ${variates.map((item) => `var ${item} = pageData[item];\n`).join('')}
+    ${variates.map((item) => `var ${item} = pageData['${item}'];\n`).join('')}
     return ${Array.isArray(code) ? code.join(',') : code}
   };
   `;

@@ -65,7 +65,7 @@ module.exports = {
     new webpack.ProvidePlugin(provides),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: path.join(__dirname, '../index.html'),
+      template: path.join(__dirname, '../dist/index.html'),
       inject: true,
       minify: {
         html5: true,

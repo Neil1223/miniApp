@@ -14,11 +14,17 @@ var sum = function sum(a, b) {
 console.log(sum(1, 2));
 Page({
   data: {
-    motto: 'Hello World'
+    motto: 'Hello World',
+    user: {
+      name: 'Neil'
+    },
+    count: 10,
+    length: 3,
+    name: 'Neil'
   },
   bindViewTap: function bindViewTap() {
-    wx.navigateTo({
-      url: '../logs/logs'
+    kiple.navigateTo({
+      url: 'pages/logs/logs'
     });
   },
   onLoad: function onLoad() {
@@ -37,6 +43,14 @@ Page({
   back: function back() {
     console.log('-手动触发back事件--');
     kiple.navigateBack();
+  }
+});});
+define("app.js", function(require, module, exports, window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,fetch,XMLHttpRequest,WebSocket,webkit,ttJSCore,Reporter,print){"use strict";
+
+App({
+  globalData: {},
+  onLaunch: function onLaunch() {
+    console.log('onLaunch');
   }
 });});
 

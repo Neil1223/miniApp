@@ -8,10 +8,14 @@ console.log(sum(1, 2));
 Page({
   data: {
     motto: 'Hello World',
+    user: { name: 'Neil' },
+    count: 10,
+    length: 3,
+    name: 'Neil',
   },
   bindViewTap() {
-    wx.navigateTo({
-      url: '../logs/logs',
+    kiple.navigateTo({
+      url: 'pages/logs/logs',
     });
   },
   onLoad() {
