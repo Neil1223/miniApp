@@ -13,12 +13,49 @@ Page({
     length: 3,
     name: 'Neil',
   },
+  onLoad() {
+    console.log('===============', app, data);
+  },
   bindViewTap() {
     kiple.navigateTo({
       url: 'pages/logs/logs',
     });
   },
-  onLoad() {
-    console.log('===============', app, data);
+  onHide: function onShow() {
+    console.log('Page onHide');
+  },
+  onPageScroll(e) {
+    console.log('========监听到页面的滚动事件', e);
+  },
+  onPullDownRefresh() {
+    console.log('触发下拉刷新');
+    setTimeout(function () {
+      kiple.stopPullDownRefresh();
+    }, 2000);
+  },
+  onReachBottom(e) {
+    console.log('触发加载更多....', e);
+  },
+  addFunc() {
+    this.setData({ count: ++this.data.count });
+  },
+  subFunc() {
+    this.setData({ count: --this.data.count });
+  },
+  open2() {
+    kiple.navigateTo({
+      url: 'pages/custom',
+      fail(e) {
+        console.log('===', e);
+      },
+    });
+  },
+  open() {
+    kiple.navigateTo({
+      url: 'pages/second',
+      fail(e) {
+        console.log('===', e);
+      },
+    });
   },
 });

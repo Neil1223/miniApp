@@ -135,6 +135,15 @@
     - 编译 .css 文件: 1. 分析文件依赖2. 通过正则将 rpx 抽出来，然后生成 `setCssToHead([],currentPath,...importPath)`;
     - 编译 .kml 文件: 1. 直接生成 ast 树，然后踢出div等标签; 2. 根据 ast 树生成 createElement(xxx) 的树结构
     - 编译 .json 文件: 合并到 config.js 中
+    - 如何实现source map?
+4. 使用 webpack 进行打包
+    - webpack 有两个配置，一个是 view 的，一个 service 的
+    - 两个配置的入口文件都是 app.json，自定义一个 loader 处理这个文件
+    - webpack 的配置应该是代码中生成的，不应该是自己写的静态配置
+    - 使用 webpack 是可以，但是感觉并不会减少开发量，每个文件人需要自己处理，但是自带 source map 和dev-server 比较方便
+5. 使用 rollup 进行打包（最终方案）
+    - 入口就是 app.json, 自定义一个插件处理 app.json，在插件中便利pages，然后批量导入 page.js
+    - 每个 page.js 使用 babel 进行编译，生成 code 和 source map（完美解决手动编译 source map 不好插入的问题，也解决了 webpack 方案模块化被重写的问题，性能也比较好）
 
 
 ### 处理涉及到UI的API

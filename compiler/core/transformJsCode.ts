@@ -32,7 +32,7 @@ export const transformJsCode = (currentPath: string, resolvePath: string) => {
 
   const result = {};
   const requireContents: string[] = [];
-  const output = babel.transformSync(enterCode, { presets: [presetEnv], plugins: [transformRequireCode(requireContents)], filename: enterPath });
+  const output = babel.transformSync(enterCode, { presets: [presetEnv], plugins: [transformRequireCode(requireContents)], filename: enterPath, sourceMaps:true });
 
   if (requireContents.length) {
     const childPath = path.join(currentPath, '../', requireContents[0]).replace(/\\/g, '/');

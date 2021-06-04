@@ -6,8 +6,8 @@
   "scripts": {
     "webpack": "webpack-dev-server --config build/webpack.config.js",
     "rollup": "rollup  -c build/rollup.config.js",
-    "dev": "rollup  -c build/rollup.config.js -w",
-    "build": "webpack build/webpack.test.js",
+    "dev": "rollup  -c build/rollup.test.js",
+    "build": "node build/webpack.test.js",
     "compiler": "ts-node-dev compiler/index.ts"
   },
   "keywords": [],

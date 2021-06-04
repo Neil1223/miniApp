@@ -22,13 +22,54 @@ Page({
     length: 3,
     name: 'Neil'
   },
+  onLoad: function onLoad() {
+    console.log('===============', app, data);
+  },
   bindViewTap: function bindViewTap() {
     kiple.navigateTo({
       url: 'pages/logs/logs'
     });
   },
-  onLoad: function onLoad() {
-    console.log('===============', app, data);
+  onHide: function onShow() {
+    console.log('Page onHide');
+  },
+  onPageScroll: function onPageScroll(e) {
+    console.log('========监听到页面的滚动事件', e);
+  },
+  onPullDownRefresh: function onPullDownRefresh() {
+    console.log('触发下拉刷新');
+    setTimeout(function () {
+      kiple.stopPullDownRefresh();
+    }, 2000);
+  },
+  onReachBottom: function onReachBottom(e) {
+    console.log('触发加载更多....', e);
+  },
+  addFunc: function addFunc() {
+    this.setData({
+      count: ++this.data.count
+    });
+  },
+  subFunc: function subFunc() {
+    this.setData({
+      count: --this.data.count
+    });
+  },
+  open2: function open2() {
+    kiple.navigateTo({
+      url: 'pages/custom',
+      fail: function fail(e) {
+        console.log('===', e);
+      }
+    });
+  },
+  open: function open() {
+    kiple.navigateTo({
+      url: 'pages/second',
+      fail: function fail(e) {
+        console.log('===', e);
+      }
+    });
   }
 });});
 define("pages/logs/logs.js", function(require, module, exports, window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,fetch,XMLHttpRequest,WebSocket,webkit,ttJSCore,Reporter,print){"use strict";
