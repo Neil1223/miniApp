@@ -77,6 +77,7 @@ define("pages/logs/logs.js", function(require, module, exports, window,document,
 Page({
   onLoad: function onLoad(e) {
     console.log('Page onLoad,二级页面', e);
+    console.log(require('../index/data'));
   },
   onUnload: function onUnload() {
     console.log('二级页面触发销毁事件');
