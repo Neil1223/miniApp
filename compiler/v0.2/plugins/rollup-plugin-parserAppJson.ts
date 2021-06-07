@@ -31,7 +31,7 @@ export const viewRoot = () => ({
     if (/app\.json$/.test(fileName)) {
       const config: IConfig = JSON.parse(source);
 
-      var code = "import 'inject/view.js';\n";
+      var code = "import {__AppCssCode__,setCssToHead} from  'inject/view.js';\n";
       const result: IPageModule[] = [];
 
       // 获取页面的模板和样式

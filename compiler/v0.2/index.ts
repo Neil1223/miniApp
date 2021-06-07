@@ -57,11 +57,11 @@ const build = async () => {
   console.log('编译 view 文件成功, 耗时：', new Date().getTime() - endTime);
 };
 
-console.log('Start Build mini App');
+console.log('Start Build Mini App');
 try {
   build().then(() => {
     const endTime = new Date().getTime();
-    console.log('Build mini App Success. Consume: ', endTime - startTime, 'ms');
+    console.log('Build Mini App Success. Consume: ', endTime - startTime, 'ms');
   });
 } catch (error) {
   console.log('Build mini App Error');

@@ -1,5 +1,5 @@
-const createElement = window.core.createElement;
-const __AppCssCode__ = {};
+export const createElement = window.core.createElement;
+export const __AppCssCode__ = (window.__AppCssCode__ = {});
 
 const BASE_DEVICE_WIDTH = 750;
 var deviceWidth = window.innerWidth || 375;
@@ -13,7 +13,7 @@ const rpx2px = (rpx) => {
   return rpx;
 };
 
-const setCssToHead = (word, path) => {
+export const setCssToHead = (word, path) => {
   return () => {
     var cssText = '';
     var style = document.createElement('style');

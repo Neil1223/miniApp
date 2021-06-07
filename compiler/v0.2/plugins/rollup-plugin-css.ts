@@ -1,5 +1,4 @@
-import * as path from 'path';
-import { resolveApp } from '../utils';
+import { getRelativePath, getUpperCasePath, resolveApp } from '../utils';
 
 const reg = /\d+rpx/gi;
 
@@ -23,22 +22,6 @@ const getCssArray = (text: string): Array<string | number> => {
   return result;
 };
 
-export const getUpperCasePath = (path: string) => {
-  const paths = path.split('/');
-  let result = '';
-  paths.forEach((item) => {
-    item = item.toLowerCase();
-    result += item.slice(0, 1).toUpperCase() + item.slice(1);
-  });
-  return result.split('.')[0];
-};
-
-const getRelativePath = (targetPath: string, curPath: any) => {
-  let result = path.relative(targetPath, curPath);
-  result = result.replace(/\\/g, '/').replace('../', '');
-  return result;
-};
-
 /**
  * 处理css文件
  */
@@ -51,9 +34,7 @@ const parserCss = () => {
     },
     transform(source: string, fileName: string) {
       if (/\.css$/.test(fileName)) {
-        console.log('编译css');
         const arrayCode: Array<string | number> = getCssArray(source);
-        console.log(fileName);
         const pagePath = getRelativePath(inputFile, fileName);
         const upperPath = getUpperCasePath(pagePath) + 'Style';
         return `var ${upperPath} = [${arrayCode.join(',')}]; export default ${upperPath};`;

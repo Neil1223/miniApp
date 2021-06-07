@@ -5,6 +5,12 @@ export const appRoot = fs.realpathSync(process.cwd());
 
 export const resolveApp = (relativePath: string) => path.resolve(appRoot, relativePath);
 
+export const getRelativePath = (targetPath: string, curPath: string) => {
+  let result = path.relative(targetPath, curPath);
+  result = result.replace(/\\/g, '/').replace('../', '');
+  return result;
+};
+
 export const getUpperCasePath = (path: string) => {
   const paths = path.split('/');
   let result = '';
@@ -12,5 +18,5 @@ export const getUpperCasePath = (path: string) => {
     item = item.toLowerCase();
     result += item.slice(0, 1).toUpperCase() + item.slice(1);
   });
-  return result;
+  return result.split('.')[0];
 };
