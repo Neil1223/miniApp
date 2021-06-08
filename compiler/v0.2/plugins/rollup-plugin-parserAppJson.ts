@@ -31,7 +31,7 @@ export const viewRoot = () => ({
     if (/app\.json$/.test(fileName)) {
       const config: IConfig = JSON.parse(source);
 
-      var code = "import {__AppCssCode__,setCssToHead} from  'inject/view.js';\n";
+      var code = "import {__AppCssCode__,setCssToHead} from  'inject/view.js';import AppStyle from './app.css';";
       const result: IPageModule[] = [];
 
       // 获取页面的模板和样式
@@ -47,7 +47,7 @@ export const viewRoot = () => ({
         pages.push(`${JSON.stringify(item.path)}:{render: ${item.moduleName}}`);
       });
 
-      code += `\nwindow.app = {${pages.join(',')}};`;
+      code += `\nwindow.app = {${pages.join(',')}};\n__AppCssCode__['app'] = setCssToHead(AppStyle,'app');`;
 
       // 转换 css
       result.forEach((item) => {

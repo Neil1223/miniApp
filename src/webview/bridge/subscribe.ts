@@ -1,4 +1,4 @@
-import { renderPage, initPage } from '../page';
+import { renderPage, initApp } from '../page';
 import onNavigationBarChange from '../page/navigationBar';
 import onRouteChange from '../page/route';
 
@@ -7,7 +7,7 @@ export default function initSubscribe(subscribe: ViewJSBridge['subscribe']) {
     console.log('通过api触发页面返回顶部', e);
   });
 
-  subscribe('CREATE_APP', initPage);
+  subscribe('CREATE_APP', initApp);
   subscribe('RENDER_PAGE', renderPage);
 
   subscribe('onRouteChange', onRouteChange);

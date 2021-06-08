@@ -17,6 +17,7 @@ const navigateBack = (delta: number = 1) => {
     lastPage.resetBackground();
     lastPage.root.replaceChild(lastPage.pageContainer, currentPage.pageContainer);
     PageFactory.removePage(currentPage.__webviewId__);
+    // 移除样式，应该放到 PageFactory 中？
     var styles = document.querySelectorAll(`style[path="${currentPage.__route__}"]`);
     if (styles.length) {
       styles.forEach((style) => {

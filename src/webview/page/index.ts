@@ -143,16 +143,27 @@ export const renderPage = (args: { options: Object; route: string }, webviewId: 
 };
 
 /**
- * 专用于创建page，如果没有参数，那么就是app初始化，如果有参数，那么就是在进行路由跳转
+ * 初始化 App，处理 app.css, tabBar
  */
-export const initPage = (route?: string) => {
+ export const initApp = (route?: string) => {
   route = route ? route : location.hash.slice(1, location.hash.length);
   if (!route) {
     route = window.__wxConfig.entryPagePath;
   }
+  initPage(route);
+  // 添加样式
+  __AppCssCode__['app'] && __AppCssCode__['app']();
+};
+
+
+/**
+ * 专用于创建page
+ */
+export const initPage = (route:string) => {
   __webviewId__++;
   PageFactory.createPage(__webviewId__);
   route = route.split('?')[0];
+  // 添加 page 样式
   __AppCssCode__[route] && __AppCssCode__[route]();
   KipleViewJSBridge.publishHandler('registerPage', parserUrl(route), __webviewId__);
 };
