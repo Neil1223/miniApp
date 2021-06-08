@@ -1,7 +1,6 @@
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
@@ -51,18 +50,5 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new webpack.ProvidePlugin(provides),
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: path.join(__dirname, '../dist/index.html'),
-      inject: true,
-      minify: {
-        html5: true,
-        removeComments: true,
-        minifyCSS: true,
-        scriptLoading: 'blocking',
-      },
-    }),
-  ],
+  plugins: [new webpack.ProvidePlugin(provides)],
 };
