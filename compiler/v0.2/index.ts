@@ -14,7 +14,7 @@ const inputOptions = {
 };
 
 const outputOptions = {
-  file: 'dist/service.js',
+  file: 'dist/app-service.js',
   sourcemap: true,
   format: 'iife',
 };
@@ -33,7 +33,7 @@ const inputOptions1 = {
 };
 
 const outputOptions1 = {
-  file: 'dist/view.js',
+  file: 'dist/app-view.js',
   format: 'iife',
 };
 

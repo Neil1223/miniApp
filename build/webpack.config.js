@@ -21,7 +21,7 @@ module.exports = {
   },
   output: {
     path: resolveApp('dist'),
-    filename: '[name].[hash].js',
+    filename: '[name].js',
     libraryTarget: 'umd',
     globalObject: 'this',
   },
@@ -50,16 +50,6 @@ module.exports = {
         exclude: /node_modules/,
       },
     ],
-  },
-  devServer: {
-    hot: true,
-    historyApiFallback: true,
-    contentBase: path.join(__dirname, '../dist'),
-    disableHostCheck: true,
-    // progress: true,
-    compress: true,
-    host: '0.0.0.0',
-    port: 3004,
   },
   plugins: [
     new webpack.ProvidePlugin(provides),

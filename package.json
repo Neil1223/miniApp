@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "webpack": "webpack-dev-server --config build/webpack.config.js",
+    "webpack": "webpack --config build/webpack.config.js",
     "rollup": "rollup  -c build/rollup.config.js",
     "dev": "rollup  -c build/rollup.test.js",
     "build": "node build/webpack.test.js",
     "compiler:v2": "ts-node-dev compiler/v0.2/index.ts",
+    "compiler:v2:dev": "ts-node-dev compiler/v0.2/index.dev.ts",
     "compiler": "ts-node-dev compiler/v0.1/index.ts"
   },
   "keywords": [],
@@ -42,6 +43,7 @@
     "fs-extra": "^10.0.0",
     "html-webpack-plugin": "^5.3.1",
     "htmlparser2": "^6.1.0",
+    "rollup-plugin-serve": "^1.1.0",
     "rollup-plugin-typescript2": "^0.30.0",
     "ts-loader": "^9.0.2",
     "ts-node-dev": "^1.1.6",
