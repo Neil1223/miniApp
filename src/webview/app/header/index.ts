@@ -9,6 +9,7 @@ export interface PageHeadElement extends HTMLElement {
   navigationStyle: string;
   coverage: number;
   loading: boolean;
+  showBackButton: boolean;
 }
 
 class PageHead extends Base {
@@ -22,6 +23,7 @@ class PageHead extends Base {
       navigationStyle: { type: String, value: 'default', observer: '_onNavigationBarChange' },
       coverage: { type: Number, value: 132 }, // 滑动时渐变的区域距离
       loading: { type: Boolean, value: false, reflectToAttribute: true },
+      showBackButton: { type: Boolean, value: true, observer: '_setBackButton' },
     };
   }
   placeholderView: HTMLElement;
@@ -66,6 +68,11 @@ class PageHead extends Base {
         break;
       default:
         break;
+    }
+  }
+  _setBackButton(_: string, newValue: boolean) {
+    if (!newValue) {
+      this.backBtn.remove();
     }
   }
   setTransparent() {

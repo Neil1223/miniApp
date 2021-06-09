@@ -42,20 +42,9 @@ Page({
   subFunc() {
     this.setData({ count: --this.data.count });
   },
-  open2() {
+  bindViewTap1() {
     kiple.navigateTo({
-      url: 'pages/custom',
-      fail(e) {
-        console.log('===', e);
-      },
-    });
-  },
-  open() {
-    kiple.navigateTo({
-      url: 'pages/second',
-      fail(e) {
-        console.log('===', e);
-      },
+      url: 'pages/transparent/index',
     });
   },
 });

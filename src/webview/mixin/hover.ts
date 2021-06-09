@@ -47,7 +47,7 @@ const Hover = (Base: typeof HTMLElement) => {
       this._hoverTouch = true;
       this._hoverStartTimer = setTimeout(() => {
         this.hovering = true;
-        this.setAttribute('class', _this.hoverClass);
+        this.classList.toggle((this as any).hoverClass, true);
         if (!this._hoverTouch) {
           // 防止在 hoverStartTime 时间内触发了 touchend,touchcancel,touchmove
           this._hoverReset();

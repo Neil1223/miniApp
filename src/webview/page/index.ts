@@ -113,7 +113,7 @@ export const PageFactory = {
   },
   getCurrentPage: () => {
     const page = PageFactory.getLastPage(0);
-    return page || null;
+    return page;
   },
   getLastPage: (lastIndex: number) => {
     const page = AppPages[AppPages.length - lastIndex - 1];
@@ -145,7 +145,7 @@ export const renderPage = (args: { options: Object; route: string }, webviewId: 
 /**
  * 初始化 App，处理 app.css, tabBar
  */
- export const initApp = (route?: string) => {
+export const initApp = (route?: string) => {
   route = route ? route : location.hash.slice(1, location.hash.length);
   if (!route) {
     route = window.__wxConfig.entryPagePath;
@@ -155,15 +155,21 @@ export const renderPage = (args: { options: Object; route: string }, webviewId: 
   __AppCssCode__['app'] && __AppCssCode__['app']();
 };
 
-
 /**
  * 专用于创建page
  */
-export const initPage = (route:string) => {
+export const initPage = (route: string) => {
   __webviewId__++;
-  PageFactory.createPage(__webviewId__);
+  const page = PageFactory.createPage(__webviewId__);
   route = route.split('?')[0];
   // 添加 page 样式
   __AppCssCode__[route] && __AppCssCode__[route]();
+
+  // 如果事首页，那么需要移除返回按钮,TODO: 首页是 tab 的时候，也需要移除返回按钮
+  if (route === window.__wxConfig.entryPagePath) {
+    page.navigationBar.showBackButton = false;
+  }
+
+  // 通知 service 层，执行 page 的初始化
   KipleViewJSBridge.publishHandler('registerPage', parserUrl(route), __webviewId__);
 };
