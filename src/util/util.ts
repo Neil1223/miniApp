@@ -21,6 +21,10 @@ export function isObject(obj: any) {
   return obj !== null && typeof obj === 'object';
 }
 
+export function isArray(obj: any) {
+  return _toString.call(obj) === '[object Array]';
+}
+
 export function isPlainObject(obj: Object) {
   return _toString.call(obj) === '[object Object]';
 }
@@ -30,6 +34,9 @@ export const isTextNode = (child: any): boolean => {
 };
 
 export const isSameText = (oldText: any, newText: any): boolean => {
+  if (isArray(oldText) && isArray(newText)) {
+    return oldText.flat().join('') === newText.flat().join('');
+  }
   return oldText === newText || (isNum(oldText) && isNum(newText) && isNaN(oldText) && isNaN(newText));
 };
 
