@@ -49,6 +49,11 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
             }
           });
         }
+        // 如果 code 不存在，那么直接 return ==> 处理 html 中的注释
+        if (!_result.code) {
+          return;
+        }
+
         if (typeof _result.code === 'string') {
           children.push(_result.code);
         } else if (Array.isArray(_result.code)) {
@@ -68,7 +73,7 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
             }
           });
         }
-        const value = dataString.variates.length > 1 ? `''.concat(${dataString.values.join(',')})` : dataString.values[0];
+        const value = dataString.variates.length > 0 ? `_concat(${dataString.values})` : dataString.values[0];
         attribs += attribs ? ',' : '';
         if (key === 'class') {
           attribs += `className:${value}`;
@@ -82,7 +87,8 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
   } else if (htmlAST.type === 'text') {
     // 需要使用正则解析 {{data}}
     const dataString = getData(htmlAST.data.replace(/(^\s+)|(\s+$)/gi, ''));
-    result.code = dataString.values;
+    result.code = dataString.variates.length > 1 ? `_concat(${dataString.values})` : dataString.values[0];
+    // result.code = dataString.values;
     if (dataString.variates.length) {
       dataString.variates.forEach((item) => {
         if (!result.variates.includes(item)) {

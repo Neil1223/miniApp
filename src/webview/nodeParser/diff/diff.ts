@@ -1,5 +1,6 @@
 //react-dom/diff.js
 
+import { isSameText, isTextNode } from '@/util';
 import { PATCHES_TYPE } from './patches-type';
 
 export interface IPatch {
@@ -15,10 +16,6 @@ export interface IPatch {
 export interface IPatches {
   [key: number]: IPatch[];
 }
-
-export const isTextNode = (child: any): boolean => {
-  return typeof child === 'object' && child.hasOwnProperty('tag') && child.hasOwnProperty('props') && child.hasOwnProperty('children') ? false : true;
-};
 
 const diffHelper = {
   Index: 0,
@@ -69,7 +66,10 @@ export const diff = (oldTree: IVirtualDom, newTree: IVirtualDom) => {
 
 function getPatches(oldNode: IVirtualDom, newNode: IVirtualDom, index: number, patches: IPatches) {
   let currentPatches: IPatch[] = [];
-  if (!newNode) {
+  if (isSameText(oldNode, newNode)) {
+    return;
+  }
+  if (!['string', 'number', 'boolean', 'object'].includes(typeof newNode)) {
     // 如果不存在新节点，发生了移除，产生一个关于 Remove 的 patch 补丁
     currentPatches.push({
       type: PATCHES_TYPE.REMOVE,

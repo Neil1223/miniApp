@@ -1,4 +1,4 @@
-import { isFn, isStr } from '@/util';
+import { isFn, isPlainObject, isStr } from '@/util';
 import { applyEvent } from './event';
 import { CreateIVirtualDomFunc } from './render.d';
 
@@ -27,24 +27,27 @@ export const setProperty = (dom: HTMLElement, key: string, value: any) => {
  * @param virtualDom 虚拟DOM树
  */
 export const createDomTree = (virtualDom: IVirtualDom): HTMLElement | Text | null => {
-  if (virtualDom && isStr(virtualDom.tag)) {
-    const dom = document.createElement(virtualDom.tag as string);
-    if (virtualDom.props) {
-      for (let key in virtualDom.props) {
-        setProperty(dom, key, virtualDom.props[key]);
+  const paramType = typeof virtualDom;
+  if (isPlainObject(virtualDom)) {
+    if (isStr(virtualDom.tag)) {
+      const dom = document.createElement(virtualDom.tag as string);
+      if (virtualDom.props) {
+        for (let key in virtualDom.props) {
+          setProperty(dom, key, virtualDom.props[key]);
+        }
       }
+      //递归处理子节点,将子节点插入到dom里面
+      if (virtualDom.children && virtualDom.children.length > 0) {
+        virtualDom.children.forEach((item) => render(item, dom));
+      }
+      return dom;
+    } else if (isFn(virtualDom.tag)) {
+      // 简单的处理函数组件，小程序只生成简单的函数组件，暂时不进行复杂的处理
+      const _virtualDom = (virtualDom.tag as CreateIVirtualDomFunc)(virtualDom.props);
+      const dom = createDomTree(_virtualDom);
+      return dom;
     }
-    //递归处理子节点,将子节点插入到dom里面
-    if (virtualDom.children && virtualDom.children.length > 0) {
-      virtualDom.children.forEach((item) => render(item, dom));
-    }
-    return dom;
-  } else if (virtualDom && isFn(virtualDom.tag)) {
-    // 简单的处理函数组件，小程序只生成简单的函数组件，暂时不进行复杂的处理
-    const _virtualDom = (virtualDom.tag as CreateIVirtualDomFunc)(virtualDom.props);
-    const dom = createDomTree(_virtualDom);
-    return dom;
-  } else if (virtualDom && !virtualDom.tag) {
+  } else if (['string', 'number', 'boolean', 'object'].includes(paramType)) {
     return document.createTextNode(String(virtualDom));
   }
   return null;

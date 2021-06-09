@@ -5,7 +5,7 @@
   <view>{{ [1, 2, 3, 4, op] }}</view>
   <view>{{ user.name || count }}</view>
   <view>{{ a + b }} + {{ c }} + d</view>
-  <view>{{ length > 5 }}</view>
+  <view>{{ count > 10 }}</view>
   <view>{{ 'hello' + name }}</view>
   <button size="mini" bindtap="addFunc" bindlongtap="subFunc">渲染button</button>
   <button size="mini" type="primary" bindtap="bindViewTap">跳转渐变页面</button>

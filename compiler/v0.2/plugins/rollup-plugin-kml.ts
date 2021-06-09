@@ -20,7 +20,7 @@ const parserKml = () => {
         const { code, variates } = generateFromAST(ast[0] as any); // 需要生成 code 和 code 中使用的变量
 
         const result = `
-        import {createElement} from 'inject/view.js';
+        import {createElement,_concat} from 'inject/view.js';
         var ${upperPath} = (pageData) => {
           ${variates.map((item) => `var ${item} = pageData['${item}'];`).join('\n')}
           return ${Array.isArray(code) ? code.join(',') : code}

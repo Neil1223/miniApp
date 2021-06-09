@@ -9,6 +9,10 @@ export function isFn(fn: any) {
   return typeof fn === 'function';
 }
 
+export function isNum(num: any) {
+  return typeof num === 'number';
+}
+
 export function isStr(str: string) {
   return typeof str === 'string';
 }
@@ -20,6 +24,14 @@ export function isObject(obj: any) {
 export function isPlainObject(obj: Object) {
   return _toString.call(obj) === '[object Object]';
 }
+
+export const isTextNode = (child: any): boolean => {
+  return typeof child === 'object' && child.hasOwnProperty('tag') && child.hasOwnProperty('props') && child.hasOwnProperty('children') ? false : true;
+};
+
+export const isSameText = (oldText: any, newText: any): boolean => {
+  return oldText === newText || (isNum(oldText) && isNum(newText) && isNaN(oldText) && isNaN(newText));
+};
 
 export function hasOwn(obj: Object, key: string) {
   return hasOwnProperty.call(obj, key);

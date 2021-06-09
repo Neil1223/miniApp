@@ -32,3 +32,7 @@ export const setCssToHead = (word, path) => {
     }
   };
 };
+
+export const _concat = (...arg) => {
+  return ''.concat(...arg);
+};

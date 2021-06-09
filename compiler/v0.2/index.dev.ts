@@ -60,12 +60,12 @@ watcher.on('event', (event) => {
     case 'START':
       startTime = new Date().getTime();
       break;
-    case 'ERROR':
-      console.error(event);
-      break;
     case 'END':
       console.log('编译文件成功, 耗时：', new Date().getTime() - startTime);
       startTime = new Date().getTime();
       break;
+    case 'ERROR':
+      console.error(event);
+      process.exit(1);
   }
 });
