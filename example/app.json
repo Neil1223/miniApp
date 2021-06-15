@@ -5,5 +5,25 @@
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "test",
     "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#3cc51f",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "static/image/icon_component.png",
+        "selectedIconPath": "static/image/icon_component_HL.png",
+        "text": "Tab1"
+      },
+      {
+        "pagePath": "pages/logs/logs",
+        "iconPath": "static/image/icon_API.png",
+        "selectedIconPath": "static/image/icon_API_HL.png",
+        "text": "Tab2"
+      }
+    ]
   }
 }

@@ -126,7 +126,7 @@
       ```
       ├── app-frames.js           # 编译后的小程序渲染层
       ├── app-service.js          # 编译后的小程序逻辑层
-      └── config.js               # 小程序的所有配置
+      └── app-config.js           # 小程序的所有配置
       ```
 3.  实现步骤
     - 循环遍历 app.json, 知道整个项目有哪些页面
@@ -145,13 +145,35 @@
     - 入口就是 app.json, 自定义一个插件处理 app.json，在插件中便利pages，然后批量导入 page.js
     - 每个 page.js 使用 babel 进行编译，生成 code 和 source map（完美解决手动编译 source map 不好插入的问题，也解决了 webpack 方案模块化被重写的问题，性能也比较好）
 
+### tabBar和css模块化（2020-6-13）
+1. css模块化
+    - 获取 css 的 ast，获取到里面的 import 语法
+    - 编译 css 的时候，将当前 css 模块依赖的 css 路径添加到单数末尾:
+      ```js
+      setCssToHead(currentCssText,currentCssPath,[moduleCss1,...moduleCssN]);
+      ```
+    - 执行 setCssToHead 时，需要 import 所有的依赖
+2. tabBar
+    - 执行 initPage 的时候，需要判断当前 page 是否是 tab page
+    - 是的话需要初始化 tabBar 的 UI
+    - 当从 tab 页面离开时，需要隐藏 tab 组件，当再次显示 tab 页面的时候，需要显示 tab 组件
+    - 目前使用的 hash 路由，组件中使用 window.onhashchange 监听路由发生变化，匹配到路由的使用显示，否则隐藏
 
 ### 处理涉及到UI的API
-1. tabBar
-2. 图片预览
-3. showToast
-4. showActionSheet
+1. 图片预览
+2. showToast
+3. showActionSheet
 
 ### api做参数检验
+
+### 路由的优化
+1. 路由API的实现
+2. 路由返回的监听，能够返回到正确的页面
+
+### 优化 webpack 和 rollup 的逻辑
+
+1. 添加环境变量
+2. 根据环境变量进行不同的打包逻辑
+3. rollup配置的优化
 
 

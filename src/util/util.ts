@@ -89,3 +89,8 @@ export const parserUrl = (route: string): { route: string; query: Object } => {
   }
   return { query, route: route.slice(0, queryIndex) };
 };
+
+export const getHashPath = (url: string) => {
+  const hash = url.split('#');
+  return hash.length > 1 ? hash[1] : '';
+};

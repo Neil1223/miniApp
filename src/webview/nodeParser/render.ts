@@ -11,10 +11,12 @@ import { CreateIVirtualDomFunc } from './render.d';
 export const setProperty = (dom: HTMLElement, key: string, value: any) => {
   if (/(bind|catch):?(.+)/.test(key)) {
     applyEvent(dom, key, value);
-  } else if (key == 'style' && value) {
+  } else if (key === 'style' && value) {
     // TODO style 属性需要进行 rpx2px 的转换
     if (isStr(value)) {
       dom.style.cssText = value;
+    } else {
+      Object.assign(dom.style, value);
     }
   } else if (value) {
     // 直接朝dome中进行赋值，可以使用Object.defineProperty在元素中进行监听需要的属性变化

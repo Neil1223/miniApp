@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "webpack": "webpack --config build/webpack.config.js",
+    "webpack": "webpack -w --config build/webpack.config.js",
     "rollup": "rollup  -c build/rollup.config.js",
     "dev": "rollup  -c build/rollup.test.js",
     "build": "node build/webpack.test.js",

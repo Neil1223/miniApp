@@ -20,7 +20,7 @@ export class Page {
   enableTransparentTitle: boolean = false;
   enablePageScroll: boolean = false;
   enablePageReachBottom: boolean = false;
-  root = document.querySelector('#app') || document.body;
+  root = document.querySelector('wx-app') || document.body;
   pageContainer: HTMLElement;
   navigationBar: PageHeadElement;
   webviewBody: PageBodyElement;
@@ -76,7 +76,7 @@ export class Page {
       if (lastPage && lastPage.pageContainer) {
         this.root.replaceChild(this.pageContainer, lastPage.pageContainer);
       } else {
-        this.root.appendChild(this.pageContainer);
+        this.root.insertBefore(this.pageContainer, this.root.firstChild);
       }
     }
   };
@@ -143,16 +143,23 @@ export const renderPage = (args: { options: Object; route: string }, webviewId: 
 };
 
 /**
- * 初始化 App，处理 app.css, tabBar
+ * 初始化 App，在 wx-app 中处理 app.css, tabBar
  */
 export const initApp = (route?: string) => {
   route = route ? route : location.hash.slice(1, location.hash.length);
   if (!route) {
     route = window.__wxConfig.entryPagePath;
   }
+
+  // 初始化App，使用 wx-app 替换 div#app 元素
+  const rootEl: any = document.getElementById('app');
+  if (!rootEl) {
+    throw Error('No Root Element');
+  }
+  rootEl.parentNode.replaceChild(document.createElement('wx-app'), rootEl);
+
+  // 初始化 page
   initPage(route);
-  // 添加样式
-  __AppCssCode__['app'] && __AppCssCode__['app']();
 };
 
 /**
