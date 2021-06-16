@@ -14,8 +14,6 @@
     "list": [
       {
         "pagePath": "pages/index/index",
-        "iconPath": "static/image/icon_component.png",
-        "selectedIconPath": "static/image/icon_component_HL.png",
         "text": "Tab1"
       },
       {

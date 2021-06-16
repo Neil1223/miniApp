@@ -55,7 +55,7 @@ interface Window {
       selectedColor: string;
       borderStyle: 'black' | 'white';
       backgroundColor: string;
-      list: Array<{ pagePath: string; text: string }>;
+      list: Array<{ pagePath: string; text: string; iconPath?: string; selectedIconPath?: string }>;
     };
   };
 }

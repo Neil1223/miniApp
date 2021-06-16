@@ -2,6 +2,7 @@ import { publishPageEvent } from '../bridge';
 import { PageFactory } from '../page';
 
 const EventNames = ['tap', 'longtap'];
+const PrivateEventNames = ['click'];
 const PRESS_DELAY = 350; // 手指触摸后，超过 350ms 再离开, longtap事件
 const TAP_DISTANCE = 5; // tap事件的移动距离需要小于5px
 
@@ -89,5 +90,16 @@ export const applyEvent = (element: HTMLElement, key: string, eventHandleName: s
       const currentPageId = PageFactory.getCurrentWebviewId();
       publishPageEvent(eventHandleName, res, currentPageId);
     });
+  }
+};
+
+/**
+ * 处理使用虚拟 dom 创建的内部组件的事件
+ */
+export const addEvent = (dom: HTMLElement, key: string, value: any) => {
+  const eventNames = /(on):?(.+)/.exec(key);
+  if (eventNames && PrivateEventNames.includes(eventNames[2].toLocaleLowerCase())) {
+    const eventName = eventNames[2].toLocaleLowerCase();
+    dom.addEventListener(eventName, value);
   }
 };
