@@ -1,7 +1,4 @@
 .container {
-  text-align: center;
-}
-
-wx-button {
-  margin: 8px
+  padding: 30rpx;
+  background-color: #f8f8f8;
 }

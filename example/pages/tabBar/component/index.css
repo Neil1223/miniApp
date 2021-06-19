@@ -1,0 +1,20 @@
+.img {
+  padding: 60rpx;
+  text-align: center;
+}
+
+.desc {
+  color: #7A7E83;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.panel {
+  margin-bottom: 12px;
+}
+.panel-h {
+  padding: 12px;
+  background-color: #fff;
+}

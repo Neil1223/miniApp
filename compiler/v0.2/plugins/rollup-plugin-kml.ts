@@ -1,5 +1,6 @@
 import * as htmlparser2 from 'htmlparser2';
 import generateFromAST from '../core/generateFromAST';
+import transformArrayElement from '../core/transformArrayElement';
 import { getRelativePath, getUpperCasePath, resolveApp } from '../utils';
 
 /**
@@ -17,12 +18,16 @@ const parserKml = () => {
         const pagePath = getRelativePath(inputFile, fileName);
         const upperPath = getUpperCasePath(pagePath).split('.')[0];
         const ast = htmlparser2.parseDOM(source);
-        const { code, variates } = generateFromAST(ast[0] as any); // 需要生成 code 和 code 中使用的变量
+        const { code, variates, arrayElements } = generateFromAST(ast[0] as any); // 需要生成 code 和 code 中使用的变量
+        // console.log(arrayElements);
+        const arrayCodes = transformArrayElement(arrayElements);
+        variates.push(...arrayCodes.variates);
 
         const result = `
         import {createElement,_concat} from 'inject/view.js';
         var ${upperPath} = (pageData) => {
           ${variates.map((item) => `var ${item} = pageData['${item}'];`).join('\n')}
+          ${arrayCodes.code}
           return ${Array.isArray(code) ? code.join(',') : code}
         };
         export default ${upperPath};

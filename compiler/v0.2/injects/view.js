@@ -36,3 +36,13 @@ export const setCssToHead = (word, path) => {
 export const _concat = (...arg) => {
   return ''.concat(...arg);
 };
+
+export const createListElement = (data, element) => {
+  const results = [];
+  for (let _index = 0; _index < list.length; _index++) {
+    var item = list[_index];
+    var index = _index;
+    subCode.code ? `subCode.code\nindex = _index;` : '';
+    key.push(_result.code);
+  }
+};

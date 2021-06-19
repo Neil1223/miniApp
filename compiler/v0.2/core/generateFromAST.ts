@@ -4,7 +4,7 @@ import { getGlobalData } from './helper';
 /**
  * 根据字符串，返回字符串中的静态字符和变量
  */
-const getData = (text: string): IDataString => {
+export const getData = (text: string): IDataString => {
   const result: IDataString = { values: [], variates: [] };
 
   const reg = /{{.+?}}/gi;
@@ -32,13 +32,27 @@ const getData = (text: string): IDataString => {
 };
 
 /**
- * 根据 ast 生成 render 所需的 code
+ * 根据 ast 生成 render 所需的 code.
+ *
+ * 如果 属性中含有 k:for="{{}}" 那么需要将当前的节点使用函数返回结果
  */
+
+let arrayCount = 0;
 const generateFromAST = (htmlAST: ASTElement): IGenCode => {
-  let result: IGenCode = { variates: [], code: '' };
+  let result: IGenCode = { variates: [], code: '', arrayElements: {} };
 
   if (htmlAST.type === 'tag') {
+    // 需要判断下，htmlAST.attribs 是否存在 k:for, 如果存在的话，这一块就跳过
+    if (htmlAST.attribs && htmlAST.attribs['k:for']) {
+      arrayCount += 1;
+      result.arrayElements[`array${arrayCount}`] = htmlAST;
+      result.code = `array${arrayCount}`;
+      return result;
+    }
+
     let children: string[] = [];
+
+    // 处理 children
     if (htmlAST.children && htmlAST.children.length) {
       htmlAST.children.forEach((element) => {
         var _result = generateFromAST(element);
@@ -54,6 +68,11 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
           return;
         }
 
+        // 合并子集中的含有的for循环，待会统一交给外部处理
+        if (Object.keys(_result.arrayElements)) {
+          Object.assign(result.arrayElements, _result.arrayElements);
+        }
+
         if (typeof _result.code === 'string') {
           children.push(_result.code);
         } else if (Array.isArray(_result.code)) {
@@ -61,6 +80,8 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
         }
       });
     }
+
+    // 处理属性
     let attribs: null | string = null;
     if (Object.keys(htmlAST.attribs).length) {
       attribs = '';
@@ -73,7 +94,7 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
             }
           });
         }
-        const value = dataString.variates.length > 0 ? `_concat(${dataString.values})` : dataString.values[0];
+        const value = dataString.variates.length > 1 ? `_concat(${dataString.values})` : dataString.values[0];
         attribs += attribs ? ',' : '';
         if (key === 'class') {
           attribs += `className:${value}`;

@@ -15,4 +15,10 @@ export interface IDataString {
 interface IGenCode {
   variates: string[];
   code: string | string[];
+  arrayElements: { [key: string]: ASTElement };
+}
+
+interface IForCode {
+  variates: string[];
+  code: string | string[];
 }

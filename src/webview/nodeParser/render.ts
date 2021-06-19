@@ -43,7 +43,14 @@ export const createDomTree = (virtualDom: IVirtualDom): HTMLElement | Text | nul
       }
       //递归处理子节点,将子节点插入到dom里面
       if (virtualDom.children && virtualDom.children.length > 0) {
-        virtualDom.children.forEach((item) => render(item, dom));
+        virtualDom.children.forEach((item) => {
+          // 存在 child 是数组的情况: for循环
+          if (Array.isArray(item)) {
+            item.forEach((_item) => render(_item, dom));
+          } else {
+            render(item, dom);
+          }
+        });
       }
       return dom;
     } else if (isFn(virtualDom.tag)) {
