@@ -18,10 +18,12 @@ const parserKml = () => {
         const pagePath = getRelativePath(inputFile, fileName);
         const upperPath = getUpperCasePath(pagePath).split('.')[0];
         const ast = htmlparser2.parseDOM(source);
-        const { code, variates, arrayElements } = generateFromAST(ast[0] as any); // 需要生成 code 和 code 中使用的变量
+        let { code, variates, arrayElements } = generateFromAST(ast[0] as any); // 需要生成 code 和 code 中使用的变量
         // console.log(arrayElements);
         const arrayCodes = transformArrayElement(arrayElements);
         variates.push(...arrayCodes.variates);
+
+        variates = Array.from(new Set(variates));
 
         const result = `
         import {createElement,_concat} from 'inject/view.js';
