@@ -1,5 +1,6 @@
 <view class="container">
   <view class="img" k:if="{{count > 20}}">这里是一个img</view>
+  <view class="img" k:else>这里是一个img</view>
   <view class="desc">{{count}}以下将展示小程序官方组件能力，组件样式仅供参考，开发者可根据自身需求自定义组件样式，具体属性参数详见文档: https://www.kiple.com</view>
   <view class="panel" k:for="{{ list }}">
     <view class="panel-h">

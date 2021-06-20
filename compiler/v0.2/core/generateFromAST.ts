@@ -1,5 +1,5 @@
 import { ASTElement, IDataString, IGenCode } from '.';
-import { getGlobalData } from './helper';
+import { getGlobalData, getPrev } from './helper';
 
 /**
  * 根据字符串，返回字符串中的静态字符和变量
@@ -36,12 +36,34 @@ export const getData = (text: string): IDataString => {
  *
  * 如果 属性中含有 k:for="{{}}" 那么需要将当前的节点使用函数返回结果
  */
-
 let arrayCount = 0;
+let conditionalCount = 0;
 const generateFromAST = (htmlAST: ASTElement): IGenCode => {
-  let result: IGenCode = { variates: [], code: '', arrayElements: {} };
+  let result: IGenCode = { variates: [], code: '', arrayElements: {}, conditional: [] };
 
   if (htmlAST.type === 'tag') {
+
+    // 需要判断下，html 是否是 k:if,k:else, k:elif
+    if (htmlAST.attribs && (htmlAST.attribs['k:if'] || htmlAST.attribs.hasOwnProperty('k:else') || htmlAST.attribs['k:elif'])) {
+      let key = ''
+      if (htmlAST.attribs['k:if']) {
+        key = 'if'
+        conditionalCount += 1;
+        result.code = `conditional${conditionalCount}`;
+      } else {
+        // 只有同级的else才加入到数组中，不是的话直接忽略
+        const prev = getPrev(htmlAST);
+        if (prev && prev.attribs && (prev.attribs['k:if'] || prev.attribs['k:elif'])) {
+          key = htmlAST.attribs['k:elif'] ? 'elif' : 'else';
+        }
+      }
+      if (key) {
+        result.conditional.push({ variateName: `conditional${conditionalCount}`, [key]: htmlAST })
+      }
+
+      return result;
+    }
+
     // 需要判断下，htmlAST.attribs 是否存在 k:for, 如果存在的话，这一块就跳过
     if (htmlAST.attribs && htmlAST.attribs['k:for']) {
       arrayCount += 1;
@@ -63,14 +85,20 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
             }
           });
         }
-        // 如果 code 不存在，那么直接 return ==> 处理 html 中的注释
-        if (!_result.code) {
-          return;
-        }
 
         // 合并子集中的含有的for循环，待会统一交给外部处理
         if (Object.keys(_result.arrayElements)) {
           Object.assign(result.arrayElements, _result.arrayElements);
+        }
+
+        // 合并子集中的含有的 if 语句，待会统一交给外部处理
+        if (_result.conditional.length) {
+          result.conditional.push(..._result.conditional)
+        }
+
+        // 如果 code 不存在，那么直接 return ==> 处理 html 中的注释
+        if (!_result.code) {
+          return;
         }
 
         if (typeof _result.code === 'string') {
@@ -99,7 +127,7 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
         if (key === 'class') {
           attribs += `className:${value}`;
         } else {
-          attribs += `${key}:${value}`;
+          attribs += `${JSON.stringify(key)}:${value}`;
         }
       }
     }

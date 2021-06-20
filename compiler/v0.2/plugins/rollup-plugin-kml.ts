@@ -1,6 +1,7 @@
 import * as htmlparser2 from 'htmlparser2';
 import generateFromAST from '../core/generateFromAST';
-import transformArrayElement from '../core/transformArrayElement';
+import transformFor from '../core/transformFor';
+import transformIf from '../core/transformIf';
 import { getRelativePath, getUpperCasePath, resolveApp } from '../utils';
 
 /**
@@ -18,10 +19,15 @@ const parserKml = () => {
         const pagePath = getRelativePath(inputFile, fileName);
         const upperPath = getUpperCasePath(pagePath).split('.')[0];
         const ast = htmlparser2.parseDOM(source);
-        let { code, variates, arrayElements } = generateFromAST(ast[0] as any); // 需要生成 code 和 code 中使用的变量
-        // console.log(arrayElements);
-        const arrayCodes = transformArrayElement(arrayElements);
+        let { code, variates, arrayElements,conditional } = generateFromAST(ast[0] as any); // 需要生成 code 和 code 中使用的变量
+
+        //处理 for 循环语句
+        const arrayCodes = transformFor(arrayElements);
         variates.push(...arrayCodes.variates);
+
+        // 处理 if 判断语句
+        const conditionalCodes = transformIf(conditional);
+        variates.push(...conditionalCodes.variates);
 
         variates = Array.from(new Set(variates));
 
@@ -29,7 +35,7 @@ const parserKml = () => {
         import {createElement,_concat} from 'inject/view.js';
         var ${upperPath} = (pageData) => {
           ${variates.map((item) => `var ${item} = pageData['${item}'];`).join('\n')}
-          ${arrayCodes.code}
+          ${conditionalCodes.code};${arrayCodes.code}
           return ${Array.isArray(code) ? code.join(',') : code}
         };
         export default ${upperPath};
