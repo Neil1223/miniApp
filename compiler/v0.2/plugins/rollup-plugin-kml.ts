@@ -19,7 +19,7 @@ const parserKml = () => {
         const pagePath = getRelativePath(inputFile, fileName);
         const upperPath = getUpperCasePath(pagePath).split('.')[0];
         const ast = htmlparser2.parseDOM(source);
-        let { code, variates, arrayElements,conditional } = generateFromAST(ast[0] as any); // 需要生成 code 和 code 中使用的变量
+        let { code, variates, arrayElements, conditional } = generateFromAST(ast[0] as any); // 需要生成 code 和 code 中使用的变量
 
         //处理 for 循环语句
         const arrayCodes = transformFor(arrayElements);
@@ -35,7 +35,7 @@ const parserKml = () => {
         import {createElement,_concat} from 'inject/view.js';
         var ${upperPath} = (pageData) => {
           ${variates.map((item) => `var ${item} = pageData['${item}'];`).join('\n')}
-          ${conditionalCodes.code};${arrayCodes.code}
+          ${conditionalCodes.code}${arrayCodes.code}
           return ${Array.isArray(code) ? code.join(',') : code}
         };
         export default ${upperPath};

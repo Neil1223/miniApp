@@ -42,12 +42,11 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
   let result: IGenCode = { variates: [], code: '', arrayElements: {}, conditional: [] };
 
   if (htmlAST.type === 'tag') {
-
     // 需要判断下，html 是否是 k:if,k:else, k:elif
     if (htmlAST.attribs && (htmlAST.attribs['k:if'] || htmlAST.attribs.hasOwnProperty('k:else') || htmlAST.attribs['k:elif'])) {
-      let key = ''
+      let key = '';
       if (htmlAST.attribs['k:if']) {
-        key = 'if'
+        key = 'if';
         conditionalCount += 1;
         result.code = `conditional${conditionalCount}`;
       } else {
@@ -58,7 +57,7 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
         }
       }
       if (key) {
-        result.conditional.push({ variateName: `conditional${conditionalCount}`, [key]: htmlAST })
+        result.conditional.push({ variateName: `conditional${conditionalCount}`, [key]: key === 'elif' ? [htmlAST] : htmlAST });
       }
 
       return result;
@@ -93,7 +92,7 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
 
         // 合并子集中的含有的 if 语句，待会统一交给外部处理
         if (_result.conditional.length) {
-          result.conditional.push(..._result.conditional)
+          result.conditional.push(..._result.conditional);
         }
 
         // 如果 code 不存在，那么直接 return ==> 处理 html 中的注释
@@ -122,7 +121,7 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
             }
           });
         }
-        const value = dataString.variates.length > 1 ? `_concat(${dataString.values})` : dataString.values[0];
+        const value = dataString.values.length > 1 ? `_concat(${dataString.values})` : dataString.values[0];
         attribs += attribs ? ',' : '';
         if (key === 'class') {
           attribs += `className:${value}`;
@@ -136,7 +135,7 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
   } else if (htmlAST.type === 'text') {
     // 需要使用正则解析 {{data}}
     const dataString = getData(htmlAST.data.replace(/(^\s+)|(\s+$)/gi, ''));
-    result.code = dataString.variates.length > 1 ? `_concat(${dataString.values})` : dataString.values[0];
+    result.code = dataString.values.length > 1 ? `_concat(${dataString.values})` : dataString.values[0];
     // result.code = dataString.values;
     if (dataString.variates.length) {
       dataString.variates.forEach((item) => {

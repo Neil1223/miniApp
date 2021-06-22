@@ -1,6 +1,6 @@
 Page({
   data: {
-    count: 12,
+    count: 2,
     list: [
       {
         id: 'view',

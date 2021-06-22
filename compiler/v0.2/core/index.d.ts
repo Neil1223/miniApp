@@ -16,7 +16,7 @@ export interface IDataString {
 export interface Conditional {
   variateName: string; // if,elif,else 有相同的 variateName
   if?: ASTElement;
-  elif?: ASTElement;
+  elif?: ASTElement[];
   else?: ASTElement;
 }
 

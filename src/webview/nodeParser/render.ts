@@ -31,7 +31,7 @@ export const setProperty = (dom: HTMLElement, key: string, value: any) => {
  * 根据虚拟dom，生成真实dom
  * @param virtualDom 虚拟DOM树
  */
-export const createDomTree = (virtualDom: IVirtualDom): HTMLElement | Text | null => {
+export const createDomTree = (virtualDom: IVirtualDom): HTMLElement | Text | Comment | null => {
   const paramType = typeof virtualDom;
   if (isPlainObject(virtualDom)) {
     if (isStr(virtualDom.tag)) {
@@ -59,6 +59,8 @@ export const createDomTree = (virtualDom: IVirtualDom): HTMLElement | Text | nul
       const dom = createDomTree(_virtualDom);
       return dom;
     }
+  } else if (virtualDom === null) {
+    return document.createComment('');
   } else if (['string', 'number', 'boolean', 'object'].includes(paramType)) {
     return document.createTextNode(String(virtualDom));
   }
