@@ -21,6 +21,13 @@ export const setProperty = (dom: HTMLElement, key: string, value: any) => {
     } else {
       Object.assign(dom.style, value);
     }
+  } else if (/data-/.test(key)) {
+    // 处理自定义属性，常用来进行 view 通知 service 的数据
+    const customKey = key
+      .replace('data-', '')
+      .toLocaleLowerCase()
+      .replace(/-[a-z]/g, (e) => e[1].toLocaleUpperCase());
+    dom.dataset[customKey] = value;
   } else if (value) {
     // 直接朝dome中进行赋值，可以使用Object.defineProperty在元素中进行监听需要的属性变化
     dom[key] = value;

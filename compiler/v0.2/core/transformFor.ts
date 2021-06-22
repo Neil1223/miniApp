@@ -4,6 +4,9 @@ import transformIf from './transformIf';
 
 /**
  * 处理k:for的元素
+ * @param arrayElements {Object} 需要循环渲染的 ast 元素
+ * @param indexKey {String} 当前逻辑如果处于一个列表循环里面, 需要传入 indexKey, 以确保当前逻辑结束, 上个循环的 index 变量没有发生变化
+ * @param itemKey {String} 当前逻辑如果处于一个列表循环里面, 需要传入 itemKey, 以确保当前逻辑结束, 上个循环的 item 变量没有发生变化
  */
 const transformFor = (arrayElements: IGenCode['arrayElements'], indexKey?: string, itemKey?: string): IForCode => {
   const result: IForCode = { code: '', variates: [] };
@@ -24,12 +27,13 @@ const transformFor = (arrayElements: IGenCode['arrayElements'], indexKey?: strin
     // 解析当前节点下面的 for 循环
     const subCode = transformFor(_result.arrayElements, index, item);
     // 处理当前节点下面的 if 判断语句
-    const conditionalCodes = transformIf(_result.conditional);
+    const conditionalCodes = transformIf(_result.conditional, index, item);
 
     // 合并所有的变量
     _result.variates = _result.variates.filter((variate) => variate !== item && variate !== index);
     subCode.variates = subCode.variates.filter((variate) => variate !== item && variate !== index);
-    result.variates.push(...getData(listString).variates, ..._result.variates, ...subCode.variates,...conditionalCodes.variates);
+    conditionalCodes.variates = conditionalCodes.variates.filter((variate) => variate !== item && variate !== index);
+    result.variates.push(...getData(listString).variates, ..._result.variates, ...subCode.variates, ...conditionalCodes.variates);
 
     var code = `
       var ${key} = [];

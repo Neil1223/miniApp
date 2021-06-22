@@ -15,7 +15,7 @@ let __webviewId__ = 0;
 export class Page {
   __webviewId__: number;
   __route__: string = '';
-  __DOMTree__: HTMLElement | Text | null = null;
+  __DOMTree__: HTMLElement | Text | Comment | null = null;
   __VirtualDom__: IVirtualDom | null = null;
   enableTransparentTitle: boolean = false;
   enablePageScroll: boolean = false;
