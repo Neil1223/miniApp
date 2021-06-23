@@ -1,6 +1,5 @@
 Page({
   data: {
-    count: 2,
     list: [
       {
         id: 'view',
@@ -51,5 +50,14 @@ Page({
         pages: ['web-view'],
       },
     ],
+  },
+  triggerCollapse(e) {
+    const index = Number(e.target.dataset.index);
+    this.setData({
+      list: this.data.list.map((item, idx) => {
+        item.open = idx === index ? !item.open : false;
+        return item;
+      }),
+    });
   },
 });

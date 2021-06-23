@@ -20,13 +20,29 @@ function setPatch(node: Node, patches: IPatches, patchHelper: IPatchHelper) {
     doPatch(node, currentPatch);
   }
   // 当元素是移除或者替换的时候，就不需要遍历老的元素了，因为都是已经删除了的
-  if (currentPatch && currentPatch[0].type === PATCHES_TYPE.REPLACE) {
+  if (currentPatch && [PATCHES_TYPE.REPLACE, PATCHES_TYPE.REMOVE].includes(currentPatch[0].type)) {
     return;
   }
-  node.childNodes.forEach((child) => {
+
+  let length = node.childNodes.length;
+  if (currentPatch && currentPatch[0].type === PATCHES_TYPE.ADD && currentPatch[0].nodeList) {
+    // 如果是 add，那么需要减去增加的长度，以免循环时 Index 发生变化，导致后面的其他节点不能正确的匹配到
+    length -= currentPatch[0].nodeList.length;
+  }
+
+  for (let index = 0; index < length; index++) {
+    const child = node.childNodes[index];
+    if (!child) {
+      return;
+    }
     patchHelper.Index++;
+
+    // 如果某个子节点被删除，那么本应该是下一个节点进入循环，此时就变成了下下各节点了，中间的那个节点就被跳过了，需要将这个节点插入到循环中
+    if (patches[patchHelper.Index] && patches[patchHelper.Index][0].type === PATCHES_TYPE.REMOVE) {
+      index--;
+    }
     setPatch(child, patches, patchHelper);
-  });
+  }
 }
 
 const doPatch = (node: Node, patches: IPatch[]) => {
@@ -46,7 +62,7 @@ const doPatch = (node: Node, patches: IPatch[]) => {
         patch.contentText && (node.textContent = patch.contentText);
         break;
       case PATCHES_TYPE.REPLACE:
-        if (patch.node) {
+        if (patch.node || patch.node === null) {
           const newNode = createDomTree(patch.node);
           newNode && node.parentNode?.replaceChild(newNode, node);
         }

@@ -30,7 +30,7 @@ export function isPlainObject(obj: Object) {
 }
 
 export const isTextNode = (child: any): boolean => {
-  return typeof child === 'object' && child.hasOwnProperty('tag') && child.hasOwnProperty('props') && child.hasOwnProperty('children') ? false : true;
+  return typeof child === 'object' && child && child.hasOwnProperty('tag') && child.hasOwnProperty('props') && child.hasOwnProperty('children') ? false : true;
 };
 
 export const isSameText = (oldText: any, newText: any): boolean => {

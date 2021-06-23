@@ -8,11 +8,12 @@ export interface IPatch {
   nodeList?: IVirtualDom[]; // 当子元素长度大于原来的时候，需要添加剩余的所有子集
   attrs?: { [key: string]: string }; // 属性发生变化
   contentText?: string; // 文字发生变化
-  node?: IVirtualDom; // 原来节点和新的节点标签不一样
+  node?: IVirtualDom | null; // 原来节点和新的节点标签不一样
 }
 
 // 一层一层从前往后的记录dom树发生了的变化
 // 第二个子节点发生的变化，永远比第一个子节点的 key 值大
+// 对于子节点的 diff， 采用的是先 add 再 remove 或者 replace 的方式，感觉会出问题
 export interface IPatches {
   [key: number]: IPatch[];
 }
@@ -37,6 +38,8 @@ const diffHelper = {
     return patches;
   },
   diffChildren: (oldChild: IVirtualDom[], newChild: IVirtualDom[], patches: IPatches) => {
+    oldChild = oldChild.flat();
+    newChild = newChild.flat();
     if (newChild.length > oldChild.length) {
       // 有新节点产生
       patches[diffHelper.Index] = patches[diffHelper.Index] || [];
@@ -64,7 +67,10 @@ export const diff = (oldTree: IVirtualDom, newTree: IVirtualDom) => {
   return patches;
 };
 
-function getPatches(oldNode: IVirtualDom, newNode: IVirtualDom, index: number, patches: IPatches) {
+/**
+ * 当节点为 null 的时候，说明是条件渲染的节点
+ */
+function getPatches(oldNode: IVirtualDom | null, newNode: IVirtualDom | null, index: number, patches: IPatches) {
   let currentPatches: IPatch[] = [];
   if (isSameText(oldNode, newNode)) {
     return;
@@ -82,7 +88,7 @@ function getPatches(oldNode: IVirtualDom, newNode: IVirtualDom, index: number, p
         contentText: String(newNode),
       });
     }
-  } else if (oldNode.tag === newNode.tag) {
+  } else if (newNode && oldNode && oldNode.tag === newNode.tag) {
     // 如果节点类型相同，比较属性差异，如若属性不同，产生一个关于属性的 patch 补丁
     let attrs = diffHelper.diffAttr(oldNode.props, newNode.props);
     // 有attr差异
