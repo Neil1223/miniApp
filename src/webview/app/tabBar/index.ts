@@ -1,7 +1,7 @@
 import { getHashPath } from '@/util';
 import { publishPageEvent } from '@/webview/bridge';
 import Base from '@/webview/mixin/base';
-import { createElement as _h, render } from '@/webview/nodeParser/render';
+import { createElement as _h, render } from '@/webview/parser/render';
 import { PageFactory } from '@/webview/page';
 import template from './template.html';
 

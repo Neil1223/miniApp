@@ -153,13 +153,14 @@
       setCssToHead(currentCssText,currentCssPath,[moduleCss1,...moduleCssN]);
       ```
     - 执行 setCssToHead 时，需要 import 所有的依赖
+    - 支持 Css module
 2. tabBar
     - 执行 initPage 的时候，需要判断当前 page 是否是 tab page
     - 是的话需要初始化 tabBar 的 UI
     - 当从 tab 页面离开时，需要隐藏 tab 组件，当再次显示 tab 页面的时候，需要显示 tab 组件
     - 目前使用的 hash 路由，组件中使用 window.onhashchange 监听路由发生变化，匹配到路由的使用显示，否则隐藏
 
-### 添加示例代码
+### 添加示例代码（6-16 ~ 6-23）
 1. 支持 for 循环
 2. 支持 hide 和 display: none
 

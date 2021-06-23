@@ -13,7 +13,9 @@ class App extends Base {
 
     // 处理 tabBar 组件
     if (window.__wxConfig.tabBar && window.__wxConfig.tabBar.list.length) {
-      this.appendChild(document.createElement('wx-tabbar'));
+      const tabbar = document.createElement('wx-tabbar');
+      tabbar.style.display = 'none';
+      this.appendChild(tabbar);
     }
 
     // 处理 onShow/onHide 的监听

@@ -1,5 +1,12 @@
 {
-  "pages": ["pages/tabBar/component/index", "pages/tabBar/API/index", "pages/index/index", "pages/logs/logs", "pages/transparent/index"],
+  "pages": [
+    "pages/tabBar/component/index",
+    "pages/tabBar/API/index",
+    "pages/index/index",
+    "pages/component/button/button",
+    "pages/logs/logs",
+    "pages/transparent/index"
+  ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",

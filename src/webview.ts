@@ -1,5 +1,5 @@
 import registerAllElement from './webview/components';
-import { createElement } from './webview/nodeParser/render';
+import { createElement } from './webview/parser/render';
 import './webview/app';
 
 class KipleApp {

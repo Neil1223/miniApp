@@ -51,6 +51,13 @@ Page({
       },
     ],
   },
+  goDetailPage(e) {
+    const url = e.target.dataset.url;
+    console.log(url);
+    kiple.navigateTo({
+      url: 'pages/component/' + url + '/' + url,
+    });
+  },
   triggerCollapse(e) {
     const index = Number(e.target.dataset.index);
     this.setData({

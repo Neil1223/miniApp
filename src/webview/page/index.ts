@@ -1,9 +1,9 @@
 import { parserUrl } from '@/util';
 import { PageBodyElement } from '../app/body';
 import { PageHeadElement } from '../app/header';
-import { diff } from '../nodeParser/diff/diff';
-import { patch } from '../nodeParser/diff/patch';
-import { createDomTree } from '../nodeParser/render';
+import { diff } from '../parser/diff/diff';
+import { patch } from '../parser/diff/patch';
+import { createDomTree } from '../parser/render';
 import initScrollEvent from './scroll';
 
 /**
@@ -172,8 +172,9 @@ export const initPage = (route: string) => {
   // 添加 page 样式
   __AppCssCode__[route] && __AppCssCode__[route]();
 
-  // 如果事首页，那么需要移除返回按钮,TODO: 首页是 tab 的时候，也需要移除返回按钮
-  if (route === window.__wxConfig.entryPagePath) {
+  // 如果事首页，那么需要移除返回按钮 || 页面是 tab 的时候，也需要移除返回按钮
+  const tabList = window.__wxConfig.tabBar.list.map((item) => item.pagePath);
+  if (route === window.__wxConfig.entryPagePath || tabList.includes(route)) {
     page.navigationBar.showBackButton = false;
   }
 

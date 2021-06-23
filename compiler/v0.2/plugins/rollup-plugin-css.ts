@@ -14,7 +14,12 @@ const getCssArray = (text: string): Array<string | number> => {
         result.push(JSON.stringify(firstString[0]));
       }
       result.push(matchText.split('rpx')[0]);
-      text = firstString[1] ? firstString[1] : '';
+      if (firstString.length > 1) {
+        firstString.splice(0, 1);
+        text = firstString.join(matchText);
+      } else {
+        text = '';
+      }
     }
   }
   result.push(JSON.stringify(text));

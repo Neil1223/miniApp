@@ -14,7 +14,23 @@
 .panel {
   margin-bottom: 12px;
 }
+
 .panel-h {
   padding: 12px;
   background-color: #fff;
+}
+
+.panel-h-on {
+  background-color: #f0f0f0;
+}
+
+.navigate-item {
+  flex-direction: row;
+  align-items: center;
+  background-color: #FFFFFF;
+  border-top-style: solid;
+  border-top-color: #f0f0f0;
+  border-top-width: 1px;
+  padding: 12px;
+  font-size: 14px;
 }
