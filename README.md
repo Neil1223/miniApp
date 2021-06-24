@@ -153,8 +153,10 @@
       setCssToHead(currentCssText,currentCssPath,[moduleCss1,...moduleCssN]);
       ```
     - 执行 setCssToHead 时，需要 import 所有的依赖
-    - 支持 Css module
-2. tabBar
+    - css 中添加 hash
+    - 支持字体文件
+2. Image 组件
+3. tabBar
     - 执行 initPage 的时候，需要判断当前 page 是否是 tab page
     - 是的话需要初始化 tabBar 的 UI
     - 当从 tab 页面离开时，需要隐藏 tab 组件，当再次显示 tab 页面的时候，需要显示 tab 组件

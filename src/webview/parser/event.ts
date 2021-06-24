@@ -65,7 +65,7 @@ export const addListener = (element: HTMLElement, eventName: string, callback: F
           touches: e.detail.sourceEndEvent.changedTouches,
           changedTouches: e.detail.sourceEndEvent.changedTouches,
           detail: { x: e.detail.x, y: e.detail.y },
-          target: e.detail.sourceEndEvent.target,
+          target: e.target,
           timeStamp: e.timeStamp,
         });
       });
