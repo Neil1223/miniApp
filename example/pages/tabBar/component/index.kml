@@ -6,10 +6,12 @@
   <view class="panel" k:for="{{ list }}">
     <view class="panel-h {{ item.open ? 'panel-h-on' : '' }}" data-index="{{ index }}" bindtap="triggerCollapse">
       <text class="panel-text">{{ item.name }}</text>
+      <view class="icon">&#xe62c;</view>
     </view>
     <view class="panel-c" k:if="{{ item.open }}">
       <view class="navigate-item" k:for="{{ item.pages }}" data-url="{{ item }}" bindtap="goDetailPage">
         <view>{{ item }}</view>
+        <view class="icon">&#xe62d;</view>
       </view>
     </view>
   </view>

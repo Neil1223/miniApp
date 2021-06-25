@@ -68,7 +68,7 @@ export class Page {
 
     this.__VirtualDom__ = window.app[this.__route__].render(options.data);
     // 生成页面 Dom 树
-    this.__DOMTree__ = createDomTree(this.__VirtualDom__);
+    this.__DOMTree__ = createDomTree(this.__VirtualDom__, window.app[this.__route__].hash);
     if (this.__DOMTree__) {
       this.webviewBody.appendChild(this.__DOMTree__);
       const lastPage = AppPages[AppPages.length - 2];
@@ -82,10 +82,11 @@ export class Page {
   };
   reRender = (options: { [key: string]: any }) => {
     const newVirtualDom = window.app[this.__route__].render(options.data || {});
+    const hash = window.app[this.__route__].hash;
     if (this.__DOMTree__ && this.__VirtualDom__) {
       // 这个方案是没有进行 key 的使用的 ！！！
       const patches = diff(this.__VirtualDom__, newVirtualDom);
-      patch(this.__DOMTree__, patches);
+      patch(this.__DOMTree__, patches, hash);
       this.__VirtualDom__ = newVirtualDom;
     }
   };

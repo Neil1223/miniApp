@@ -42,7 +42,7 @@ interface Window {
   };
   define: Function;
   require: Function;
-  app: { [key: string]: { render: (data: Object) => IVirtualDom } };
+  app: { [key: string]: { render: (data: Object) => IVirtualDom; hash?: string } };
   __wxConfig: {
     entryPagePath: string;
     pages: string[];

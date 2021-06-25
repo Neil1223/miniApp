@@ -1,5 +1,5 @@
 import { IConfig, IPageModule } from '.';
-import { getUpperCasePath } from '../utils';
+import { getHashCode, getUpperCasePath } from '../utils';
 
 /**
  * 处理 app.json，批量导入 page js 文件
@@ -44,7 +44,8 @@ export const viewRoot = () => ({
 
       const pages: string[] = [];
       result.forEach((item) => {
-        pages.push(`${JSON.stringify(item.path)}:{render: ${item.moduleName}}`);
+        const hash = getHashCode(item.moduleName);
+        pages.push(`${JSON.stringify(item.path)}:{render: ${item.moduleName}, hash: "${hash}"} `);
       });
 
       code += `\nwindow.app = {${pages.join(',')}};\n__AppCssCode__['app'] = setCssToHead(AppStyle,'app');`;

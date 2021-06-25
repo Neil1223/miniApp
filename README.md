@@ -154,7 +154,7 @@
       ```
     - 执行 setCssToHead 时，需要 import 所有的依赖
     - css 中添加 hash
-    - 支持字体文件
+    - 支持字体文件(不用额外处理，暂时只支持 base64或者网络路径)
 2. Image 组件
 3. tabBar
     - 执行 initPage 的时候，需要判断当前 page 是否是 tab page

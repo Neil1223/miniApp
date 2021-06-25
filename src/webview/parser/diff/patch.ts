@@ -7,17 +7,17 @@ interface IPatchHelper {
   Index: number;
 }
 
-export function patch(node: Node, patches: IPatches) {
+export function patch(node: Node, patches: IPatches, hash?: string) {
   let patchHelper: IPatchHelper = {
     Index: 0,
   };
-  setPatch(node, patches, patchHelper);
+  setPatch(node, patches, patchHelper, hash);
 }
 
-function setPatch(node: Node, patches: IPatches, patchHelper: IPatchHelper) {
+function setPatch(node: Node, patches: IPatches, patchHelper: IPatchHelper, hash?: string) {
   let currentPatch = patches[patchHelper.Index];
   if (currentPatch) {
-    doPatch(node, currentPatch);
+    doPatch(node, currentPatch, hash);
   }
   // 当元素是移除或者替换的时候，就不需要遍历老的元素了，因为都是已经删除了的
   if (currentPatch && [PATCHES_TYPE.REPLACE, PATCHES_TYPE.REMOVE].includes(currentPatch[0].type)) {
@@ -41,11 +41,11 @@ function setPatch(node: Node, patches: IPatches, patchHelper: IPatchHelper) {
     if (patches[patchHelper.Index] && patches[patchHelper.Index][0].type === PATCHES_TYPE.REMOVE) {
       index--;
     }
-    setPatch(child, patches, patchHelper);
+    setPatch(child, patches, patchHelper, hash);
   }
 }
 
-const doPatch = (node: Node, patches: IPatch[]) => {
+const doPatch = (node: Node, patches: IPatch[], hash?: string) => {
   // 理论上 patches 应该只有一个子元素，因为 getPatches 中只会朝一个 Index 插入一条数据
   patches.forEach((patch) => {
     switch (patch.type) {
@@ -63,7 +63,7 @@ const doPatch = (node: Node, patches: IPatch[]) => {
         break;
       case PATCHES_TYPE.REPLACE:
         if (patch.node || patch.node === null) {
-          const newNode = createDomTree(patch.node);
+          const newNode = createDomTree(patch.node, hash);
           newNode && node.parentNode?.replaceChild(newNode, node);
         }
         break;
@@ -73,7 +73,7 @@ const doPatch = (node: Node, patches: IPatch[]) => {
       case PATCHES_TYPE.ADD:
         patch.nodeList &&
           patch.nodeList.forEach((nodeChild: IVirtualDom) => {
-            const newNode = createDomTree(nodeChild);
+            const newNode = createDomTree(nodeChild, hash);
             newNode && node.appendChild(newNode);
           });
         break;

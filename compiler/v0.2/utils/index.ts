@@ -1,5 +1,6 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import { createHmac } from 'crypto';
 
 export const appRoot = fs.realpathSync(process.cwd());
 
@@ -30,4 +31,13 @@ export const getUpperCasePath = (path: string) => {
     result += item.slice(0, 1).toUpperCase() + item.slice(1);
   });
   return result.split('.')[0];
+};
+
+export const getHashCode = (name: string): string => {
+  const date = new Date().getTime();
+  const hash = createHmac('sha256', 'test')
+    .update(name + date)
+    .digest('hex');
+  const hashArray = hash.match(/[a-z].{7}/);
+  return hashArray ? hashArray[0] : 'k' + hash.substr(0, 7);
 };

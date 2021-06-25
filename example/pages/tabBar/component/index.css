@@ -18,10 +18,28 @@
 .panel-h {
   padding: 12px;
   background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.icon {
+  font-family: uniicons;
+  color: #999;
+  font-size: 12px;
+}
+
+.panel-h .icon {
+  transform: rotate(180deg);
+  transition: transform linear 150ms;
 }
 
 .panel-h-on {
   background-color: #f0f0f0;
+}
+
+.panel-h-on .icon {
+  transform: rotate(0deg);
 }
 
 .navigate-item {
@@ -33,4 +51,7 @@
   border-top-width: 1px;
   padding: 12px;
   font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

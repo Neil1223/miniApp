@@ -38,11 +38,14 @@ export const setProperty = (dom: HTMLElement, key: string, value: any) => {
  * 根据虚拟dom，生成真实dom
  * @param virtualDom 虚拟DOM树
  */
-export const createDomTree = (virtualDom: IVirtualDom | null): HTMLElement | Text | Comment | null => {
+export const createDomTree = (virtualDom: IVirtualDom | null, hash?: string): HTMLElement | Text | Comment | null => {
   const paramType = typeof virtualDom;
   if (virtualDom && isPlainObject(virtualDom)) {
     if (isStr(virtualDom.tag)) {
       const dom = document.createElement(virtualDom.tag as string);
+      if (hash) {
+        dom.setAttribute(hash, '');
+      }
       if (virtualDom.props) {
         for (let key in virtualDom.props) {
           setProperty(dom, key, virtualDom.props[key]);
@@ -53,9 +56,9 @@ export const createDomTree = (virtualDom: IVirtualDom | null): HTMLElement | Tex
         virtualDom.children.forEach((item) => {
           // 存在 child 是数组的情况: for循环
           if (Array.isArray(item)) {
-            item.forEach((_item) => render(_item, dom));
+            item.forEach((_item) => render(_item, dom, hash));
           } else {
-            render(item, dom);
+            render(item, dom, hash);
           }
         });
       }
@@ -63,7 +66,7 @@ export const createDomTree = (virtualDom: IVirtualDom | null): HTMLElement | Tex
     } else if (isFn(virtualDom.tag)) {
       // 简单的处理函数组件，小程序只生成简单的函数组件，暂时不进行复杂的处理
       const _virtualDom = (virtualDom.tag as CreateIVirtualDomFunc)(virtualDom.props);
-      const dom = createDomTree(_virtualDom);
+      const dom = createDomTree(_virtualDom, hash);
       return dom;
     }
   } else if (virtualDom === null) {
@@ -77,9 +80,9 @@ export const createDomTree = (virtualDom: IVirtualDom | null): HTMLElement | Tex
 /**
  * 根据虚拟dom，和父节点，渲染页面
  */
-export const render = (virtualDom: IVirtualDom, container: Element) => {
+export const render = (virtualDom: IVirtualDom, container: Element, hash?: string) => {
   // 根据虚拟DOM转换为真实DOM
-  const dom = createDomTree(virtualDom);
+  const dom = createDomTree(virtualDom, hash);
   // 将真实DOM添加到容器DOM中
   if (dom) {
     container.appendChild(dom);
