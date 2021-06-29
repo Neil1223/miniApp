@@ -16,7 +16,7 @@ class Button extends Hover(Base) {
       openType: { type: String, value: '' },
       hoverStartTime: { type: Number, value: 20 },
       hoverStayTime: { type: Number, value: 70 },
-      hoverClass: { type: String, value: 'button-hover', observer: '_hoverClassChange' },
+      hoverClass: { type: String, value: 'button-hover', observer: '_hoverClassChange', initObserver: true },
     };
   }
   constructor() {

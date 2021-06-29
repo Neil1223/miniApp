@@ -1,6 +1,12 @@
+.header-logo {
+  display: flex;
+  justify-content: center;
+  padding: 30rpx;
+}
+
 .img {
-  padding: 60rpx;
-  text-align: center;
+  width: 160rpx;
+  height: 160rpx;
 }
 
 .desc {

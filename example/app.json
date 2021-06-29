@@ -4,6 +4,7 @@
     "pages/tabBar/API/index",
     "pages/index/index",
     "pages/component/button/button",
+    "pages/component/image/image",
     "pages/logs/logs",
     "pages/transparent/index"
   ],

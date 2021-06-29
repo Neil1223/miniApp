@@ -20,6 +20,12 @@ const BaseWrapper = (Parent: typeof HTMLElement) => {
       templateNode.innerHTML = (this.constructor as any).template;
       shadowRoot.appendChild(templateNode.content.cloneNode(true));
     }
+
+    triggerEvent(eventName: string, detail: any = {}) {
+      const event: any = new Event(eventName, { bubbles: false, composed: false });
+      event.detail = detail;
+      this.dispatchEvent(event);
+    }
   }
 
   return Base;

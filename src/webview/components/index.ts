@@ -1,7 +1,8 @@
 import Button from './button/index';
 import View from './view';
+import Image from './image';
 
-const components = [Button, View];
+const components = [Button, Image, View];
 
 const registerAllElement = () => {
   // 需要获取当前文件夹里面的所有导出文件，然后循环遍历绑定到window对象上

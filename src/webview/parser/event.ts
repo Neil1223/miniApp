@@ -1,7 +1,7 @@
 import { publishPageEvent } from '../bridge';
 import { PageFactory } from '../page';
 
-const EventNames = ['tap', 'longtap'];
+const EventNames = ['tap', 'longtap', 'load', 'error'];
 const PrivateEventNames = ['click'];
 const PRESS_DELAY = 350; // 手指触摸后，超过 350ms 再离开, longtap事件
 const TAP_DISTANCE = 5; // tap事件的移动距离需要小于5px
@@ -79,6 +79,10 @@ export const addListener = (element: HTMLElement, eventName: string, callback: F
         callback.call(element, e);
       });
       break;
+    default:
+      element.addEventListener(eventName, (e: any) => {
+        callback.call(element, e);
+      });
   }
 };
 
