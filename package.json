@@ -10,7 +10,8 @@
     "build": "node build/webpack.test.js",
     "compiler:v2": "ts-node-dev compiler/v0.2/index.ts",
     "compiler:v2:dev": "ts-node-dev compiler/v0.2/index.dev.ts",
-    "compiler": "ts-node-dev compiler/v0.1/index.ts"
+    "compiler": "ts-node-dev compiler/v0.1/index.ts",
+    "test": "jest --runInBand --forceExit --colors --detectOpenHandles"
   },
   "keywords": [],
   "author": "",
@@ -37,19 +38,38 @@
     "@types/babel__core": "^7.1.14",
     "@types/babel__preset-env": "^7.9.1",
     "@types/fs-extra": "^9.0.11",
+    "@types/jest": "^26.0.23",
     "@types/node": "^15.12.1",
     "babel-loader": "^8.2.2",
     "css-loader": "^5.2.4",
     "fs-extra": "^10.0.0",
     "html-webpack-plugin": "^5.3.1",
     "htmlparser2": "^6.1.0",
+    "jest": "^27.0.6",
     "rollup-plugin-serve": "^1.1.0",
     "rollup-plugin-typescript2": "^0.30.0",
+    "ts-jest": "^27.0.3",
     "ts-loader": "^9.0.2",
     "ts-node-dev": "^1.1.6",
     "tslib": "^2.2.0",
     "typescript": "^4.2.4",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.2"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "compiler",
+    "testRegex": ".test.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage"
   }
 }

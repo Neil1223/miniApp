@@ -174,7 +174,7 @@ export const initPage = (route: string) => {
   __AppCssCode__[route] && __AppCssCode__[route]();
 
   // 如果事首页，那么需要移除返回按钮 || 页面是 tab 的时候，也需要移除返回按钮
-  const tabList = window.__wxConfig.tabBar.list.map((item) => item.pagePath);
+  const tabList = window.__wxConfig.tabBar?.list.map((item) => item.pagePath);
   if (route === window.__wxConfig.entryPagePath || tabList.includes(route)) {
     page.navigationBar.showBackButton = false;
   }

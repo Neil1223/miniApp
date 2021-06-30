@@ -25,6 +25,8 @@ interface IGenCode {
   code: string | string[];
   arrayElements: { [key: string]: ASTElement };
   conditional: Conditional[]; // 条件语句使用有序的数组进行存档，方便遍历的时候获取
+  staticPath: string[]; // 静态资源的路径
+  staticPathVariates: string[];
 }
 
 interface IForCode {

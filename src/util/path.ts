@@ -11,7 +11,7 @@ const getRealRoute = (e: string, t: string): string => {
   return r.concat(o).join('/');
 };
 
-export const getRealPath = (filePath: string) => {
+export const getRealPath = (filePath: string, curPath?: string) => {
   const SCHEME_RE = /^([a-z-]+:)?\/\//i;
   const DATA_RE = /^data:.*,.*/;
 
@@ -26,6 +26,9 @@ export const getRealPath = (filePath: string) => {
   }
 
   // TODO 处理相对路径和绝对路径
+  if (curPath) {
+    console.log(getRealRoute(filePath, curPath));
+  }
 
   return filePath;
 };

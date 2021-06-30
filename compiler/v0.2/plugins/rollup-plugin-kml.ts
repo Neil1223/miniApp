@@ -2,6 +2,7 @@ import * as htmlparser2 from 'htmlparser2';
 import generateFromAST from '../core/generateFromAST';
 import transformFor from '../core/transformFor';
 import transformIf from '../core/transformIf';
+import transformStaticFile from '../core/transformStaticFile';
 import { getRelativePath, getUpperCasePath, resolveApp } from '../utils';
 
 /**
@@ -19,7 +20,9 @@ const parserKml = () => {
         const pagePath = getRelativePath(inputFile, fileName);
         const upperPath = getUpperCasePath(pagePath).split('.')[0];
         const ast = htmlparser2.parseDOM(source);
-        let { code, variates, arrayElements, conditional } = generateFromAST(ast[0] as any); // 需要生成 code 和 code 中使用的变量
+        let { code, variates, arrayElements, conditional, staticPath } = generateFromAST(ast[0] as any); // 需要生成 code 和 code 中使用的变量
+
+        transformStaticFile(staticPath, fileName, inputFile);
 
         //处理 for 循环语句
         const arrayCodes = transformFor(arrayElements);

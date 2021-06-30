@@ -1,5 +1,6 @@
 import { getRealPath } from '@/util/path';
 import Base from '@/webview/mixin/base';
+import { PageFactory } from '@/webview/page';
 import template from './template.html';
 
 class _Image extends Base {
@@ -83,6 +84,7 @@ class _Image extends Base {
 
   srcChanged(_: string, newValue: string) {
     const src = getRealPath(newValue);
+    console.log(src, '需要在这里获取图片的绝对路径');
     if (src && src !== this.contentPath) {
       const img = new Image();
       this.contentPath = src;

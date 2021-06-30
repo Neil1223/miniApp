@@ -39,7 +39,7 @@ export const getData = (text: string): IDataString => {
 let arrayCount = 0;
 let conditionalCount = 0;
 const generateFromAST = (htmlAST: ASTElement): IGenCode => {
-  let result: IGenCode = { variates: [], code: '', arrayElements: {}, conditional: [] };
+  let result: IGenCode = { variates: [], code: '', arrayElements: {}, conditional: [], staticPath: [], staticPathVariates: [] };
 
   if (htmlAST.type === 'tag') {
     // 需要判断下，html 是否是 k:if,k:else, k:elif
@@ -100,6 +100,11 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
           return;
         }
 
+        // 合并子节点中的静态文件路径
+        if (_result.staticPath.length) {
+          result.staticPath.push(..._result.staticPath);
+        }
+
         if (typeof _result.code === 'string') {
           children.push(_result.code);
         } else if (Array.isArray(_result.code)) {
@@ -127,6 +132,14 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
           attribs += `className:${value}`;
         } else {
           attribs += `${JSON.stringify(key)}:${value}`;
+        }
+
+        if (['image', 'video'].includes(htmlAST.name) && key === 'src') {
+          if (dataString.variates.length) {
+            result.staticPathVariates.push(...dataString.variates);
+          } else if (!result.staticPath.includes(dataString.values[0])) {
+            result.staticPath.push(dataString.values[0]);
+          }
         }
       }
     }
