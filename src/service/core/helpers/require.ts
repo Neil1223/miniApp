@@ -1,37 +1,16 @@
 import { isStr } from '@/util';
+import { getRealRoute } from '@/util/path';
 import { setGlobPageRegisterPath } from '../page';
 
 const modules = {};
-const getPagePath = (name: string) => {
-  var path = name.match(/(.*)\/([^/]+)?$/);
-  return path && path[1] ? path[1] : './';
-};
+
 // 生成模块内部的 require 函数
 const getRequire = (moduleName: string) => {
-  const path = getPagePath(moduleName);
   return (name: string) => {
     if (!isStr(name)) {
       throw new Error('require args must be a string');
     }
-    const modulePath = (path + '/' + name).split('/');
-    const dirNames = [];
-    for (let index = 0, i = modulePath.length; index < i; index++) {
-      var dirName = modulePath[index];
-      if (dirName !== '' && dirName !== '.') {
-        if (dirName === '..') {
-          if (!dirNames.length) {
-            throw new Error("Can't find module : " + name);
-          }
-          dirNames.pop();
-        } else {
-          dirNames.push(dirName);
-        }
-      }
-    }
-    var curPath = dirNames.join('/');
-    if (!/\.js$/.test(curPath)) {
-      curPath += '.js';
-    }
+    const curPath = getRealRoute(moduleName, name);
     return require(curPath);
   };
 };

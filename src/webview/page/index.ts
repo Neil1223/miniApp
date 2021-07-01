@@ -120,6 +120,10 @@ export const PageFactory = {
     const page = AppPages[AppPages.length - lastIndex - 1];
     return page || null;
   },
+  getCurrentWebviewRoute: () => {
+    const page = PageFactory.getCurrentPage();
+    return page.__route__;
+  },
   getCurrentWebviewId: () => {
     const page = PageFactory.getCurrentPage();
     return page.__webviewId__;

@@ -83,8 +83,8 @@ class _Image extends Base {
   }
 
   srcChanged(_: string, newValue: string) {
-    const src = getRealPath(newValue);
-    console.log(src, '需要在这里获取图片的绝对路径');
+    const src = getRealPath(newValue, PageFactory.getCurrentWebviewRoute());
+
     if (src && src !== this.contentPath) {
       const img = new Image();
       this.contentPath = src;

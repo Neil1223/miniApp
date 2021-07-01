@@ -2,8 +2,6 @@ import { renderPage, initApp } from '../page';
 import onNavigationBarChange from '../page/navigationBar';
 import onRouteChange from '../page/route';
 
-console.log(initApp, renderPage, '======');
-
 export default function initSubscribe(subscribe: ViewJSBridge['subscribe']) {
   subscribe('pageScrollTo', (e: any) => {
     console.log('通过api触发页面返回顶部', e);

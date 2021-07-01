@@ -1,13 +1,11 @@
-import registerAllElement from './webview/components';
-import { createElement } from './webview/parser/render';
 import './webview/app';
+import './webview/components';
+import { createElement } from './webview/parser/render';
 
 class KipleApp {
   constructor() {
-    this.registerAllElement();
     this._init();
   }
-  registerAllElement = registerAllElement;
   createElement = createElement;
   _init() {
     window.viewJSBridge = {
