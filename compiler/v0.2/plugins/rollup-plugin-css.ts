@@ -1,4 +1,6 @@
-import { getRelativePath, getUpperCasePath, resolveApp } from '../utils';
+import postcss from 'postcss';
+import { getFileHash, getRelativePath, getUpperCasePath, resolveApp } from '../utils';
+import postcssScope from './postcss-plugin-scope';
 
 const reg = /\d+rpx/gi;
 
@@ -37,8 +39,17 @@ const parserCss = () => {
     options(options: { input: any }) {
       inputFile = resolveApp(options.input);
     },
-    transform(source: string, fileName: string) {
+    transform: async function (source: string, fileName: string) {
       if (/\.css$/.test(fileName)) {
+        let hash = '';
+        if (!/app\.css/.test(fileName)) {
+          hash = getFileHash(fileName, this);
+        }
+        console.log(hash);
+        if (hash) {
+          const result = await postcss([postcssScope(hash)]).process(source, { from: fileName });
+          source = result.css;
+        }
         const arrayCode: Array<string | number> = getCssArray(source);
         const pagePath = getRelativePath(inputFile, fileName);
         const upperPath = getUpperCasePath(pagePath) + 'Style';

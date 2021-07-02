@@ -33,11 +33,23 @@ export const getUpperCasePath = (path: string) => {
   return result.split('.')[0];
 };
 
-export const getHashCode = (name: string): string => {
-  const date = new Date().getTime();
+export const getHashCode = (name: string, date: number): string => {
   const hash = createHmac('sha256', 'test')
     .update(name + date)
     .digest('hex');
   const hashArray = hash.match(/[a-z].{7}/);
   return hashArray ? hashArray[0] : 'k' + hash.substr(0, 7);
+};
+
+export const getFileHash = (fileName: string, _this: any) => {
+  if (/\.kml/.test(fileName)) {
+    fileName = fileName.split('.kml')[0];
+  }
+  if (/\.css/.test(fileName)) {
+    fileName = fileName.split('.css')[0];
+  }
+
+  const appJson = Array.from(_this.getModuleIds())[0];
+  const time = _this.getModuleInfo(appJson).meta.time;
+  return getHashCode(fileName, time);
 };

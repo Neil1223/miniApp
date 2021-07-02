@@ -1,5 +1,5 @@
 import { IConfig, IPageModule } from '.';
-import { getHashCode, getUpperCasePath } from '../utils';
+import { getHashCode, getResolvePath, getUpperCasePath } from '../utils';
 
 /**
  * 处理 app.json，批量导入 page js 文件
@@ -30,6 +30,7 @@ export const viewRoot = () => ({
   transform(source: string, fileName: string) {
     if (/app\.json$/.test(fileName)) {
       const config: IConfig = JSON.parse(source);
+      const curTime = new Date().getTime();
 
       var code = "import {__AppCssCode__,setCssToHead} from  'inject/view.js';import AppStyle from './app.css';";
       const result: IPageModule[] = [];
@@ -44,7 +45,7 @@ export const viewRoot = () => ({
 
       const pages: string[] = [];
       result.forEach((item) => {
-        const hash = getHashCode(item.moduleName);
+        const hash = getHashCode(getResolvePath(fileName, '../', item.path), curTime);
         pages.push(`${JSON.stringify(item.path)}:{render: ${item.moduleName}, hash: "${hash}"} `);
       });
 
@@ -55,7 +56,7 @@ export const viewRoot = () => ({
         code += `\n__AppCssCode__['${item.path}'] = setCssToHead(${item.cssModuleName},'${item.path}');`;
       });
 
-      return { code, map: null };
+      return { code, map: null, meta: { time: curTime } };
     }
     return null;
   },

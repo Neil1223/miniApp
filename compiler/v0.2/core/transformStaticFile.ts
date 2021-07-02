@@ -5,7 +5,6 @@ import * as fs from 'fs-extra';
 import { getRelativePath, getResolvePath, resolveApp } from '../utils';
 
 const transformStaticFile = (files: string[], curPath: string, inputFile: string) => {
-  console.log(files, curPath, inputFile);
   files.forEach((item) => {
     const path = JSON.parse(item);
     let filePath = '';
@@ -16,10 +15,8 @@ const transformStaticFile = (files: string[], curPath: string, inputFile: string
       // 处理绝对路径
       filePath = getResolvePath(inputFile, '../', `.${path}`);
     }
-    console.log('目标文件:', filePath);
     const resolvePath = getRelativePath(inputFile, filePath);
     const resultPath = getResolvePath(resolveApp('./dist'), resolvePath);
-    console.log('编译后的文件:', resultPath);
     fs.copySync(filePath, resultPath);
   });
 };
