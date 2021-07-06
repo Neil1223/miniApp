@@ -1,4 +1,5 @@
 import postcss from 'postcss';
+import * as atImport from 'postcss-import';
 import { getFileHash, getRelativePath, getUpperCasePath, resolveApp } from '../utils';
 import postcssScope from './postcss-plugin-scope';
 
@@ -46,15 +47,27 @@ const parserCss = () => {
           hash = getFileHash(fileName, this);
         }
         console.log(hash);
+
         if (hash) {
           const result = await postcss([postcssScope(hash)])
-            .use(require('postcss-import'))
+            .use(atImport as any)
             .process(source, { from: fileName });
+
           source = result.css;
+
+          // 监听 css 中 @import 的文件
+          const messages = result.messages || [];
+          messages.forEach((item) => {
+            if (item.type === 'dependency' && item.plugin === 'postcss-import') {
+              (this as any).addWatchFile(item.file);
+            }
+          });
         }
+
         const arrayCode: Array<string | number> = getCssArray(source);
         const pagePath = getRelativePath(inputFile, fileName);
         const upperPath = getUpperCasePath(pagePath) + 'Style';
+
         return `var ${upperPath} = [${arrayCode.join(',')}]; export default ${upperPath};`;
       }
       return null;
