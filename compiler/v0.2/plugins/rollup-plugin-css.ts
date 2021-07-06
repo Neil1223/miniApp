@@ -47,7 +47,9 @@ const parserCss = () => {
         }
         console.log(hash);
         if (hash) {
-          const result = await postcss([postcssScope(hash)]).process(source, { from: fileName });
+          const result = await postcss([postcssScope(hash)])
+            .use(require('postcss-import'))
+            .process(source, { from: fileName });
           source = result.css;
         }
         const arrayCode: Array<string | number> = getCssArray(source);

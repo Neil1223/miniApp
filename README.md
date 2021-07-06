@@ -148,7 +148,7 @@
 ### tabBar和css模块化（2020-6-13）
 1. css模块化
     - 获取 css 的 ast，获取到里面的 import 语法
-    - 编译 css 的时候，将当前 css 模块依赖的 css 路径添加到单数末尾:
+    - 编译 css 的时候，将当前 css 模块依赖的 css 路径添加到单数末尾: ===> 还是使用postcss，直接将 import 的 css 插入到当前代码里面
       ```js
       setCssToHead(currentCssText,currentCssPath,[moduleCss1,...moduleCssN]);
       ```

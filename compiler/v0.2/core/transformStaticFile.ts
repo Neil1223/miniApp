@@ -11,9 +11,12 @@ const transformStaticFile = (files: string[], curPath: string, inputFile: string
     if (/^(\.\/)|(\.\.\/)/.test(path)) {
       // 处理相对路径
       filePath = getResolvePath(curPath, '../', path);
-    } else if (/\//.test(path)) {
+    } else if (/^\/(?!\/)/.test(path)) {
       // 处理绝对路径
       filePath = getResolvePath(inputFile, '../', `.${path}`);
+    } else {
+      // base64 或者 https 或者是其他，直接 return
+      return;
     }
     const resolvePath = getRelativePath(inputFile, filePath);
     const resultPath = getResolvePath(resolveApp('./dist'), resolvePath);
