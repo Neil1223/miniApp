@@ -1,6 +1,5 @@
 import * as rollup from 'rollup';
 import parserCss from './plugins/rollup-plugin-css';
-import parserJson from './plugins/rollup-plugin-json';
 import parserKml from './plugins/rollup-plugin-kml';
 import { serviceRoot, viewRoot } from './plugins/rollup-plugin-parserAppJson';
 import transformPage from './plugins/rollup-plugin-parserService';
@@ -18,14 +17,6 @@ const watchOptions = [
       file: 'dist/app-service.js',
       sourcemap: true,
       format: 'iife',
-    },
-  },
-  {
-    input: 'example/app.json',
-    plugins: [parserJson()],
-    output: {
-      file: 'dist/app-config.js',
-      format: 'cjs',
     },
   },
   {

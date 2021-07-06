@@ -146,7 +146,7 @@
     - 每个 page.js 使用 babel 进行编译，生成 code 和 source map（完美解决手动编译 source map 不好插入的问题，也解决了 webpack 方案模块化被重写的问题，性能也比较好）
 
 ### tabBar和css模块化（2020-6-13）
-1. css模块化
+1. css模块化（7.6 end）
     - 获取 css 的 ast，获取到里面的 import 语法
     - 编译 css 的时候，将当前 css 模块依赖的 css 路径添加到单数末尾: ===> 还是使用postcss，直接将 import 的 css 插入到当前代码里面
       ```js

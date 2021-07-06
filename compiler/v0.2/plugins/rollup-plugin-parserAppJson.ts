@@ -1,5 +1,27 @@
+import * as fs from 'fs-extra';
 import { IConfig, IPageModule } from '.';
-import { getHashCode, getResolvePath, getUpperCasePath } from '../utils';
+import { getFileContent, getHashCode, getResolvePath, getUpperCasePath, resolveApp } from '../utils';
+
+/**
+ * 生成 app-config.js
+ */
+const generateConfig = (config: IConfig, fileName: string, _this: any) => {
+  config.page = {};
+  for (let index = 0; index < config.pages.length; index++) {
+    const page = config.pages[index];
+    const pageJson = getFileContent(getResolvePath(fileName, '../', page + '.json'));
+    if (pageJson) {
+      config.page[page] = JSON.parse(pageJson);
+    }
+  }
+
+  config.entryPagePath = config.entryPagePath ? config.entryPagePath : config.pages[0];
+  config.global = { window: config.window };
+  delete config.window;
+
+  const source = `window.__wxConfig = ${JSON.stringify(config)}`;
+  _this.emitFile({ type: 'asset', fileName: 'app-config.js', source });
+};
 
 /**
  * 处理 app.json，批量导入 page js 文件
@@ -10,11 +32,18 @@ export const serviceRoot = () => ({
     if (/app\.json$/.test(fileName)) {
       const config: IConfig = JSON.parse(source);
 
+      // 处理 page js 文件
       var code = `import './app.js';`;
       config.pages.forEach((item) => {
         code += `import './${item}';`;
       });
       code += `\nrequire('app.js');\ninitApp();`;
+
+      // 处理小程序配置文件, 生成 app-config.js
+      generateConfig(config, fileName, this);
+
+      // 拷贝 index.html 到 dist 目录
+      fs.copyFileSync(resolveApp('compiler/v0.2/injects/index.html'), resolveApp('dist/index.html'));
 
       return { code, map: null };
     }
