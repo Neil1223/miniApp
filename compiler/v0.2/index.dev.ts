@@ -48,21 +48,21 @@ const options = [
 const build = async () => {
   startTime = new Date().getTime();
 
-  // create a bundle
-  const bundle: any = await rollup.rollup(options[0] as any);
+  // create view.js bundle
+  const viewBundle: any = await rollup.rollup(options[0] as any);
 
   // write the bundle to disk
-  await bundle.write(options[0].output);
+  await viewBundle.write(options[0].output);
 
   let endTime = new Date().getTime();
 
   console.log('编译 view 文件成功, 耗时：', endTime - startTime);
 
-  // create a bundle
-  const bundle1: any = await rollup.rollup(options[1] as any);
+  // create service.js bundle
+  const serviceBundle: any = await rollup.rollup(options[1] as any);
 
   // write the bundle to disk
-  await bundle1.write(options[1].output);
+  await serviceBundle.write(options[1].output);
 
   console.log('编译 service 文件成功, 耗时：', new Date().getTime() - endTime);
 };

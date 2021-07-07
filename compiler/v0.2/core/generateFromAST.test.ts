@@ -14,14 +14,6 @@ describe('Parser Component', () => {
     const image = '<image src="/static/test.jpg"></image>';
     const ast: any[] = htmlparser2.parseDOM(image);
     const result = generateFromAST(ast[0]);
-    expect(result.staticPath[0]).toEqual(JSON.stringify('/static/test.jpg'));
-  });
-
-  test('Image: simple path for nested', () => {
-    const image = '<view><image src="/static/test.jpg"></image><image src="/static/UI.png"></image></view>';
-    const ast: any[] = htmlparser2.parseDOM(image);
-    const result = generateFromAST(ast[0]);
-    expect(result.staticPath[0]).toEqual(JSON.stringify('/static/test.jpg'));
-    expect(result.staticPath[1]).toEqual(JSON.stringify('/static/UI.png'));
+    expect(result.code).toEqual(`createElement('wx-image',{${JSON.stringify('src')}:${JSON.stringify('/static/test.jpg')}},)`);
   });
 });

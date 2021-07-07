@@ -1,4 +1,5 @@
 import * as rollup from 'rollup';
+import * as fs from 'fs-extra';
 import parserCss from './plugins/rollup-plugin-css';
 import parserKml from './plugins/rollup-plugin-kml';
 import { serviceRoot, viewRoot } from './plugins/rollup-plugin-parserAppJson';
@@ -6,6 +7,7 @@ import transformPage from './plugins/rollup-plugin-parserService';
 import { resolveApp } from './utils';
 const alias = require('@rollup/plugin-alias');
 const serve = require('rollup-plugin-serve');
+const chokidar = require('chokidar');
 
 let startTime = 0;
 
@@ -54,6 +56,7 @@ const watchOptions = [
 
 const watcher = rollup.watch(watchOptions as any);
 
+// 监听业务代码
 watcher.on('event', (event) => {
   switch (event.code) {
     case 'START':
@@ -68,3 +71,24 @@ watcher.on('event', (event) => {
       process.exit(1);
   }
 });
+
+// 监听静态文件
+try {
+  const files = ['.png', '.jpg', '.svg', '.mp4', '.mov', '.m4v', '.3gp', '.avi', '.m3u8'];
+  const watch = chokidar.watch(
+    files.map((item) => `example/**/**${item}`),
+    { cwd: process.cwd() }
+  );
+
+  watch.on('all', (event: string, path: string) => {
+    const filePath = resolveApp(path);
+    if (['add', 'change'].includes(event)) {
+      fs.copySync(filePath, filePath.replace('example', 'dist'));
+    }
+    if (event === 'unlink') {
+      fs.removeSync(filePath.replace('example', 'dist'));
+    }
+  });
+} catch (error) {
+  console.log('Build mini App Error', error);
+}

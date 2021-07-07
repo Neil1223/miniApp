@@ -167,13 +167,16 @@
     - 当从 tab 页面离开时，需要隐藏 tab 组件，当再次显示 tab 页面的时候，需要显示 tab 组件
     - 目前使用的 hash 路由，组件中使用 window.onhashchange 监听路由发生变化，匹配到路由的使用显示，否则隐藏
 
-### dev 模式的选择（7-7）
+### dev 模式的选择, 处理 img src 引发的思考（7-7）
 - 使用 rollup 的 watch 进行代码的编译
   - 优点：速度很快，初次编译只要 650ms, 再次 10ms
   - 缺点：编译 view 层时产生的数据，无法在编译service层时进行传递，view 进行修改后，无法通知编译器进行 service 层的编译
 - 使用 rollup.rollup 分开编译
   - 缺点：速度稍慢，初次需要 650ms, 再次 150ms
   - 优点：由于 view 和 service 使用 api 进行分开编译，相当于每次编译都是第一次，所以在参数传递上很好解决
+- 最终还是使用 rollup 的 watch 进行编译：
+  - 很难做到极致的静态语法分析，即使将 kml 中使用的变量传递到了 service 的编译器中，但是在 service 层，写法千奇百怪，`this.setData({src:'/static/test.png'})`, 这种可以分析出来，但是如果重写了 setData 就不易处理了，或者使用了js中的内变量对src进行赋值 `this.setData({src: this.path})`也不好处理
+  - 再写一个监听器，监听目标目录的静态资源文件（如 .png,.mp4,.gif 等）的变化，然后直接将所有的文件复制到 dist 目录
 
 ### 添加示例代码（6-16 ~ 6-23）
 1. 支持 for 循环
