@@ -42,6 +42,7 @@
     "@types/node": "^15.12.1",
     "@types/postcss-import": "^12.0.0",
     "babel-loader": "^8.2.2",
+    "chokidar": "^3.5.2",
     "css-loader": "^5.2.4",
     "fs-extra": "^10.0.0",
     "html-webpack-plugin": "^5.3.1",

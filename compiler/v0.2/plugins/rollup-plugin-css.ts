@@ -55,13 +55,13 @@ const parserCss = () => {
 
           source = result.css;
 
-          // 监听 css 中 @import 的文件
+          /* // 监听 css 中 @import 的文件, 由于采用三方的文件监听，所以，注释掉这个功能, 如果后面还是要使用 rollup.watch 那么就需要这段代码
           const messages = result.messages || [];
           messages.forEach((item) => {
             if (item.type === 'dependency' && item.plugin === 'postcss-import') {
               (this as any).addWatchFile(item.file);
             }
-          });
+          }); */
         }
 
         const arrayCode: Array<string | number> = getCssArray(source);

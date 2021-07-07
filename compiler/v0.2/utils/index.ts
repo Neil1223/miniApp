@@ -53,3 +53,16 @@ export const getFileHash = (fileName: string, _this: any) => {
   const time = _this.getModuleInfo(appJson).meta.time;
   return getHashCode(fileName, time);
 };
+
+export const debounce = (fn: Function, wait: number) => {
+  let timer: any;
+  return function (this: any) {
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+      fn.apply(this, arguments);
+      timer = null;
+    }, wait);
+  };
+};
