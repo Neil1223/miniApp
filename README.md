@@ -182,6 +182,10 @@
 1. 支持 for 循环
 2. 支持 hide 和 display: none
 
+### 细节优化
+- page 组件的高度
+- \n 转义成 <br />
+
 ### 处理涉及到UI的API
 1. 图片预览
 2. showToast

@@ -51,6 +51,7 @@ export const serviceRoot = () => ({
   },
 });
 
+const curTime = new Date().getTime();
 /**
  * 处理 app.json，批量导入 page kml/css 文件，生成 app-config.json
  */
@@ -59,7 +60,6 @@ export const viewRoot = () => ({
   transform(source: string, fileName: string) {
     if (/app\.json$/.test(fileName)) {
       const config: IConfig = JSON.parse(source);
-      const curTime = new Date().getTime();
 
       var code = "import {__AppCssCode__,setCssToHead} from  'inject/view.js';import AppStyle from './app.css';";
       const result: IPageModule[] = [];
