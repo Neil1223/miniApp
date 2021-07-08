@@ -9,7 +9,7 @@ const Hover = (Base: typeof HTMLElement) => {
     private _hoverStartTimer: any;
     static get properties() {
       return {
-        hoverClass: { type: String, value: 'none' },
+        hoverClass: { type: String, value: 'none', observer: '_hoverClassChange' },
         hoverStopPropagation: { type: Boolean, value: false },
         hoverStartTime: { type: Number, value: 50 }, // hover 延时生效事件
         hoverStayTime: { type: Number, value: 400 }, // hover 效果，延时消失时间

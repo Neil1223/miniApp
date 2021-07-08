@@ -9,3 +9,14 @@
   padding: 30rpx;
   background-color: #f8f8f8;
 }
+
+.page-section {
+  margin-bottom: 40rpx;
+  width: 100%;
+}
+
+.page-section-title {
+  font-size: 28rpx;
+  color: #999999;
+  margin-bottom: 8px;
+}

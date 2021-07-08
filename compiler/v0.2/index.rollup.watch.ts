@@ -68,7 +68,7 @@ watcher.on('event', (event) => {
       break;
     case 'ERROR':
       console.error(event);
-      process.exit(1);
+      // process.exit(1);
   }
 });
 
