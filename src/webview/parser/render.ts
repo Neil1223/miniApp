@@ -73,7 +73,7 @@ export const createDomTree = (virtualDom: IVirtualDom | null, hash?: string): HT
   } else if (virtualDom === null) {
     return document.createComment('');
   } else if (['string', 'number', 'boolean', 'object'].includes(paramType)) {
-    return document.createTextNode(String(virtualDom.toString().replace(/\\n/g, '\n')));
+    return document.createTextNode(String(virtualDom));
   }
   return null;
 };
