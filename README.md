@@ -185,6 +185,7 @@
 ### 细节优化
 - page 组件的高度
 - \n 转义成 <br />
+- button 的 disabled/loading 不能动态修改
 
 ### 处理涉及到UI的API
 1. 图片预览

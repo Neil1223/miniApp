@@ -1,5 +1,8 @@
 .text-box {
-  min-height: 200px;
+  min-height: 300rpx;
+  text-align: center;
   line-height: 1.8;
-  font-size: 30upx;
+  font-size: 30rpx;
+  background-color: #FFFFFF;
+  margin-bottom: 70rpx;
 }

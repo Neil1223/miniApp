@@ -28,7 +28,7 @@ export const setProperty = (dom: HTMLElement, key: string, value: any) => {
       .toLocaleLowerCase()
       .replace(/-[a-z]/g, (e) => e[1].toLocaleUpperCase());
     dom.dataset[customKey] = value;
-  } else if (value) {
+  } else if (value !== undefined) {
     // 直接朝dome中进行赋值，可以使用Object.defineProperty在元素中进行监听需要的属性变化
     key = key.replace(/-[a-z]/g, (e) => e[1].toLocaleUpperCase());
     dom[key] = value;

@@ -14,8 +14,6 @@ const texts = [
   '......',
 ];
 
-console.log(texts);
-
 Page({
   data: {
     text: '',
@@ -31,8 +29,6 @@ Page({
       canAdd: this.extraLine.length < 12,
       canRemove: this.extraLine.length > 0,
     });
-    console.log(this.extraLine.length > 0, 'remove', this.extraLine);
-    console.log(this.extraLine.length < 12, 'canAdd');
   },
   remove() {
     if (this.extraLine.length > 0) {

@@ -5,7 +5,7 @@
         <text>{{text}}</text>
       </view>
       <button type="primary" disabled="{{!canAdd}}" bindtap="add">add line</button>
-      <button type="warn" disabled="{{!canRemove}}" bindtap="remove">remove line</button>
+      <button type="warn" disabled="{{!canRemove}}" loading="{{!canRemove}}" bindtap="remove">remove line</button>
     </view>
   </view>
 </view>
