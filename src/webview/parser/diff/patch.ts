@@ -32,7 +32,7 @@ function setPatch(node: Node, patches: IPatches, patchHelper: IPatchHelper, hash
 
   for (let index = 0; index < length; index++) {
     const child = node.childNodes[index];
-    if (!child) {
+    if (!child || !child.parentNode?.nodeName.includes('WX-')) { // 处理 text 标签里面的 span 元素
       return;
     }
     patchHelper.Index++;
@@ -59,7 +59,7 @@ const doPatch = (node: Node, patches: IPatch[], hash?: string) => {
         }
         break;
       case PATCHES_TYPE.TEXT:
-        patch.contentText && (node.textContent = patch.contentText);
+        node.textContent = patch.contentText || '';
         break;
       case PATCHES_TYPE.REPLACE:
         if (patch.node || patch.node === null) {

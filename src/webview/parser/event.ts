@@ -92,6 +92,9 @@ export const applyEvent = (element: HTMLElement, key: string, eventHandleName: s
     const eventName = eventNames[2];
     addListener(element, eventName, (res: any) => {
       const currentPageId = PageFactory.getCurrentWebviewId();
+      if (element.getAttribute('disabled')) {
+        return;
+      }
       publishPageEvent(eventHandleName, res, currentPageId);
     });
   }
