@@ -76,6 +76,10 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
     // 处理 children
     if (htmlAST.children && htmlAST.children.length) {
       htmlAST.children.forEach((element) => {
+        if (htmlAST.name === 'text' && element.name && element.name !== 'text') {
+          // 如果组件时 text， 那么子元素只能是文字或者 text 元素
+          return;
+        }
         var _result = generateFromAST(element);
         if (_result.variates.length) {
           _result.variates.forEach((item) => {

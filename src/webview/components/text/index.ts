@@ -41,7 +41,7 @@ class Text extends Hover(Base) {
       if (item.nodeType === 3) {
         // node 节点是 text
         syncDom.appendChild(this.compilerText(item.textContent || ''));
-      } else if (item.nodeType === 1) {
+      } else if (item.nodeType === 1 && item.nodeName === 'WX-TEXT') {
         // node 节点是 element
         syncDom.appendChild(item);
       }
