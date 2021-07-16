@@ -17,21 +17,27 @@ class Text extends Hover(Base) {
       decode: { type: Boolean, value: false },
     };
   }
+  isInit = false;
+  _observer: any;
   constructor() {
     super();
   }
 
   connectedCallback() {
-    this._initContent();
+    if (!this.isInit) {
+      this._initContent();
+    }
+
     // 需要监听 dom 发生变化，之所以有问题，是因为 diff 的时候，text 的children 是一个数组，文字变成了一个数组，导致index变化
     const config = { attributes: false, childList: true, subtree: true, characterData: true };
     // 创建一个观察器实例并传入回调函数
-    (this as any)._observer = new MutationObserver(this._updateText.bind(this));
-    (this as any)._observer.observe(this, config);
+    this._observer = new MutationObserver(this._updateText.bind(this));
+    this._observer.observe(this, config);
   }
 
   disconnectedCallback() {
-    (this as any)._observer && (this as any)._observer.disconnect();
+    this._observer && this._observer.disconnect();
+    this._observer = null;
   }
 
   _decodeHtml(htmlString: string) {
@@ -68,6 +74,7 @@ class Text extends Hover(Base) {
   }
 
   _initContent() {
+    this.isInit = true;
     const syncDom = document.createDocumentFragment();
     Array.from(this.childNodes).forEach((item) => {
       if (item.nodeType === 3) {
@@ -83,6 +90,7 @@ class Text extends Hover(Base) {
   }
 
   _updateText(events?: any) {
+    console.log('-----', events);
     const event = events ? events[0] : null;
     if (event && event.type === 'childList' && event.target && event.target.tagName === 'SPAN') {
       if (event.addedNodes[0]?.textContent !== event.removedNodes[0]?.textContent) {
