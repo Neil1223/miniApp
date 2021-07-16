@@ -130,7 +130,7 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
         if (key === 'class') {
           attribs += `className:${value}`;
         } else {
-          attribs += `${JSON.stringify(key)}:${value}`;
+          attribs += `${JSON.stringify(key)}:${value || true}`;
         }
       }
     }
