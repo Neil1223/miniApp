@@ -37,7 +37,7 @@ export class Page {
   initScrollEvent = () => initScrollEvent(this);
   resetBackground = () => {
     const curWindowStyle = Object.assign({}, window.__wxConfig.global.window, window.__wxConfig.page[this.__route__]);
-    document.body.style.backgroundColor = curWindowStyle.backgroundColor || '#ffffff';
+    this.pageContainer.style.backgroundColor = curWindowStyle.backgroundColor || '#ffffff';
   };
   setPullDownRefresh = (options: { [key: string]: any }, webviewConfig: IWindow) => {
     if (options.onPullDownRefresh && webviewConfig.enablePullDownRefresh) {

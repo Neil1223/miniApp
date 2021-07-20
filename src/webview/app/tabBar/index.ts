@@ -52,10 +52,12 @@ class App extends Base {
   _show() {
     this.showTabBar = true;
     this.style.display = 'block';
+    (this.parentElement as HTMLElement).classList.toggle('uni-showTabbar', true);
   }
   _hide() {
     this.showTabBar = false;
     this.style.display = 'none';
+    (this.parentElement as HTMLElement).classList.toggle('uni-showTabbar', false);
   }
   /**
    * 触发 item 的点击事件

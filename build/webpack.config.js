@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
@@ -45,10 +46,15 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: 'css-loader',
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
         exclude: /node_modules/,
       },
     ],
   },
-  plugins: [new webpack.ProvidePlugin(provides)],
+  plugins: [
+    new webpack.ProvidePlugin(provides),
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+    }),
+  ],
 };

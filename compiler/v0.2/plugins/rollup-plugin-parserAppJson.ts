@@ -12,6 +12,8 @@ const generateConfig = (config: IConfig, fileName: string, _this: any) => {
     const pageJson = getFileContent(getResolvePath(fileName, '../', page + '.json'));
     if (pageJson) {
       config.page[page] = JSON.parse(pageJson);
+      // 监听页面 json 配置的变化
+      _this.addWatchFile(getResolvePath(fileName, '../', page + '.json'));
     }
   }
 
@@ -24,7 +26,7 @@ const generateConfig = (config: IConfig, fileName: string, _this: any) => {
 };
 
 /**
- * 处理 app.json，批量导入 page js 文件
+ * 处理 app.json，批量导入 page js 文件, 同时生成 app-config.json
  */
 export const serviceRoot = () => ({
   name: 'transform-config',
@@ -53,7 +55,7 @@ export const serviceRoot = () => ({
 
 const curTime = new Date().getTime();
 /**
- * 处理 app.json，批量导入 page kml/css 文件，生成 app-config.json
+ * 处理 app.json，批量导入 page kml/css 文件
  */
 export const viewRoot = () => ({
   name: 'transform-config',
