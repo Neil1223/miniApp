@@ -46,7 +46,6 @@ const parserCss = () => {
         if (!/app\.css/.test(fileName)) {
           hash = getFileHash(fileName, this);
         }
-        console.log(hash);
 
         if (hash) {
           const result = await postcss([postcssScope(hash)])

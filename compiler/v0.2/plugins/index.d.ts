@@ -2,6 +2,7 @@ export interface IPageModule {
   path: string;
   moduleName: string;
   cssModuleName: string;
+  resolvePath?: string;
 }
 
 export interface IConfig {

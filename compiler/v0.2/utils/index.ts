@@ -8,6 +8,7 @@ export const resolveApp = (relativePath: string) => path.resolve(appRoot, relati
 
 export const getResolvePath = (...pathSegments: string[]) => path.resolve(...pathSegments);
 
+// 获取文件内容
 export const getFileContent = (path: string) => {
   try {
     return fs.readFileSync(path).toString();
@@ -17,6 +18,10 @@ export const getFileContent = (path: string) => {
   return null;
 };
 
+// 判断文件是否存在
+export const fileIsExist = (filePath: string) => fs.existsSync(filePath);
+
+// 获取绝对路径
 export const getRelativePath = (targetPath: string, curPath: string) => {
   let result = path.relative(targetPath, curPath);
   result = result.replace(/\\/g, '/').replace('../', '');

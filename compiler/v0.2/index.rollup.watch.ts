@@ -57,18 +57,22 @@ const watchOptions = [
 const watcher = rollup.watch(watchOptions as any);
 
 // 监听业务代码
-watcher.on('event', (event) => {
+watcher.on('event', (event: any) => {
   switch (event.code) {
     case 'START':
       startTime = new Date().getTime();
       break;
     case 'END':
-      console.log('编译文件成功, 耗时：', new Date().getTime() - startTime);
+      console.log('编译文件结束, 耗时：', new Date().getTime() - startTime);
       startTime = new Date().getTime();
       break;
     case 'ERROR':
-      console.error(event);
-      // process.exit(1);
+      console.error('[Error]', event.error.message);
+  }
+
+  // 移除最后一个缓存(app.json的缓存)，为了使每次文件发生变化都能进行最外一层的重新刷新, 保持正确的文件依赖引入
+  if (event.result && event.result && event.result.cache) {
+    event.result.cache.modules.pop();
   }
 });
 

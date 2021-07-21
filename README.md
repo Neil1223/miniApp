@@ -182,15 +182,28 @@
 1. 支持 for 循环
 2. 支持 hide 和 display: none
 
-### 细节优化
+### 细节优化（7-21）
 - page 组件的高度
 - 编译器不能监听 json 文件的的改变，从而触发重新编译
-- 只有页面 json/js/kml 都存在时，才会进行页面的编译，当 css 不存在时，不能出现报错，当添加 css 时，需要被编译器监听到
+- 只有页面 js/kml 有一个不存在时，需要提示错误，当 css 不存在时，不能出现报错，当添加 css 时，需要被编译器监听到
 - button 的 disabled/loading 不能动态修改
 - text 组件
   - \n 转义成 <br />
   - 处理字符串转义
   - 目前的 text 文字处理方式是将所有文字使用 span 标签包裹起来，文字 diff 的时候修改 span 的内容，然后在 text 组件中监听文字改变，进行字符串的拼接
+
+
+### swiper 组件
+
+### scroll-view 组件
+
+### input 组件
+
+### label 组件
+
+### form 组件
+
+### checkbox 组件
 
 ### 处理涉及到UI的API
 1. 图片预览
