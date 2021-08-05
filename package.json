@@ -19,6 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "eventemitter3": "^4.0.7",
+    "history": "^5.0.0",
     "rollup": "^2.45.2",
     "webpack": "^5.34.0"
   },

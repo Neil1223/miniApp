@@ -1,7 +1,7 @@
 <view class="container">
   <!-- <page-head :title="title"></page-head> -->
   <view class="uni-padding-wrap uni-common-mt">
-    <button type="primary">页面主操作 Normal</button>
+    <button type="primary" bindtap="test">页面主操作 Normal</button>
     <button type="primary" loading="true">页面主操作 Loading</button>
     <button type="primary" disabled="true">页面主操作 Disabled</button>
 

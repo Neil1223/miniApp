@@ -108,6 +108,9 @@ export const PageFactory = {
       AppPages.splice(pageIndex, 1);
     }
   },
+  deleteLastPage: (delta: number = 1) => {
+    AppPages.splice(AppPages.length - delta, delta);
+  },
   getPage: (webviewId: number) => {
     const page = AppPages.find((page) => page.__webviewId__ === webviewId);
     return page || null;
@@ -151,10 +154,8 @@ export const renderPage = (args: { options: Object; route: string }, webviewId: 
  * 初始化 App，在 wx-app 中处理 app.css, tabBar
  */
 export const initApp = (route?: string) => {
-  route = route ? route : location.hash.slice(1, location.hash.length);
-  if (!route) {
-    route = window.__wxConfig.entryPagePath;
-  }
+  route = route ? route : location.pathname;
+  route = route.replace('/', '');
 
   // 初始化App，使用 wx-app 替换 div#app 元素
   const rootEl: any = document.getElementById('app');
@@ -170,10 +171,10 @@ export const initApp = (route?: string) => {
 /**
  * 专用于创建page
  */
-export const initPage = (route: string) => {
+export const initPage = (route?: string) => {
   __webviewId__++;
   const page = PageFactory.createPage(__webviewId__);
-  route = route.split('?')[0];
+  route = route ? route.split('?')[0] : window.__wxConfig.entryPagePath;
   // 添加 page 样式
   __AppCssCode__[route] && __AppCssCode__[route]();
 

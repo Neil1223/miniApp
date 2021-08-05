@@ -1,9 +1,9 @@
-import { getHashPath } from '@/util';
 import { publishPageEvent } from '@/webview/bridge';
 import Base from '@/webview/mixin/base';
 import { createElement as _h, render } from '@/webview/parser/render';
 import { PageFactory } from '@/webview/page';
 import template from './template.html';
+import { history } from '@/webview/page/route';
 
 class App extends Base {
   static is = 'wx-tabbar';
@@ -16,12 +16,12 @@ class App extends Base {
   }
   connectedCallback() {
     // 初次触发active
-    this._onRouteChange();
+    this._onRouteChange(location.pathname);
 
     // 处理路由的监听
-    window.addEventListener('hashchange', ({ newURL, oldURL }) => {
-      console.log('newURL:', newURL, '\noldURL', oldURL);
-      this._onRouteChange(newURL, oldURL);
+    history.listen(({ location }) => {
+      console.log('newURL:', location.pathname);
+      this._onRouteChange(location.pathname);
     });
   }
   _createChild() {
@@ -63,7 +63,11 @@ class App extends Base {
    * 触发 item 的点击事件
    */
   _switchTab({ pagePath, text }: { pagePath: string; text: string }, index: number) {
-    if (pagePath !== getHashPath(location.href)) {
+    let curPathname = location.pathname;
+    if (curPathname && curPathname[0] === '/') {
+      curPathname = curPathname.replace('/', '');
+    }
+    if (pagePath !== curPathname) {
       // 如果当前的路由 != pagePath, 需要进行路由跳转 TODO: 调用方式需要优化
       window.viewJSBridge.subscribeHandler('onRouteChange', { type: 'navigateTo', options: { url: pagePath } }, 0);
     } else {
@@ -89,14 +93,16 @@ class App extends Base {
   /**
    * 路由改变时，决定tabbar显示或是隐藏，同时决定哪个tab高亮
    */
-  _onRouteChange(newURL: string = location.href, oldURL?: string) {
+  _onRouteChange(newURL?: string, oldURL?: string) {
     const tabList = window.__wxConfig.tabBar.list.map((item) => item.pagePath);
-    let newPath = getHashPath(newURL);
-    if (!newPath) {
-      newPath = window.__wxConfig.pages[0];
+    if (newURL && newURL[0] === '/') {
+      newURL = newURL.replace('/', '');
+    }
+    if (!newURL) {
+      newURL = window.__wxConfig.pages[0];
     }
 
-    const index = tabList.findIndex((item) => item === newPath);
+    const index = tabList.findIndex((item) => item === newURL);
 
     if (index !== -1) {
       this._changeActive(index);
