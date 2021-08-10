@@ -12,6 +12,8 @@ import initScrollEvent from './scroll';
 const AppPages: Page[] = [];
 let __webviewId__ = 0;
 
+window.aaa = AppPages;
+
 export class Page {
   __webviewId__: number;
   __route__: string = '';
@@ -20,13 +22,14 @@ export class Page {
   enableTransparentTitle: boolean = false;
   enablePageScroll: boolean = false;
   enablePageReachBottom: boolean = false;
+  isTablePage: boolean = false;
   root = document.querySelector('wx-app') || document.body;
   pageContainer: HTMLElement;
   navigationBar: PageHeadElement;
   webviewBody: PageBodyElement;
   constructor(__webviewId__: number) {
     this.__webviewId__ = __webviewId__;
-    // 创建 容器
+    // 创建容器
     const pageContainer = document.createElement('wx-page');
     this.navigationBar = document.createElement('wx-page-head') as PageHeadElement;
     this.webviewBody = document.createElement('wx-page-body') as PageBodyElement;
@@ -102,17 +105,51 @@ export const PageFactory = {
     window.scrollTo(0, 0);
     return page;
   },
-  removePage: (webviewId: number) => {
-    const pageIndex = AppPages.findIndex((page) => page.__webviewId__ === webviewId);
+  removePage: (pageIndex: number) => {
     if (pageIndex > -1) {
       AppPages.splice(pageIndex, 1);
     }
   },
-  deleteLastPage: (delta: number = 1) => {
-    AppPages.splice(AppPages.length - delta, delta);
+  replacePage: (replaceLength: number = 1, currentWebviewId?: number) => {
+    let currentPage: Page | undefined;
+    if (currentWebviewId !== undefined) {
+      currentPage = AppPages.find((item) => item.__webviewId__ === currentWebviewId);
+    } else {
+      currentPage = PageFactory.getCurrentPage();
+    }
+    const lastPage = PageFactory.getLastPage(replaceLength);
+    if (lastPage && lastPage.pageContainer && currentPage?.pageContainer) {
+      lastPage.initScrollEvent();
+      lastPage.resetBackground();
+      lastPage.root.replaceChild(lastPage.pageContainer, currentPage.pageContainer);
+      // 移除页面
+      PageFactory.deleteLastPage(replaceLength, 0);
+    }
+  },
+  /* 移除指定长度的非 tab 页面 */
+  deleteLastPage: (delta: number = 1, tabPageLength: number) => {
+    const index = AppPages.length - tabPageLength - 1;
+    const lastPage = AppPages[index];
+    const tabList = window.__wxConfig.tabBar.list.map((item) => item.pagePath);
+    if (!tabList.includes(lastPage.__route__)) {
+      PageFactory.removePage(index);
+    } else {
+      tabPageLength += 1;
+    }
+    delta -= 1;
+    if (delta > 0) {
+      PageFactory.deleteLastPage(delta, tabPageLength);
+    }
+  },
+  replacePageIndex: (firstIndex: number, lastIndex: number) => {
+    [AppPages[firstIndex], AppPages[lastIndex]] = [AppPages[lastIndex], AppPages[firstIndex]];
   },
   getPage: (webviewId: number) => {
     const page = AppPages.find((page) => page.__webviewId__ === webviewId);
+    return page || null;
+  },
+  getPageByRoute: (route: string) => {
+    const page = AppPages.find((page) => page.__route__ === route);
     return page || null;
   },
   getCurrentPage: () => {
@@ -131,6 +168,23 @@ export const PageFactory = {
     const page = PageFactory.getCurrentPage();
     return page.__webviewId__;
   },
+  getLastTablePageIndex: () => {
+    for (let index = AppPages.length - 1; index >= 0; index--) {
+      if (AppPages[index].isTablePage) {
+        return index;
+      }
+    }
+    return -1;
+  },
+  getPageIndex: (webviewId?: number) => {
+    let index: number;
+    if (webviewId) {
+      index = AppPages.findIndex((item) => item.__webviewId__ === webviewId);
+    } else {
+      index = AppPages.length - 1;
+    }
+    return { index, length: AppPages.length };
+  },
   setCurrentWebviewId: (webviewId: number) => {
     __webviewId__ = webviewId;
   },
@@ -144,6 +198,7 @@ export const renderPage = (args: { options: Object; route: string }, webviewId: 
   }
   page.__route__ = route;
   if (!page.__DOMTree__) {
+    __AppCssCode__[route] && __AppCssCode__[route](page.pageContainer);
     page.render(options);
   } else {
     page.reRender(options);
@@ -155,7 +210,7 @@ export const renderPage = (args: { options: Object; route: string }, webviewId: 
  */
 export const initApp = (route?: string) => {
   route = route ? route : location.pathname;
-  route = route.replace('/', '');
+  route = route.replace(/^\//, '');
 
   // 初始化App，使用 wx-app 替换 div#app 元素
   const rootEl: any = document.getElementById('app');
@@ -175,13 +230,15 @@ export const initPage = (route?: string) => {
   __webviewId__++;
   const page = PageFactory.createPage(__webviewId__);
   route = route ? route.split('?')[0] : window.__wxConfig.entryPagePath;
-  // 添加 page 样式
-  __AppCssCode__[route] && __AppCssCode__[route]();
 
   // 如果事首页，那么需要移除返回按钮 || 页面是 tab 的时候，也需要移除返回按钮
   const tabList = window.__wxConfig.tabBar?.list.map((item) => item.pagePath);
   if (route === window.__wxConfig.entryPagePath || tabList.includes(route)) {
     page.navigationBar.showBackButton = false;
+  }
+
+  if (tabList.includes(route)) {
+    page.isTablePage = true;
   }
 
   // 通知 service 层，执行 page 的初始化

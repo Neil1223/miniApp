@@ -13,8 +13,9 @@ const rpx2px = (rpx) => {
   return rpx;
 };
 
+// 将 style 插入到对应的 page 中
 export const setCssToHead = (word, path) => {
-  return () => {
+  return (parentEl) => {
     var cssText = '';
     var style = document.createElement('style');
     var head = document.head || document.getElementsByTagName('head')[0];
@@ -28,7 +29,11 @@ export const setCssToHead = (word, path) => {
     if (cssText) {
       style.setAttribute('path', path);
       style.appendChild(document.createTextNode(cssText));
-      head.appendChild(style);
+      if (parentEl && parentEl.children[0]) {
+        parentEl.insertBefore(style, parentEl.children[0]);
+      } else {
+        head.appendChild(style);
+      }
     }
   };
 };

@@ -11,7 +11,8 @@ const shouldCheckUrlTypes = ['navigateTo', 'redirectTo', 'switchTab'];
 // 我需要在这里触发page的hide，show的生命周期
 const onAppRoute = (type: string, args?: IRouteParams) => {
   const { url } = args || {};
-  const { route } = parserUrl(url || '');
+  let { route } = parserUrl(url || '');
+  route = route.replace(/^\//, '');
   if (shouldCheckUrlTypes.includes(type)) {
     if (!checkPageInPagesJson(route)) {
       throw new Error(`Page register error. ${route} has not been declared in pages.json.`);
@@ -20,7 +21,7 @@ const onAppRoute = (type: string, args?: IRouteParams) => {
   // 通知 view 层进行路由处理
   KipleServiceJSBridge.publishHandler('onRouteChange', { type, options: args || {} }, 0);
 
-  // 通知 service 触发 Page 的生命周期函数
+  // 通知 service 触发 Page 的生命周期函数，并删除内存的多余的 Page
   callPageRouteHook(type, args || {});
 
   return {

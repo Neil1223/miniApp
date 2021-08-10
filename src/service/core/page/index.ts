@@ -88,9 +88,14 @@ export const Page = (options: IPageOptions) => {
 
 export const getApp = () => globApp;
 
+// 如果是多个tab页面的时候，只返回最后一个 tab 的 page 实例
 export const getCurrentPages = () => AppPages.map((item) => item.page);
 
 export const checkPageInPagesJson = (e: string) => window.__wxConfig.pages.includes(e);
+
+const deletePages = (delta: number = 1) => {
+  AppPages.splice(AppPages.length - delta, delta);
+};
 
 /**
  * 修改当前的正在注册的page的路由路径
@@ -114,8 +119,9 @@ export const callPageRouteHook = (type: string, options: any) => {
     case 'navigateTo': // 前一个页面触发 onHide
       fromPage && fromPage.__callPageLifeTime__('onHide');
       break;
-    case 'redirectTo': // 前一个页面触发 onUnload
+    case 'redirectTo': // 触发当前页面触发 onUnload，删除当前页面
       fromPage && fromPage.__callPageLifeTime__('onUnload');
+      deletePages(1);
       break;
     case 'switchTab': // 前一个页面时 tabBar 页面, 则触发 onHide 事件，非 tabBar 触发 onUnload
       fromPage && fromPage.__callPageLifeTime__(fromPage.__isTabBar__ ? 'onHide' : 'onUnload');
@@ -125,7 +131,7 @@ export const callPageRouteHook = (type: string, options: any) => {
         const lastPage = AppPages[index]?.page;
         lastPage && lastPage.__callPageLifeTime__('onUnload');
       }
-      AppPages.splice(AppPages.length - delta, delta);
+      deletePages(delta);
       AppPages[AppPages.length - 1] && AppPages[AppPages.length - 1].page.__callPageLifeTime__('onShow');
       break;
     default:
