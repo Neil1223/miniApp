@@ -1,4 +1,4 @@
-import { callPageRouteHook, checkPageInPagesJson } from '@/service/core/page';
+import { callPageRouteHook, checkPageInPagesJson, checkPageInTabList } from '@/service/core/page';
 import { parserUrl } from '@/util';
 
 interface IRouteParams {
@@ -6,23 +6,41 @@ interface IRouteParams {
   delta?: number;
 }
 
-const shouldCheckUrlTypes = ['navigateTo', 'redirectTo', 'switchTab'];
+const shouldCheckUrlTypes = ['navigateTo', 'redirectTo', 'switchTab', 'reLaunch'];
 
 // 我需要在这里触发page的hide，show的生命周期
 const onAppRoute = (type: string, args?: IRouteParams) => {
   const { url } = args || {};
   let { route } = parserUrl(url || '');
   route = route.replace(/^\//, '');
+
   if (shouldCheckUrlTypes.includes(type)) {
     if (!checkPageInPagesJson(route)) {
       throw new Error(`Page register error. ${route} has not been declared in pages.json.`);
     }
   }
-  // 通知 view 层进行路由处理
-  KipleServiceJSBridge.publishHandler('onRouteChange', { type, options: args || {} }, 0);
+
+  switch (type) {
+    case 'switchTab':
+      if (!checkPageInTabList(route)) {
+        throw new Error(`can not switch to no-tabBar page`);
+      }
+      break;
+    case 'navigateTo':
+    case 'redirectTo':
+      if (checkPageInTabList(route)) {
+        throw new Error(`can not ${type} a tabbar page`);
+      }
+      break;
+    default:
+      break;
+  }
 
   // 通知 service 触发 Page 的生命周期函数，并删除内存的多余的 Page
   callPageRouteHook(type, args || {});
+
+  // 通知 view 层进行路由处理
+  KipleServiceJSBridge.publishHandler('onRouteChange', { type, options: args || {} }, 0);
 
   return {
     errMsg: type + ':ok',

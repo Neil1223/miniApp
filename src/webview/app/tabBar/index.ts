@@ -68,8 +68,7 @@ class App extends Base {
       curPathname = curPathname.replace('/', '');
     }
     if (pagePath !== curPathname) {
-      // 如果当前的路由 != pagePath, 需要进行路由跳转 TODO: 调用方式需要优化
-      window.viewJSBridge.subscribeHandler('onRouteChange', { type: 'switchTab', options: { url: pagePath } }, 0);
+      KipleViewJSBridge.publishHandler('switchTab', { url: pagePath }, 0);
     } else {
       // 向 Service 发送 onTabItemTap 事件
       const detail = { index, text, pagePath };

@@ -19,10 +19,10 @@ export class Page {
   __route__: string = '';
   __DOMTree__: HTMLElement | Text | Comment | null = null;
   __VirtualDom__: IVirtualDom | null = null;
+  __isTabBar__: boolean = false;
   enableTransparentTitle: boolean = false;
   enablePageScroll: boolean = false;
   enablePageReachBottom: boolean = false;
-  isTablePage: boolean = false;
   root = document.querySelector('wx-app') || document.body;
   pageContainer: HTMLElement;
   navigationBar: PageHeadElement;
@@ -126,19 +126,22 @@ export const PageFactory = {
       PageFactory.deleteLastPage(replaceLength, 0);
     }
   },
-  /* 移除指定长度的非 tab 页面 */
-  deleteLastPage: (delta: number = 1, tabPageLength: number) => {
+  /* 移除指定长度的页面 */
+  deleteLastPage: (delta: number = 1, tabPageLength: number, ignoreTab: Boolean = true) => {
     const index = AppPages.length - tabPageLength - 1;
+    if (index < 0) {
+      return;
+    }
     const lastPage = AppPages[index];
     const tabList = window.__wxConfig.tabBar.list.map((item) => item.pagePath);
-    if (!tabList.includes(lastPage.__route__)) {
+    if (!ignoreTab || !tabList.includes(lastPage.__route__)) {
       PageFactory.removePage(index);
     } else {
       tabPageLength += 1;
     }
     delta -= 1;
     if (delta > 0) {
-      PageFactory.deleteLastPage(delta, tabPageLength);
+      PageFactory.deleteLastPage(delta, tabPageLength, ignoreTab);
     }
   },
   replacePageIndex: (firstIndex: number, lastIndex: number) => {
@@ -170,7 +173,7 @@ export const PageFactory = {
   },
   getLastTablePageIndex: () => {
     for (let index = AppPages.length - 1; index >= 0; index--) {
-      if (AppPages[index].isTablePage) {
+      if (AppPages[index].__isTabBar__) {
         return index;
       }
     }
@@ -238,7 +241,7 @@ export const initPage = (route?: string) => {
   }
 
   if (tabList.includes(route)) {
-    page.isTablePage = true;
+    page.__isTabBar__ = true;
   }
 
   // 通知 service 层，执行 page 的初始化

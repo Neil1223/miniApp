@@ -57,6 +57,10 @@ const onRouteChange = (data: IRouteChange) => {
       history.replace(route);
       PageFactory.removePage(index);
       break;
+    case 'reLaunch':
+      history.replace(route);
+      PageFactory.deleteLastPage(PageFactory.getPageIndex().length, 1, false);
+      break;
     case 'switchTab':
       // 移除内存中所有非 tabBar 页面
       // 判断之前的 page 中，是否含有 tab 页面，含有的话，直接 back 到那个页面；
@@ -81,6 +85,9 @@ const onRouteChange = (data: IRouteChange) => {
       } else {
         history.replace(route);
       }
+      // 移除非 tab page
+      const length = PageFactory.getPageIndex(curPage.__webviewId__).length;
+      PageFactory.deleteLastPage(length, 0);
       break;
     default:
       break;

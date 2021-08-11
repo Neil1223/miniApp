@@ -1,3 +1,5 @@
+import { WrapperPage } from './index';
+
 export interface IPageOptions {
   data?: { [key: string]: any };
   onLoad?: (query: Object) => void; // 页面加载时触发,可以传入初始化的数据
@@ -24,7 +26,7 @@ export interface IAppOptions {
 }
 
 export interface IAppPage {
-  page: any; // 页面逻辑
+  page: WrapperPage; // 页面逻辑
   route: string; // 页面路径
   webviewId: number;
 }
