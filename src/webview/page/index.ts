@@ -68,6 +68,8 @@ export class Page {
     Object.assign(this.navigationBar, curWindowStyle);
     // 设置下拉刷新
     this.setPullDownRefresh(options, curWindowStyle);
+    // 修改 document title
+    document.title = this.navigationBar.navigationBarTitleText;
 
     this.__VirtualDom__ = window.app[this.__route__].render(options.data);
     // 生成页面 Dom 树
@@ -122,6 +124,8 @@ export const PageFactory = {
       lastPage.initScrollEvent();
       lastPage.resetBackground();
       lastPage.root.replaceChild(lastPage.pageContainer, currentPage.pageContainer);
+      // 修改 document title
+      document.title = lastPage.navigationBar.navigationBarTitleText;
       // 移除页面
       PageFactory.deleteLastPage(replaceLength, 0);
     }

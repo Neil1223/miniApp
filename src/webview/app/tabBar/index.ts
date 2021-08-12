@@ -68,7 +68,7 @@ class App extends Base {
       curPathname = curPathname.replace('/', '');
     }
     if (pagePath !== curPathname) {
-      KipleViewJSBridge.publishHandler('switchTab', { url: pagePath }, 0);
+      KipleViewJSBridge.publishHandler('onRouteChange', { type: 'switchTab', options: { url: pagePath } }, 0);
     } else {
       // 向 Service 发送 onTabItemTap 事件
       const detail = { index, text, pagePath };

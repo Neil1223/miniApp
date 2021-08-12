@@ -41,7 +41,7 @@ class PageHead extends Base {
 
     this.backBtn.addEventListener('click', () => {
       // 传递消息给 Service 层; 在 App 中 Service 层直接就是监听 webview 的 back 事件进行事件触发
-      KipleViewJSBridge.publishHandler('navigateBack', null, 0);
+      KipleViewJSBridge.publishHandler('onRouteChange', { type: 'navigateBack' }, 0);
     });
   }
   _onNavigationBarChange(_: string, newValue: string, name: string) {

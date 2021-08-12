@@ -1,5 +1,5 @@
 import { getCurrentPages, registerPage } from '@/service/core/page';
-import { navigateBack, switchTab } from '../api/route';
+import { onAppRoute } from '../api/route';
 
 interface PageEvent {
   eventName: string;
@@ -22,13 +22,9 @@ export default function initSubscribe(subscribe: ServiceJSBridge['subscribe']) {
   subscribe('registerPage', (args: { route: string; query: Object }, pageId: number) => {
     registerPage(args.route, pageId, args.query);
   });
-  // 监听到自定义header的back事件
-  subscribe('navigateBack', () => {
-    navigateBack();
-  });
-  // 监听到tab的点击切换事件
-  subscribe('switchTab', (args: any) => {
-    switchTab(args);
+  // 监听 view 层触发的路由跳转事件
+  subscribe('onRouteChange', (args: { type: string; options: any }) => {
+    onAppRoute(args.type, args.options);
   });
   // app 进入后台
   subscribe('onAppEnterBackground', () => {

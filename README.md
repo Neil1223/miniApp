@@ -222,7 +222,7 @@
 4. 路由跳转携带参数
 5. 路由修改时，page title 跟着改变
 6. 其他
-  - 移除Page时，需要删除 style 节点
+  - 移除Page时，需要删除 style 节点《将page style保存在page实例中，每次page的添加/移除就不用特别处理style了》
 
 ### 优化 webpack 和 rollup 的逻辑
 
