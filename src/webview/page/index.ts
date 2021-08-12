@@ -232,18 +232,18 @@ export const initApp = (route?: string) => {
 export const initPage = (route?: string) => {
   __webviewId__++;
   const page = PageFactory.createPage(__webviewId__);
-  route = route ? route.split('?')[0] : window.__wxConfig.entryPagePath;
+  const pagePath = route ? route.split('?')[0] : window.__wxConfig.entryPagePath;
 
   // 如果事首页，那么需要移除返回按钮 || 页面是 tab 的时候，也需要移除返回按钮
   const tabList = window.__wxConfig.tabBar?.list.map((item) => item.pagePath);
-  if (route === window.__wxConfig.entryPagePath || tabList.includes(route)) {
+  if (pagePath === window.__wxConfig.entryPagePath || tabList.includes(pagePath)) {
     page.navigationBar.showBackButton = false;
   }
 
-  if (tabList.includes(route)) {
+  if (tabList.includes(pagePath)) {
     page.__isTabBar__ = true;
   }
 
   // 通知 service 层，执行 page 的初始化
-  KipleViewJSBridge.publishHandler('registerPage', parserUrl(route), __webviewId__);
+  KipleViewJSBridge.publishHandler('registerPage', parserUrl(route || ''), __webviewId__);
 };

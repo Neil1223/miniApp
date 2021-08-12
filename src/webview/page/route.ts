@@ -24,7 +24,7 @@ history.listen(({ location, action }) => {
     }
   }
 
-  initPage(pagePath);
+  initPage(pagePath + location.search);
 });
 
 interface IRouteChange {
@@ -80,6 +80,8 @@ const onRouteChange = (data: IRouteChange) => {
           PageFactory.replacePageIndex(lastIndex, firstIndex);
         }
       }
+      location.search = '';
+      route = route.replace(/\?.*/, ''); // switchTab 不允许携带参数
       if (isTabPage) {
         history.push(route);
       } else {
