@@ -9,7 +9,8 @@
     "pages/component/image/image",
     "pages/component/navigator/navigator",
     "pages/logs/logs",
-    "pages/transparent/index"
+    "pages/transparent/index",
+    "pages/api/image/image"
   ],
   "window": {
     "backgroundTextStyle": "light",
