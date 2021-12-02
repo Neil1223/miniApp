@@ -1,3 +1,22 @@
+### 运行命令
+```bash
+# 编译器，运行脚本
+$ npm run compiler:v2:watch
+
+# 运行时框架，运行命令
+$ npm run webpack
+```
+
+### 项目目录
+```
+├── src               # 运行时框架源码
+├── build             # 打包运行时的脚本
+├── compiler          # 编译器源码
+├── example           # 示例代码
+├── lib               # 允许编译的api的集合
+└── ...                 
+```
+
 ### 基础部分
 1. 基础 API：需要提供 kiple.xxx() 供web调用native的能力
 2. 基础组件：框架仅允许内置的组件，div等组件不允许使用
@@ -186,6 +205,7 @@
 - page 组件的高度
 - 编译器不能监听 json 文件的的改变，从而触发重新编译
 - 只有页面 js/kml 有一个不存在时，需要提示错误，当 css 不存在时，不能出现报错，当添加 css 时，需要被编译器监听到
+- css中, ::after, ::before不生效,原因：scope 添加到了伪类后面，`.uni-uploader__input-box::after[ba14242e]`
 - button 的 disabled/loading 不能动态修改
 - text 组件
   - \n 转义成 <br />
@@ -212,7 +232,7 @@
 
 ### api做参数检验
 
-### 路由的优化
+### 路由的优化(end: 8-12)
 1. 路由返回的监听，能够返回到正确的页面
 2. 各种路由API的实现
   - redirectTo
@@ -223,6 +243,9 @@
 5. 路由修改时，page title 跟着改变
 6. 其他
   - 移除Page时，需要删除 style 节点《将page style保存在page实例中，每次page的添加/移除就不用特别处理style了》
+
+### view 层和 service 层分离
+使用 h5 的 web worker 进行分层，以达到和客户段相同的分层效果
 
 ### 优化 webpack 和 rollup 的逻辑
 

@@ -12,8 +12,6 @@ import initScrollEvent from './scroll';
 const AppPages: Page[] = [];
 let __webviewId__ = 0;
 
-window.aaa = AppPages;
-
 export class Page {
   __webviewId__: number;
   __route__: string = '';
@@ -219,6 +217,13 @@ export const initApp = (route?: string) => {
   route = route ? route : location.pathname;
   route = route.replace(/^\//, '');
 
+  // 处理部署时含有html的情况
+  if (/\.html/.test(route)) {
+    const splitGroup = route.split('/');
+    splitGroup.pop();
+    route = splitGroup.join('/');
+  }
+
   // 初始化App，使用 wx-app 替换 div#app 元素
   const rootEl: any = document.getElementById('app');
   if (!rootEl) {
@@ -237,9 +242,10 @@ export const initPage = (route?: string) => {
   __webviewId__++;
   const page = PageFactory.createPage(__webviewId__);
   const pagePath = route ? route.split('?')[0] : window.__wxConfig.entryPagePath;
+  route = route ? route : pagePath;
 
   // 如果事首页，那么需要移除返回按钮 || 页面是 tab 的时候，也需要移除返回按钮
-  const tabList = window.__wxConfig.tabBar?.list.map((item) => item.pagePath);
+  const tabList = window.__wxConfig.tabBar?.list.map((item) => item.pagePath) || [];
   if (pagePath === window.__wxConfig.entryPagePath || tabList.includes(pagePath)) {
     page.navigationBar.showBackButton = false;
   }
