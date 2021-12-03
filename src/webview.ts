@@ -1,7 +1,7 @@
-import './webview/app';
-import './webview/components';
-import { createElement } from './webview/parser/render';
-import './webview.css';
+import '@/core/webview/app';
+import '@/core/webview/components';
+import { createElement } from '@/core/webview/parser/render';
+import '@/webview.css';
 
 class KipleApp {
   constructor() {

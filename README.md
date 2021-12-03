@@ -1,15 +1,30 @@
 ### 运行命令
 ```bash
-# 编译器，运行脚本
+# 编译器，运行脚本 -- 开发时
 $ npm run compiler:v2:watch
+# 编译器，运行脚本 -- 打包时
+$ npm run compiler:v2
 
 # 运行时框架，运行命令
-$ npm run webpack
+$ npm run dev:h5
+$ npm run dev:app
+$ npm run build:h5
+$ npm run build:app
 ```
 
 ### 项目目录
 ```
-├── src               # 运行时框架源码
+├── src                       # 运行时框架源码
+│   ├── core                  # 框架核心代码，H5 和 App 都能使用
+│   │   ├── service           # 逻辑层源码文件
+│   │   └── webview           # 视图层源码文件
+│   ├── platforms             
+│   │   ├── h5                # H5 独有的 api/view 实现
+│   │   └── app               # App 独有的 api/view 实现
+│   ├── utils                 # 一些工具库
+│   ├── service.ts            # 打包 service.js 库的入口文件 <逻辑层>
+│   ├── webview.ts            # 打包 webview.js 库的入口文件 <视图层>
+│   └── webview.css           # 公共的 css 文件 <视图层>
 ├── build             # 打包运行时框架的 webpack 脚本
 ├── compiler          # 编译器源码，用于编译小程序工程
 ├── example           # 示例代码

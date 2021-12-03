@@ -9,8 +9,8 @@ const isDev = process.env.NODE_ENV === 'dev';
 
 const provides = {
   console: [resolveApp('src/util/console')],
-  KipleViewJSBridge: [resolveApp('src/webview/bridge/index')],
-  KipleServiceJSBridge: [resolveApp('src/service/bridge/index')],
+  KipleViewJSBridge: [resolveApp('src/core/webview/bridge/index')],
+  KipleServiceJSBridge: [resolveApp('src/core/service/bridge/index')],
 };
 
 module.exports = {
