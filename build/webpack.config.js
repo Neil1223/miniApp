@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
+const isDev = process.env.NODE_ENV === 'dev';
 
 const provides = {
   console: [resolveApp('src/util/console')],
@@ -14,7 +15,7 @@ const provides = {
 
 module.exports = {
   mode: 'production',
-  devtool: 'source-map',
+  devtool: isDev ? 'source-map' : false,
   entry: {
     webview: resolveApp('src/webview.ts'),
     service: resolveApp('src/service.ts'),

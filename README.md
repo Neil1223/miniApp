@@ -10,8 +10,8 @@ $ npm run webpack
 ### 项目目录
 ```
 ├── src               # 运行时框架源码
-├── build             # 打包运行时的脚本
-├── compiler          # 编译器源码
+├── build             # 打包运行时框架的 webpack 脚本
+├── compiler          # 编译器源码，用于编译小程序工程
 ├── example           # 示例代码
 ├── lib               # 允许编译的api的集合
 └── ...                 
