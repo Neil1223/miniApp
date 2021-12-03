@@ -1,4 +1,4 @@
-import { isFn } from '../../../../util/util';
+import { isFn } from '@/util/util';
 import { isSyncApi } from './promise';
 
 interface IInvokeCallback {

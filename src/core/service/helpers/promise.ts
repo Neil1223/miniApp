@@ -1,4 +1,4 @@
-import { isFn } from '../../../../util/util';
+import { isFn } from '@/util/util';
 
 const SYNC_API_RE = /Sync$/;
 

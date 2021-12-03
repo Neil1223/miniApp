@@ -1,4 +1,4 @@
-import { getCurrentPages, registerPage } from '@/core/service/core/page';
+import { getCurrentPages, registerPage } from '@/core/service/page';
 import { onAppRoute } from '../api/route';
 
 interface PageEvent {
@@ -18,18 +18,22 @@ const onWebviewEvent = (args: PageEvent, pageId: number) => {
 export default function initSubscribe(subscribe: ServiceJSBridge['subscribe']) {
   // 监听到页面触发事件
   subscribe('PAGE_EVENT', onWebviewEvent);
+
   // 监听到注册页面
   subscribe('registerPage', (args: { route: string; query: Object }, pageId: number) => {
     registerPage(args.route, pageId, args.query);
   });
+
   // 监听 view 层触发的路由跳转事件
   subscribe('onRouteChange', (args: { type: string; options: any }) => {
     onAppRoute(args.type, args.options);
   });
+
   // app 进入后台
   subscribe('onAppEnterBackground', () => {
     KipleServiceJSBridge.emit('onAppEnterBackground');
   });
+
   // app 进入前台
   subscribe('onAppEnterForeground', () => {
     KipleServiceJSBridge.emit('onAppEnterForeground');

@@ -1,6 +1,6 @@
 import apiNames from '../../../../lib/apis.js';
-import { promisify } from '../core/helpers/promise';
-import { wrapper, wrapperUnimplemented } from '../core/helpers/api';
+import { promisify } from '../helpers/promise';
+import { wrapper, wrapperUnimplemented } from '../helpers/api';
 import * as storages from './storage';
 import * as device from './device';
 import * as route from './route';
