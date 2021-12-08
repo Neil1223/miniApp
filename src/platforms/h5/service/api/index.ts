@@ -1,4 +1,4 @@
-import apiNames from 'kiple-lib';
+import apiNames from 'kiple-lib/apis.js';
 import { promisify } from '../helpers/promise';
 import { wrapper, wrapperUnimplemented } from '../helpers/api';
 import * as storages from './storage';

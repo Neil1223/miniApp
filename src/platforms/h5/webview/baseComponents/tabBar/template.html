@@ -1,0 +1,33 @@
+<style>
+  :host {
+    display: block;
+    width: 100%;
+  }
+  :host .uni-tabbar__placeholder {
+    height: 50px;
+  }
+  :host .uni-tabbar {
+    display: flex;
+    height: 50px;
+    width: 100%;
+    position: fixed;
+    z-index: 998;
+    bottom: 0;
+  }
+  :host .uni-tabbar__border {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+  }
+  :host .uni-tabbar__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+  }
+</style>
+<div class="uni-tabbar__placeholder"></div>

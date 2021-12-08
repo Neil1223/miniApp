@@ -30,6 +30,8 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js'],
     alias: {
       '@': resolveApp('src'),
+      'kiple-lib': resolveApp('lib/apis.js'),
+      'kiple-platform': resolveApp(`src/platforms/${process.env.PLATFORM}`),
       KipleViewJSBridge: resolveApp('src/'),
     },
   },
