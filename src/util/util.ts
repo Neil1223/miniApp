@@ -30,7 +30,9 @@ export function isPlainObject(obj: Object) {
 }
 
 export const isTextNode = (child: any): boolean => {
-  return typeof child === 'object' && child && child.hasOwnProperty('tag') && child.hasOwnProperty('props') && child.hasOwnProperty('children') ? false : true;
+  return typeof child === 'object' && child && child.hasOwnProperty('tag') && child.hasOwnProperty('props') && child.hasOwnProperty('children')
+    ? false
+    : true;
 };
 
 export const isSameText = (oldText: any, newText: any): boolean => {
@@ -93,4 +95,16 @@ export const parserUrl = (route: string): { route: string; query: Object } => {
 export const getHashPath = (url: string) => {
   const hash = url.split('#');
   return hash.length > 1 ? hash[1] : '';
+};
+
+export const urlStringify = (params: { [key: string]: any }) => {
+  let argString = '';
+  if (params && Object.keys(params).length) {
+    argString = Object.keys(params)
+      .map((key) => {
+        return `${key}=${params[key]}`;
+      })
+      .join('&');
+  }
+  return argString;
 };

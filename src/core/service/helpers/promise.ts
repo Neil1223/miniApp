@@ -20,23 +20,19 @@ export function shouldPromise(apiName: string) {
   return true;
 }
 
-const handlePromise = (promise: any) => {
-  return promise.then((data: any) => [null, data]).catch((err: any) => [err]);
-};
-
 export const promisify = (apiName: string, api: Function) => {
   if (!shouldPromise(apiName)) {
     return api;
   }
   return (options: IOptions = {}, ...params: any) => {
+    // 如果含有 callback, 就不走 promise 的逻辑
     if (isFn(options.success) || isFn(options.fail) || isFn(options.complete)) {
       return api(options, ...params);
     }
 
-    const promiseApi = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const _options = Object.assign({}, options, { success: resolve, fail: reject });
       api(_options, ...params);
     });
-    return handlePromise(promiseApi);
   };
 };
