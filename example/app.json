@@ -21,18 +21,20 @@
   },
   "tabBar": {
     "color": "#7A7E83",
-    "selectedColor": "#3cc51f",
+    "selectedColor": "#007AFF",
     "borderStyle": "black",
     "backgroundColor": "#ffffff",
     "list": [
       {
         "pagePath": "pages/tabBar/component/index",
+        "iconPath": "static/component.png",
+				"selectedIconPath": "static/componentHL.png",
         "text": "内置组件"
       },
       {
         "pagePath": "pages/tabBar/API/index",
-        "iconPath": "static/image/icon_API.png",
-        "selectedIconPath": "static/image/icon_API_HL.png",
+        "iconPath": "static/api.png",
+				"selectedIconPath": "static/apiHL.png",
         "text": "接口"
       }
     ]

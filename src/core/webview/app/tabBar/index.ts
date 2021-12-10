@@ -9,6 +9,7 @@ class App extends Base {
   static is = 'wx-tabbar';
   static template = template;
   showTabBar = false;
+  selectedIndex = 0;
   constructor() {
     super();
     // 创建元素
@@ -29,13 +30,15 @@ class App extends Base {
 
     // 创建子元素（元素是未选中状态）
     const items = list.map((item, index) => {
-      const fontSize = item.iconPath && item.selectedIconPath ? '12px' : '16px';
+      const hasIcon = item.iconPath && item.selectedIconPath ? true : false;
+      const fontSize = hasIcon ? '12px' : '16px';
       return _h(
         'div',
         {
           className: 'uni-tabbar__item',
           onClick: () => this._switchTab(item, index),
         },
+        hasIcon ? _h('div', { className: 'uni-tabbar__item-icon' }, _h('img', { src: '/' + item.iconPath })) : null,
         _h('div', { style: { color, fontSize }, className: 'uni-tabbar__item-text' }, item.text)
       );
     });
@@ -76,7 +79,7 @@ class App extends Base {
     }
   }
   /**
-   * 路由改变时，修改 item 的样式
+   * 路由改变时，修改 item 的文字样式，图片地址
    */
   _changeActive(index: number) {
     const tabItems = (this as any).shadowRoot.querySelectorAll('.uni-tabbar__item .uni-tabbar__item-text');
@@ -85,9 +88,19 @@ class App extends Base {
     if (activeItem) {
       activeItem.style.color = color;
       activeItem.parentElement.classList.toggle('active', false);
+      const tabItemConfig = window.__wxConfig.tabBar.list[this.selectedIndex];
+      if (tabItemConfig && tabItemConfig.iconPath && tabItemConfig.selectedIconPath) {
+        const tabIcon = tabItems[this.selectedIndex].parentElement.querySelector('img') as HTMLElement;
+        tabIcon.setAttribute('src', `/${tabItemConfig.iconPath}`);
+      }
     }
     tabItems[index].style.color = selectedColor;
     tabItems[index].parentElement.classList.toggle('active', true);
+    const tabItemConfig = window.__wxConfig.tabBar.list[index];
+    if (tabItemConfig.iconPath && tabItemConfig.selectedIconPath) {
+      const tabIcon = tabItems[index].parentElement.querySelector('img') as HTMLElement;
+      tabIcon.setAttribute('src', `/${tabItemConfig.selectedIconPath}`);
+    }
   }
   /**
    * 路由改变时，决定tabbar显示或是隐藏，同时决定哪个tab高亮
@@ -105,6 +118,7 @@ class App extends Base {
 
     if (index !== -1) {
       this._changeActive(index);
+      this.selectedIndex = index;
     }
 
     if (index !== -1 && !this.showTabBar) {

@@ -21,8 +21,6 @@ module.exports = {
   output: {
     path: resolveApp('dist'),
     filename: '[name].js',
-    libraryTarget: 'umd',
-    globalObject: 'this',
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],

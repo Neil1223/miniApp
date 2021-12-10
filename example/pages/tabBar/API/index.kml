@@ -1,6 +1,6 @@
 <view class="container">
   <view class="header-logo">
-    <image class="img" src="https://hellouniapp.dcloud.net.cn/static/apiIndex.png"></image>
+    <image class="img" src="/static/apiIndex.png"></image>
   </view>
   <view class="desc"
     >以下将展示小程序官方 API 接口能力，具体属性参数详见文档: https://www.kiple.com</view
