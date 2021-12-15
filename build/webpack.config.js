@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
 const isDev = process.env.NODE_ENV === 'dev';
+process.env.BUILD_TYPE = 'framework';
 
 const provides = {
   console: [resolveApp('src/util/console')],

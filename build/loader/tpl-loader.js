@@ -1,3 +1,6 @@
+const parserKml = require('./template-parser.js');
+
 module.exports = function (source) {
-  return `export default \`${source}\``;
+  const code = parserKml(source);
+  return code;
 };

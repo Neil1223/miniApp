@@ -1,5 +1,5 @@
 export interface ASTElement {
-  type: 'tag' | 'text';
+  type: 'tag' | 'text' | 'style';
   name: string;
   attribs: { [key: string]: any };
   data: string;

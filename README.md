@@ -5,6 +5,9 @@ $ npm run compiler:v2:watch
 # 编译器，运行脚本 -- 打包时
 $ npm run compiler:v2
 
+# 编译框架中 html 模板的解析函数
+$ npm run build:template-parser
+
 # 运行时框架，运行命令
 $ npm run dev:h5
 $ npm run dev:app
