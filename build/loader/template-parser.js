@@ -203,6 +203,10 @@ const generateFromAST = (htmlAST) => {
             });
         }
     }
+    // 如果是 build 框架的html-parser，那么需要处理 style 标签
+    if (process.env.BUILD_TYPE && process.env.BUILD_TYPE === 'framework' && htmlAST.type === 'style') {
+        result.code = `createElement('style', null, ${JSON.stringify(htmlAST.children[0].data)})`;
+    }
     return result;
 };
 
@@ -342,7 +346,7 @@ const transformFor = (arrayElements, indexKey, itemKey) => {
         var code = `
       var ${key} = [];
       {
-        const newList = ${list}
+        const newList = ${list} || [];
         for(let _index = 0; _index < newList.length; _index++){
           var ${item} = newList[_index];
           var ${index} = _index;

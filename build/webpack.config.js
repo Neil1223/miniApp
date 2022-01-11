@@ -44,8 +44,13 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /.html?$/,
+        test: /.tpl$/,
         use: [resolveApp('build/loader/tpl-loader.js')],
+        exclude: /node_modules/,
+      },
+      {
+        test: /.html$/,
+        use: [resolveApp('build/loader/html-loader.js')],
         exclude: /node_modules/,
       },
       {

@@ -134,8 +134,10 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
         }
       }
     }
+    // 如果是 build 框架，那么不需要加 wx 前缀，如果是 build 项目需要加上 wx 前缀
+    const prefix = process.env.BUILD_TYPE && process.env.BUILD_TYPE === 'framework' ? '' : 'wx-';
     attribs = attribs ? `{${attribs}}` : null;
-    result.code = `createElement('wx-${htmlAST.name}',${attribs},${children.join(',')})`;
+    result.code = `createElement('${prefix}${htmlAST.name}',${attribs},${children.join(',')})`;
   } else if (htmlAST.type === 'text') {
     // 需要使用正则解析 {{data}}
     const dataString = getData(htmlAST.data.replace(/(^\s+)|(\s+$)/gi, ''));
@@ -148,6 +150,11 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
         }
       });
     }
+  }
+
+  // 如果是 build 框架的html-parser，那么需要处理 style 标签
+  if (process.env.BUILD_TYPE && process.env.BUILD_TYPE === 'framework' && htmlAST.type === 'style') {
+    result.code = `createElement('style', null, ${JSON.stringify(htmlAST.children[0].data)})`;
   }
 
   return result;

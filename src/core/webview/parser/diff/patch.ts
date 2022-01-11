@@ -11,10 +11,13 @@ export function patch(node: Node, patches: IPatches, hash?: string) {
   let patchHelper: IPatchHelper = {
     Index: 0,
   };
-  setPatch(node, patches, patchHelper, hash);
+  const isShadowRoot = node && node.nodeName === '#document-fragment' ? true : false;
+  setPatch(node, patches, patchHelper, hash, isShadowRoot);
 }
 
-function setPatch(node: Node, patches: IPatches, patchHelper: IPatchHelper, hash?: string) {
+// hash: 用于元素的样式 scope 控制
+// isShadowRoot: 如果存在，那么说明时虚拟节点，内部组件
+function setPatch(node: Node, patches: IPatches, patchHelper: IPatchHelper, hash?: string, isShadowRoot?: boolean) {
   let currentPatch = patches[patchHelper.Index];
   if (currentPatch) {
     doPatch(node, currentPatch, hash);
@@ -32,7 +35,8 @@ function setPatch(node: Node, patches: IPatches, patchHelper: IPatchHelper, hash
 
   for (let index = 0; index < length; index++) {
     const child = node.childNodes[index];
-    if (!child || !child.parentNode?.nodeName.includes('WX-')) { // 处理 text 标签里面的 span 元素
+    if (!child || (child.parentNode && !isShadowRoot && !child.parentNode.nodeName.includes('WX-'))) {
+      // 处理 text 标签里面的 span 元素
       return;
     }
     patchHelper.Index++;
@@ -41,7 +45,7 @@ function setPatch(node: Node, patches: IPatches, patchHelper: IPatchHelper, hash
     if (patches[patchHelper.Index] && patches[patchHelper.Index][0].type === PATCHES_TYPE.REMOVE) {
       index--;
     }
-    setPatch(child, patches, patchHelper, hash);
+    setPatch(child, patches, patchHelper, hash, isShadowRoot);
   }
 }
 

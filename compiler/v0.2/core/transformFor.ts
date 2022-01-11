@@ -38,7 +38,7 @@ const transformFor = (arrayElements: IGenCode['arrayElements'], indexKey?: strin
     var code = `
       var ${key} = [];
       {
-        const newList = ${list}
+        const newList = ${list} || [];
         for(let _index = 0; _index < newList.length; _index++){
           var ${item} = newList[_index];
           var ${index} = _index;

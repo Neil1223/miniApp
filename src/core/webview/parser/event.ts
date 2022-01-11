@@ -1,3 +1,4 @@
+import { isFn } from '@/util';
 import { publishPageEvent } from '../bridge';
 import { PageFactory } from '../page';
 
@@ -107,6 +108,20 @@ export const addEvent = (dom: HTMLElement, key: string, value: any) => {
   const eventNames = /(on):?(.+)/.exec(key);
   if (eventNames && PrivateEventNames.includes(eventNames[2].toLocaleLowerCase())) {
     const eventName = eventNames[2].toLocaleLowerCase();
-    dom.addEventListener(eventName, value);
+    dom.addEventListener(eventName, (e: any) => {
+      let path = e.path;
+      if (path) {
+        for (const key in path) {
+          if (path[key] && path[key]?.nodeName.includes('WX-')) {
+            if (path[key][value] && isFn(path[key][value])) {
+              path[key][value].call(path[key], {
+                target: e.currentTarget,
+              });
+            }
+            break;
+          }
+        }
+      }
+    });
   }
 };

@@ -11,7 +11,7 @@ import { CreateIVirtualDomFunc } from './render.d';
 export const setProperty = (dom: HTMLElement, key: string, value: any) => {
   if (/(bind|catch):?(.+)/.test(key)) {
     applyEvent(dom, key, value);
-  } else if (/(on):?(.+)/.test(key) && isFn(value)) {
+  } else if (/(on):?(.+)/.test(key) && isStr(value)) {
     // 如果是 on 且 value 是 function，则认为是内部组件
     addEvent(dom, key, value);
   } else if (key === 'style' && value) {
