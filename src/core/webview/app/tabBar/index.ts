@@ -20,7 +20,6 @@ class App extends Base {
 
     // 处理路由的监听
     history.listen(({ location }) => {
-      console.log('newURL:', location.pathname);
       this._onRouteChange(location.pathname);
     });
   }
@@ -39,7 +38,6 @@ class App extends Base {
    */
   _switchTab(e: any) {
     const index = Number(e.target.dataset.index);
-    console.log(index, e, this.__data__);
     const { text, pagePath } = this.__data__.list[index];
     if (index !== this.__data__.selectIndex) {
       KipleViewJSBridge.publishHandler('onRouteChange', { type: 'switchTab', options: { url: pagePath } }, 0);
