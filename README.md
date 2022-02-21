@@ -1,3 +1,4 @@
+## 项目基础 & 结构
 ### 运行命令
 ```bash
 # 编译器，运行脚本 -- 开发时
@@ -35,6 +36,21 @@ $ npm run build:app
 └── ...                 
 ```
 
+### 打包后的业务代码目录
+```
+├── static                  # 业务中使用的静态资源，主要是图片
+│   ├── a.png          
+│   └── b.png      
+├── app.config.js           # 业务代码中, app.json 和 page.json 的配置项集合
+├── app.service.js          # 业务代码中, page.js 的打包集合, 业务逻辑代码
+├── app.service.js.map      # source-map 文件, dev 时只打包业务逻辑代码的 source-map, 方便调试, UI 代码暂时不需要 source-map
+├── app.view.js             # 业务代码中, page.kml 的打包集合, 描述页面样式, 包含 dom 和 css
+├── index.html              # 页面的初始入口文件
+├── service.js              # 运行时, 基础 api 代码文件
+├── webview.css             # 运行时, 全局样式文件
+└── webview.js              # 运行时, UI 组件文件
+```
+
 ### 基础部分
 1. 基础 API：需要提供 kiple.xxx() 供web调用native的能力
 2. 基础组件：框架仅允许内置的组件，div等组件不允许使用
@@ -59,7 +75,7 @@ $ npm run build:app
     - 加载框架
       - 加载组件样式 webview.css(全局样式)
       - 加载组件库 webview.js(组件及组件样式，进行page.html的初始化)
-      - 加载能力库 core.js(api)
+      - 加载能力库 service.js(api)
     - 加载 page-style.js(项目的样式文件,css等都会转换成js，然后使用js插入到元素的style标签中，rpx转换为number，然后根据页面大小转换为px,px不变，可以将这个文件和下一个文件合并)
     - 加载 page-ui.js(项目的视图层代码，可以和上个文件进行合并)，这个文件中初始化页面
     - 加载 page-server.js(项目的业务逻辑，项目配置等信息)
@@ -73,18 +89,14 @@ $ npm run build:app
     }, 0);
     ```
 5. 运行js的顺序
-    - 加载完page-server.js后，开支执行App(options)，执行onDocumentReady，
+    - 加载完page-server.js后, 开始执行App(options)，执行onDocumentReady，
     - 先执行全局的函数
     - 在执行页面函数，执行onLoad后，确定当前页面的data
     - 获取当前页面的渲染函数，加上初始化的data
     - 执行renderPage函数，传入render和data，父节点，渲染页面
     - 当data发生改变，再次执行renderPage
-  
-### 编译器
-1. 需要一个config文件配置页面属性
-2. AST编译器: 将每个页面进行AST编译
 
-
+## 头脑风暴 & 任务
 ### Other
 1. 在H5端，是否应该在worker中运行js，这样的话，就可以和webview中一样，视图层和逻辑层分离
 2. 在编译后的UI中，如何绑定状态？
