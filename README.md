@@ -234,6 +234,8 @@ $ npm run build:app
 - Build 时，将资源拷贝到编译目录
 - 处理tabbar的图片 (fixed)
 - 支持复杂的组件模板，比如video，swiper，需要将.html模板转换为jsx，然后绑定到自定义component中
+- 使用 key 进行同级的diff
+- 事件绑定机制：将同一种类型的事件只绑定一个，像 react 一样进行事件合成和事件绑定，事件派发
 
 ### swiper 组件
 
