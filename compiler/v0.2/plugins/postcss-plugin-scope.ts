@@ -15,7 +15,7 @@ const postcssScope = (scope: string) => {
         rule.selector = splits
           .map((item) => {
             item = item.replace(/\s$/, '');
-            if (~item.includes(':')) {
+            if (~item.indexOf(':')) {
               return item.replace(':', `[${scope}]:`);
             }
             return `${item}[${scope}]`;
