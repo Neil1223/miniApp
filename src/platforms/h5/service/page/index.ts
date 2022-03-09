@@ -1,5 +1,5 @@
 import { isPlainObject, parserUrl } from '@/util/util';
-import { require as customRequire } from '../helpers/require';
+import { require as customRequire } from '@/core/service/helpers/require';
 import { IPageOptions, IAppOptions, IAppPage } from './index.d';
 
 const PageConfig = {};

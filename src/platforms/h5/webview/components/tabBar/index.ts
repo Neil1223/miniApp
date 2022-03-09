@@ -1,8 +1,8 @@
-import { publishPageEvent } from '@/core/webview/bridge';
+import { publishPageEvent } from '../../bridge';
 import Base from '@/core/webview/mixin/base';
-import { PageFactory } from '@/core/webview/page';
+import { PageFactory } from '../../page';
 import template from './template.tpl';
-import { history } from '@/core/webview/page/route';
+import { history } from '../../page/route';
 
 class App extends Base {
   static is = 'wx-tabbar';

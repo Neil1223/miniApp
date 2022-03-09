@@ -1,9 +1,9 @@
 import { parserUrl } from '@/util';
-import { PageBodyElement } from '../app/body';
-import { PageHeadElement } from '../app/header';
-import { diff } from '../parser/diff/diff';
-import { patch } from '../parser/diff/patch';
-import { createDomTree } from '../parser/render';
+import { PageBodyElement } from '../components/body';
+import { PageHeadElement } from '../components/header';
+import { diff } from '@/core/webview/parser/diff/diff';
+import { patch } from '@/core/webview/parser/diff/patch';
+import { createDomTree } from '@/core/webview/parser/render';
 import initScrollEvent from './scroll';
 
 /**

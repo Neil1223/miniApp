@@ -1,4 +1,4 @@
-import '@/core/webview/app';
+import 'kiple-platform/webview/components';
 import '@/core/webview/components';
 import { createElement } from '@/core/webview/parser/render';
 import '@/webview.css';

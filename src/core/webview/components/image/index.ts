@@ -1,6 +1,6 @@
 import { getRealPath } from '@/util/path';
 import Base from '@/core/webview/mixin/base';
-import { PageFactory } from '@/core/webview/page';
+import { PageFactory } from 'kiple-platform/webview/page';
 import template from './template.html';
 
 class _Image extends Base {

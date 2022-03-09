@@ -8,9 +8,10 @@ const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
 const isDev = process.env.NODE_ENV === 'dev';
 process.env.BUILD_TYPE = 'framework';
 
+// 代码中直接使用的变量
 const provides = {
   console: [resolveApp('src/util/console')],
-  KipleViewJSBridge: [resolveApp('src/core/webview/bridge/index')],
+  KipleViewJSBridge: [resolveApp(`src/platforms/${process.env.PLATFORM}/webview/bridge/index`)],
   KipleServiceJSBridge: [resolveApp('src/core/service/bridge/index')],
 };
 

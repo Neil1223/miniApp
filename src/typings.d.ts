@@ -1,6 +1,6 @@
 declare module '*.tpl';
 declare module '*.html';
-declare module 'kiple-platform';
+declare module 'kiple-platform/*';
 declare module 'kiple-lib';
 
 declare const VERSION: string;

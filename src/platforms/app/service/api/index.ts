@@ -4,7 +4,7 @@ import { wrapperUnimplemented } from '@/core/service/helpers/api';
 import { wrapper } from './wrapper';
 import jsBridge from './jsBridge';
 
-const apis = ['setStorage', 'getStorage'];
+const apis = ['setStorage', 'getStorage', 'getToken', 'pay'];
 
 const kiple = Object.create({ bridge: jsBridge });
 

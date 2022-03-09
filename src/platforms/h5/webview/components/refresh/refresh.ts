@@ -1,6 +1,6 @@
-import PageRefresh from '../app/refresh';
-import { publishPageEvent } from '../bridge';
-import { PageFactory } from '../page';
+import PageRefresh from './index';
+import { publishPageEvent } from '../../bridge';
+import { PageFactory } from '../../page';
 
 interface RefreshData {
   state: null | 'pulling' | 'reached' | 'aborting' | 'refreshing' | 'restoring';

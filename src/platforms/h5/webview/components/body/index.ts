@@ -1,5 +1,5 @@
 import Base from '@/core/webview/mixin/base';
-import Refresh from '@/core/webview/mixin/refresh';
+import Refresh from '../refresh/refresh';
 import template from './template.html';
 
 export interface PageBodyElement extends HTMLElement {
