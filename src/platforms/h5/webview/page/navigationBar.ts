@@ -1,4 +1,4 @@
-import { INavigationBarParams } from '@/core/service/api/ui';
+import { INavigationBarParams } from '../../service/api/ui';
 import { PageFactory } from '.';
 
 const onNavigationBarChange = (data: INavigationBarParams, webviewId: number) => {

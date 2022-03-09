@@ -1,5 +1,5 @@
 import { getCurrentPages, registerPage } from '@/core/service/page';
-import { onAppRoute } from '../api/route';
+import { onAppRoute } from 'kiple-platform/service/api/route';
 
 interface PageEvent {
   eventName: string;
@@ -24,7 +24,7 @@ export default function initSubscribe(subscribe: ServiceJSBridge['subscribe']) {
     registerPage(args.route, pageId, args.query);
   });
 
-  // 监听 view 层触发的路由跳转事件
+  // 监听 view 层触发的路由跳转事件,一般是tab切换，或者是直接进入某个页面
   subscribe('onRouteChange', (args: { type: string; options: any }) => {
     onAppRoute(args.type, args.options);
   });

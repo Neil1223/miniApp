@@ -1,6 +1,6 @@
 import { IGetStorageParams, ISetStorageParams } from './data';
 
-const STORAGE_KEYS = 'uni-storage-keys';
+const STORAGE_KEYS = 'kiple-storage-keys';
 
 function parseValue(value: string) {
   const types = ['object', 'string', 'number', 'boolean', 'undefined'];

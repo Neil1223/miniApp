@@ -1,4 +1,9 @@
-import { INavigationBarParams } from '@/core/webview/page/navigationBar';
+export interface INavigationBarParams {
+  backgroundColor?: string;
+  color?: 'black' | 'white';
+  titleText?: string;
+  loading?: boolean;
+}
 
 interface INavigationBar {
   frontColor: string; // 仅支持 #ffffff 和 #000000

@@ -1,6 +1,6 @@
-import apiNames from 'kiple-lib/apis.js';
-import { promisify } from '../helpers/promise';
-import { wrapper, wrapperUnimplemented } from '../helpers/api';
+import apiNames from 'kiple-lib';
+import { promisify } from '@/core/service/helpers/promise';
+import { wrapper, wrapperUnimplemented } from '@/core/service/helpers/api';
 import * as storages from './storage';
 import * as device from './device';
 import * as route from './route';

@@ -1,4 +1,4 @@
-import kiple from '@/core/service/api/index';
+import kiple from 'kiple-platform/service/api/index';
 import { define, require } from '@/core/service/helpers/require';
 import { App, Page, getApp, getCurrentPages } from '@/core/service/page';
 import initApp from '@/core/service/helpers/initApp';
