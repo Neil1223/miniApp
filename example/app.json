@@ -10,7 +10,8 @@
     "pages/component/navigator/navigator",
     "pages/logs/logs",
     "pages/transparent/index",
-    "pages/api/image/image"
+    "pages/api/image/image",
+    "pages/api/pull-down-refresh/pull-down-refresh"
   ],
   "window": {
     "backgroundTextStyle": "light",

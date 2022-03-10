@@ -28,11 +28,18 @@ export const getRelativePath = (targetPath: string, curPath: string) => {
   return result;
 };
 
+// 处理文件夹路径转换驼峰命名
+// case: aa/bb/cc.js; aa/bb/cc-dd.js
 export const getUpperCasePath = (path: string) => {
   const paths = path.split('/');
   let result = '';
   paths.forEach((item) => {
     item = item.toLowerCase();
+    if (~item.indexOf('-')) {
+      item = item.replace(/-[a-z]/g, (e) => {
+        return e[1].toUpperCase();
+      });
+    }
     result += item.slice(0, 1).toUpperCase() + item.slice(1);
   });
   return result.split('.')[0];

@@ -25,6 +25,7 @@ body {
   0% {
     transform: rotate3d(0, 0, 1, 0deg)
   }
+
   100% {
     transform: rotate3d(0, 0, 1, 360deg)
   }
@@ -32,4 +33,12 @@ body {
 
 .uni-showTabbar wx-page {
   min-height: calc(var(--app-height) - 50px);
+}
+
+wx-page-head+wx-page-body {
+  min-height: calc(var(--app-height) - 44px);
+}
+
+.uni-showTabbar wx-page-head+wx-page-body {
+  min-height: calc(var(--app-height) - 44px - 50px);
 }

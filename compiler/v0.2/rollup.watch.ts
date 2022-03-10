@@ -57,17 +57,23 @@ const watchOptions = [
 
 const watcher = rollup.watch(watchOptions as any);
 
+const errorList: any[] = [];
+
 // 监听业务代码
 watcher.on('event', (event: any) => {
   switch (event.code) {
     case 'START':
       startTime = new Date().getTime();
+      errorList.splice(0);
       break;
     case 'END':
-      console.log('编译文件结束, 耗时：', new Date().getTime() - startTime);
+      if (errorList.length === 0) {
+        console.log('编译文件结束, 耗时：', new Date().getTime() - startTime);
+      }
       startTime = new Date().getTime();
       break;
     case 'ERROR':
+      errorList.push(event.error);
       console.error('[Error]', event.error.message);
   }
 

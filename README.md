@@ -118,12 +118,12 @@ $ npm run build:app
 2. 需要初始化bridge的时候，初始化一些需要监听的事件，当监听到view层发送的事件，那么需要触发对应的回调函数
 3. setData 修改后，重新渲染页面
 
-### 这个阶段开始重新处理组件的状态（5.8）
+### 这个阶段开始重新处理组件的状态
 1. Button 组件的disabled属性，在loading和tap的时候
 2. 组件的属性绑定，属性变化时的监听
 3. 处理 View 组件
 
-### 这个阶段处理App启动(5.12)
+### 这个阶段处理App启动
 1. 需要将各页面导出方法。绑定到全局对象中
 2. 需要有一个全局的变量,保存所有已经开启了的webview
 3. app.js 的生命周期
@@ -144,7 +144,7 @@ $ npm run build:app
    * 9. 思考： 创建预加载的 page（webview）应该是谁创建的，这个谁就是维护 webviewId 的那一方
    */
   ```
-### 处理页面样式(5.18)
+### 处理页面样式
 1. 处理 page 组件，需要有 title,
 2. 下拉刷新
 3. 渐变的 title
@@ -194,7 +194,7 @@ $ npm run build:app
     - 入口就是 app.json, 自定义一个插件处理 app.json，在插件中便利pages，然后批量导入 page.js
     - 每个 page.js 使用 babel 进行编译，生成 code 和 source map（完美解决手动编译 source map 不好插入的问题，也解决了 webpack 方案模块化被重写的问题，性能也比较好）
 
-### tabBar和css模块化（2020-6-13 2020-7-7）
+### tabBar和css模块化
 1. css模块化（7.6 end）
     - 获取 css 的 ast，获取到里面的 import 语法
     - 编译 css 的时候，将当前 css 模块依赖的 css 路径添加到单数末尾: ===> 还是使用postcss，直接将 import 的 css 插入到当前代码里面
@@ -216,7 +216,7 @@ $ npm run build:app
     - 当从 tab 页面离开时，需要隐藏 tab 组件，当再次显示 tab 页面的时候，需要显示 tab 组件
     - 目前使用的 hash 路由，组件中使用 window.onhashchange 监听路由发生变化，匹配到路由的使用显示，否则隐藏
 
-### dev 模式的选择, 处理 img src 引发的思考（7-7）
+### dev 模式的选择, 处理 img src 引发的思考
 - 使用 rollup 的 watch 进行代码的编译
   - 优点：速度很快，初次编译只要 650ms, 再次 10ms
   - 缺点：编译 view 层时产生的数据，无法在编译service层时进行传递，view 进行修改后，无法通知编译器进行 service 层的编译
@@ -227,12 +227,13 @@ $ npm run build:app
   - 很难做到极致的静态语法分析，即使将 kml 中使用的变量传递到了 service 的编译器中，但是在 service 层，写法千奇百怪，`this.setData({src:'/static/test.png'})`, 这种可以分析出来，但是如果重写了 setData 就不易处理了，或者使用了js中的内变量对src进行赋值 `this.setData({src: this.path})`也不好处理
   - 再写一个监听器，监听目标目录的静态资源文件（如 .png,.mp4,.gif 等）的变化，然后直接将所有的文件复制到 dist 目录
 
-### 添加示例代码（6-16 ~ 6-23）
+### 添加示例代码
 1. 支持 for 循环
 2. 支持 hide 和 display: none
 
-### 细节优化（7-21）
+### 细节优化
 - page 组件的高度
+- 处理文件夹含有-导致编译失败
 - 编译器不能监听 json 文件的的改变，从而触发重新编译
 - 只有页面 js/kml 有一个不存在时，需要提示错误，当 css 不存在时，不能出现报错，当添加 css 时，需要被编译器监听到
 - css中, ::after, ::before不生效,原因：scope 添加到了伪类后面，`.uni-uploader__input-box::after[ba14242e]`
@@ -268,7 +269,7 @@ $ npm run build:app
 
 ### api做参数检验
 
-### 路由的优化(end: 8-12)
+### 路由的优化
 1. 路由返回的监听，能够返回到正确的页面
 2. 各种路由API的实现
   - redirectTo

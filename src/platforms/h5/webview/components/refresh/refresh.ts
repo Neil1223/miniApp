@@ -43,15 +43,19 @@ const Refresh = (Base: typeof HTMLElement) => {
     }
     _onEnableChange(_: boolean, enable: boolean) {
       if (enable && !this.pageRefresh) {
+        const currentPage = PageFactory.getCurrentPage();
         this.pageRefresh = document.createElement('wx-page-refresh') as PageRefresh;
+        // 如果是 transparent header, 需要添加新属性, 保证下拉框位置正确
+        if (currentPage.enableTransparentTitle) {
+          this.pageRefresh.classList.add('page-refresh-transparent');
+        }
         (this.parentElement as HTMLElement).appendChild(this.pageRefresh);
 
         this.addEventListener('touchstart', this._touchstart.bind(this));
         this.addEventListener('touchmove', this._touchmove.bind(this));
         this.addEventListener('touchend', this._touchend.bind(this));
 
-        const webviewId = PageFactory.getCurrentWebviewId();
-        KipleViewJSBridge.on(`onPullDownRefreshChange.${webviewId}`, (status: 'start' | 'stop') => {
+        KipleViewJSBridge.on(`onPullDownRefreshChange.${currentPage.__webviewId__}`, (status: 'start' | 'stop') => {
           if (status === 'stop') {
             this._restoring();
           } else if (status === 'start') {
