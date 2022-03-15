@@ -1,5 +1,6 @@
 import { ASTElement, IDataString, IGenCode } from '.';
 import { getGlobalData, getPrev } from './helper';
+import transformTemplate from './transformTemplate';
 
 /**
  * 根据字符串，返回字符串中的静态字符和变量
@@ -42,6 +43,10 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
   let result: IGenCode = { variates: [], code: '', arrayElements: {}, conditional: [] };
 
   if (htmlAST.type === 'tag') {
+    // 判断是 template 模板
+    if (htmlAST.name === 'template') {
+      return transformTemplate(htmlAST);
+    }
     // 需要判断下，html 是否是 k:if,k:else, k:elif
     if (htmlAST.attribs && (htmlAST.attribs['k:if'] || htmlAST.attribs.hasOwnProperty('k:else') || htmlAST.attribs['k:elif'])) {
       let key = '';

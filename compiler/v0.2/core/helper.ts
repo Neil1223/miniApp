@@ -1,11 +1,30 @@
 import * as babel from '@babel/core';
+import * as htmlparser2 from 'htmlparser2';
+import { DomHandler } from 'domhandler';
 import { ASTElement } from '.';
-import getIdentifier from '../plugins/babel-plugin-require';
+import getIdentifier, { getTempIdentifier } from '../plugins/babel-plugin-require';
 
 export const getGlobalData = (text: string) => {
   const identifiers: string[] = [];
   babel.transformSync(text, { ast: true, code: false, plugins: [getIdentifier(identifiers)] });
   return identifiers;
+};
+
+export const getTempGlobalData = (text: string) => {
+  const identifiers: string[] = [];
+  babel.transformSync(text, { ast: true, code: false, plugins: [getTempIdentifier(identifiers)] });
+  return identifiers;
+};
+
+export const htmlParser = (htmlString: string, pageVariable?: string) => {
+  const addNode = (DomHandler as any).prototype.addNode;
+  (DomHandler as any).prototype.addNode = function (node: any) {
+    node.__pageVariable__ = pageVariable;
+    addNode.call(this, node);
+  };
+  var handler = new DomHandler(undefined, {});
+  new htmlparser2.Parser(handler, {}).end(htmlString);
+  return handler.root.children;
 };
 
 /**

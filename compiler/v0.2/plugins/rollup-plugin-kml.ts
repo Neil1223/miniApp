@@ -1,7 +1,8 @@
-import * as htmlparser2 from 'htmlparser2';
 import generateFromAST from '../core/generateFromAST';
+import { htmlParser } from '../core/helper';
 import transformFor from '../core/transformFor';
 import transformIf from '../core/transformIf';
+import { saveImportedTemplate } from '../core/transformTemplate';
 import { getRelativePath, getUpperCasePath, resolveApp } from '../utils';
 
 /**
@@ -17,9 +18,15 @@ const parserKml = () => {
     transform(source: any, fileName: string) {
       if (/\.kml/.test(fileName)) {
         const pagePath = getRelativePath(inputFile, fileName);
-        const upperPath = getUpperCasePath(pagePath).split('.')[0];
-        const ast = htmlparser2.parseDOM(source);
-        let { code, variates, arrayElements, conditional } = generateFromAST(ast[0] as any); // 需要生成 code 和 code 中使用的变量
+        const pageVariable = getUpperCasePath(pagePath).split('.')[0];
+
+        // 当前实现: 直接parser字符串获取节点，在后面遍历节点生成v-dom
+        // TODO: 使用 New Parser 的方式，通过回调函数进行节点遍历，这样只需要遍历一次
+        const ast = htmlParser(source, pageVariable);
+        // 处理 template
+        const [importTemplate, pageEl] = saveImportedTemplate(ast as any, inputFile, fileName);
+
+        let { code, variates, arrayElements, conditional } = generateFromAST(pageEl as any); // 需要生成 code 和 code 中使用的变量
 
         //处理 for 循环语句
         const arrayCodes = transformFor(arrayElements);
@@ -32,13 +39,14 @@ const parserKml = () => {
         variates = Array.from(new Set(variates));
 
         const result = `
-        import {createElement,_concat} from 'inject/view.js';
-        var ${upperPath} = (pageData) => {
+        import {createElement,_concat,__renderTemplate} from 'inject/view.js';
+        ${importTemplate}
+        var ${pageVariable} = (pageData) => {
           ${variates.map((item) => `var ${item} = pageData['${item}'];`).join('\n')}
           ${conditionalCodes.code}${arrayCodes.code}
           return ${Array.isArray(code) ? code.join(',') : code}
         };
-        export default ${upperPath};
+        export default ${pageVariable};
         `;
 
         return result;

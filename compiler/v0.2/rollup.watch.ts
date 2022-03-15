@@ -75,6 +75,9 @@ watcher.on('event', (event: any) => {
     case 'ERROR':
       errorList.push(event.error);
       console.error('[Error]', event.error.message);
+      if (event.error.frame) {
+        console.error(event.error.frame);
+      }
   }
 
   // 移除最后一个缓存(app.json的缓存)，为了使每次文件发生变化都能进行最外一层的重新刷新, 保持正确的文件依赖引入

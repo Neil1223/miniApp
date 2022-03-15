@@ -1,5 +1,6 @@
 export const createElement = window.core.createElement;
 export const __AppCssCode__ = (window.__AppCssCode__ = {});
+export const __AppTemplateCode__ = {};
 
 const BASE_DEVICE_WIDTH = 750;
 var deviceWidth = window.innerWidth || 375;
@@ -40,4 +41,8 @@ export const setCssToHead = (word, path) => {
 
 export const _concat = (...arg) => {
   return ''.concat(...arg);
+};
+
+export const __renderTemplate = (pageVariable, data) => {
+  return __AppTemplateCode__[pageVariable](data);
 };

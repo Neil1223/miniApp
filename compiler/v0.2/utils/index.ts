@@ -8,6 +8,9 @@ export const resolveApp = (relativePath: string) => path.resolve(appRoot, relati
 
 export const getResolvePath = (...pathSegments: string[]) => path.resolve(...pathSegments);
 
+// 获取相对路径
+export const getRelativePathString = (...pathSegments: [string, string]) => path.relative(...pathSegments);
+
 // 获取文件内容
 export const getFileContent = (path: string) => {
   try {
