@@ -6,6 +6,7 @@ const tsPlugin = ts({
   tsconfig: resolveApp('tsconfig.json'), // 导入本地ts配置
 });
 
+// 用于导出 template-parser, 供 webpack 调用
 const options = {
   input: 'compiler/v0.2/core/template-parser.ts',
   output: {

@@ -16,6 +16,7 @@ export const getTempGlobalData = (text: string) => {
   return identifiers;
 };
 
+// 解析字符串
 export const htmlParser = (htmlString: string, pageVariable?: string) => {
   const addNode = (DomHandler as any).prototype.addNode;
   (DomHandler as any).prototype.addNode = function (node: any) {
