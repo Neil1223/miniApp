@@ -18,12 +18,13 @@ export const getTempGlobalData = (text: string) => {
 
 // 解析字符串
 export const htmlParser = (htmlString: string, pageVariable?: string) => {
-  const addNode = (DomHandler as any).prototype.addNode;
-  (DomHandler as any).prototype.addNode = function (node: any) {
-    node.__pageVariable__ = pageVariable;
-    addNode.call(this, node);
-  };
-  var handler = new DomHandler(undefined, {});
+  class CustomDomHandler extends DomHandler {
+    addNode(node: any) {
+      node.__pageVariable__ = pageVariable;
+      super.addNode(node);
+    }
+  }
+  var handler = new CustomDomHandler(undefined, {});
   new htmlparser2.Parser(handler, {}).end(htmlString);
   return handler.root.children;
 };
