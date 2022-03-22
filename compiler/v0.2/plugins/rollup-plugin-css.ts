@@ -47,21 +47,19 @@ const parserCss = () => {
           hash = getFileHash(fileName, this);
         }
 
-        if (hash) {
-          const result = await postcss([postcssScope(hash)])
-            .use(atImport as any)
-            .process(source, { from: fileName });
+        const result = await postcss([postcssScope(hash)])
+          .use(atImport as any)
+          .process(source, { from: fileName });
 
-          source = result.css;
+        source = result.css;
 
-          // 监听 css 中 @import 的文件
-          const messages = result.messages || [];
-          messages.forEach((item) => {
-            if (item.type === 'dependency' && item.plugin === 'postcss-import') {
-              (this as any).addWatchFile(item.file);
-            }
-          });
-        }
+        // 监听 css 中 @import 的文件
+        const messages = result.messages || [];
+        messages.forEach((item) => {
+          if (item.type === 'dependency' && item.plugin === 'postcss-import') {
+            (this as any).addWatchFile(item.file);
+          }
+        });
 
         const arrayCode: Array<string | number> = getCssArray(source);
         const pagePath = getRelativePath(inputFile, fileName);

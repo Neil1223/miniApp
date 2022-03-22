@@ -7,6 +7,10 @@ const postcssScope = (scope: string) => {
   return {
     postcssPlugin: 'postcss-scope',
     Root(root: any) {
+      // 如果没有scope，直接退出
+      if (!scope) {
+        return;
+      }
       // Transform CSS AST here
       root.walkRules((rule: Rule) => {
         const selector = rule.selector.replace(/(?<=(\s|,|^))[a-z]+/g, (e) => `wx-${e}`);

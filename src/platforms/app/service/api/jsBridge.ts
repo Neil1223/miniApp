@@ -30,7 +30,7 @@ const invokeCallbacks: IInvokeCallback = {};
 
 const jsBridge: IBridge = {
   exec: (actionName, args) => {
-    const { success, fail, ...argsObj } = args || {};
+    const { success, fail, complete, ...argsObj } = args || {};
     invokeCallbacks[invokeCallbackId] = { success, fail };
     // 需要将callbackId发送给native，native处理结果后将call bridge.callbackFromNative 通知前端
     argsObj.__callbackId__ = invokeCallbackId++;
