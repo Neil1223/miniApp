@@ -25,7 +25,7 @@ export const htmlParser = (htmlString: string, pageVariable?: string) => {
     }
   }
   var handler = new CustomDomHandler(undefined, {});
-  new htmlparser2.Parser(handler, {}).end(htmlString);
+  new htmlparser2.Parser(handler, { recognizeSelfClosing: true }).end(htmlString);
   return handler.root.children;
 };
 
