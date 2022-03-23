@@ -250,6 +250,11 @@ $ npm run build:app
 - 使用 key 进行同级的diff
 - 事件绑定机制：将同一种类型的事件只绑定一个，像 react 一样进行事件合成和事件绑定，事件派发
 
+### 组件机制
+- import template: 引入模板 -> 使用模板; is 使用变量进行组合
+- include template: 直接导入模板插入文件
+- Component 组件: 含有生命周期的组件，支持组件diff，减少页面渲染次数; slot 语法;
+
 ### swiper 组件
 
 ### scroll-view 组件

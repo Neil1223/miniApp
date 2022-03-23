@@ -20,9 +20,7 @@ const parserKml = () => {
         const pagePath = getRelativePath(inputFile, fileName);
         const pageVariable = getUpperCasePath(pagePath).split('.')[0];
 
-        // 当前实现: 直接parser字符串获取节点，在后面遍历节点生成v-dom
-        // TODO: 使用 New Parser 的方式，通过回调函数进行节点遍历，这样只需要遍历一次
-        const ast = htmlParser(source, pageVariable);
+        const ast = htmlParser(source, pageVariable, pagePath);
         // 处理 template
         const [importTemplate, pageEl] = saveImportedTemplate(ast as any, inputFile, fileName);
 

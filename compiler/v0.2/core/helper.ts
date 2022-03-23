@@ -17,10 +17,11 @@ export const getTempGlobalData = (text: string) => {
 };
 
 // 解析字符串
-export const htmlParser = (htmlString: string, pageVariable?: string) => {
+export const htmlParser = (htmlString: string, pageVariable: string, pagePath: string) => {
   class CustomDomHandler extends DomHandler {
     addNode(node: any) {
       node.__pageVariable__ = pageVariable;
+      node.__pagePath__ = pagePath;
       super.addNode(node);
     }
   }

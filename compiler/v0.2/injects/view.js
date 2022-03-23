@@ -44,5 +44,8 @@ export const _concat = (...arg) => {
 };
 
 export const __renderTemplate = (pageVariable, data) => {
+  if (!__AppTemplateCode__[pageVariable]) {
+    throw new Error(`Can not use template when not import ${pageVariable.split('_')[1]}.`);
+  }
   return __AppTemplateCode__[pageVariable](data);
 };
