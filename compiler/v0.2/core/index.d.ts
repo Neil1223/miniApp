@@ -7,7 +7,9 @@ export interface ASTElement {
   prev: ASTElement;
   children: ASTElement[];
   __pageVariable__: string; // 当前 page 的路径驼峰变量
-  __pagePath__: string; // 当前 page 的路径
+  __pagePath__: string;
+  __pageRoute__: string; // 当前 page 的路由路径
+  __rootPath__: string; // 入口文件的路径：app.json 的路径
 }
 
 export interface IDataString {

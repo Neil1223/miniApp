@@ -244,15 +244,15 @@ $ npm run build:app
   - 目前的 text 文字处理方式是将所有文字使用 span 标签包裹起来，文字 diff 的时候修改 span 的内容，然后在 text 组件中监听文字改变，进行字符串的拼接
 
 ### TODO List
-- Build 时，将资源拷贝到编译目录
-- 处理tabbar的图片 (fixed)
-- 支持复杂的组件模板，比如video，swiper，需要将.html模板转换为jsx，然后绑定到自定义component中
+- Build 时，将资源拷贝到编译目录 (completed)
+- 处理tabbar的图片 (completed)
+- 支持复杂的组件模板，比如video，swiper，需要将.html模板转换为jsx，然后绑定到自定义component中 (completed)
 - 使用 key 进行同级的diff
 - 事件绑定机制：将同一种类型的事件只绑定一个，像 react 一样进行事件合成和事件绑定，事件派发
 
 ### 组件机制
-- import template: 引入模板 -> 使用模板; is 使用变量进行组合
-- include template: 直接导入模板插入文件
+- import template: 引入模板 -> 使用模板; is 使用变量进行组合 - (completed)；数据只能在data里面传递
+- include template: 可以将目标文件除了 template/wxs 外的整个代码引入，相当于是拷贝到 include 位置,支持在里面写 page 的变量
 - Component 组件: 含有生命周期的组件，支持组件diff，减少页面渲染次数; slot 语法;
 
 ### swiper 组件

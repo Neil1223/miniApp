@@ -50,7 +50,7 @@ export const saveImportedTemplate = (htmlAST: ASTElement[], inputFile: string, f
 
         // 处理不同 path，相同 name 的 template 引用
         if (pageTmpConfigs.find((item) => item.name === _names[0])) {
-          throw new Error('当前页面[`' + htmlAST[index].__pagePath__ + '`]已包含name=`' + _names[0] + '`的模板引用');
+          throw new Error('当前页面[`' + htmlAST[index].__pageRoute__ + '`]已包含name=`' + _names[0] + '`的模板引用');
         }
         pageTmpConfigs.push({ src, name: _names[0] });
       }
@@ -89,23 +89,23 @@ export const saveImportedTemplate = (htmlAST: ASTElement[], inputFile: string, f
  * 处理页面中的 template 标签: <template is="header" data="{{title:'view'}}" />
  * @param htmlAST {ASTElement} 需要处理的template节点
  */
-const transformTemplate = (htmlAST: ASTElement): IGenCode => {
+const transformImportTemplate = (htmlAST: ASTElement): IGenCode => {
   let result: IGenCode = { variates: [], code: '', arrayElements: {}, conditional: [] };
   const { is, data } = htmlAST.attribs;
 
   // 判断 is 是否存在
   if (!is) {
-    throw new Error('页面[`' + htmlAST.__pagePath__ + '`]中 template `is` 属性不能为空');
+    throw new Error('页面[`' + htmlAST.__pageRoute__ + '`]中 template `is` 属性不能为空');
   }
 
   if (!templates[htmlAST.__pageVariable__]) {
-    throw new Error(`不可以在页面[\`${htmlAST.__pagePath__}\`]使用未导入的 template 模板: ${is}.`);
+    throw new Error(`不可以在页面[\`${htmlAST.__pageRoute__}\`]使用未导入的 template 模板: ${is}.`);
   }
 
   // 如果 is 是静态字符串，需要校验是否导入了对应模板，如果是模板语法，最终在 render 的时候进行二次校验
   const isStaticString = !/{{.+?}}/gi.test(is);
   if (isStaticString && !templates[htmlAST.__pageVariable__].includes(is)) {
-    throw new Error(`不可以在页面[\`${htmlAST.__pagePath__}\`]使用未导入的 template 模板: ${is}.`);
+    throw new Error(`不可以在页面[\`${htmlAST.__pageRoute__}\`]使用未导入的 template 模板: ${is}.`);
   }
 
   // 处理 is 数据格式
@@ -128,4 +128,4 @@ const transformTemplate = (htmlAST: ASTElement): IGenCode => {
   return result;
 };
 
-export default transformTemplate;
+export default transformImportTemplate;

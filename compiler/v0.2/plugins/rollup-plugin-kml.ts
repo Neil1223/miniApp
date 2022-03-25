@@ -2,7 +2,7 @@ import generateFromAST from '../core/generateFromAST';
 import { htmlParser } from '../core/helper';
 import transformFor from '../core/transformFor';
 import transformIf from '../core/transformIf';
-import { saveImportedTemplate } from '../core/transformTemplate';
+import { saveImportedTemplate } from '../core/transformImportTpl';
 import { getRelativePath, getUpperCasePath, resolveApp } from '../utils';
 
 /**
@@ -15,14 +15,14 @@ const parserKml = () => {
     options(options: { input: any }) {
       inputFile = resolveApp(options.input);
     },
-    transform(source: any, fileName: string) {
-      if (/\.kml/.test(fileName)) {
-        const pagePath = getRelativePath(inputFile, fileName);
-        const pageVariable = getUpperCasePath(pagePath).split('.')[0];
+    transform(source: any, pagePath: string) {
+      if (/\.kml/.test(pagePath)) {
+        const pageRoute = getRelativePath(inputFile, pagePath);
+        const pageVariable = getUpperCasePath(pageRoute).split('.')[0];
 
-        const ast = htmlParser(source, pageVariable, pagePath);
+        const ast = htmlParser(source, { pageVariable, pagePath, pageRoute, rootPath: inputFile });
         // 处理 template
-        const [importTemplate, pageEl] = saveImportedTemplate(ast as any, inputFile, fileName);
+        const [importTemplate, pageEl] = saveImportedTemplate(ast as any, inputFile, pagePath);
 
         let { code, variates, arrayElements, conditional } = generateFromAST(pageEl as any); // 需要生成 code 和 code 中使用的变量
 
