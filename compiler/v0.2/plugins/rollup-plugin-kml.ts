@@ -20,7 +20,7 @@ const parserKml = () => {
         const pageRoute = getRelativePath(inputFile, pagePath);
         const pageVariable = getUpperCasePath(pageRoute).split('.')[0];
 
-        const ast = htmlParser(source, { pageVariable, pagePath, pageRoute, rootPath: inputFile });
+        const ast = htmlParser(source, { pageVariable, pagePath, pageRoute, rootPath: inputFile, rollup: this });
         // 处理 template
         const [importTemplate, pageEl] = saveImportedTemplate(ast as any, inputFile, pagePath);
 

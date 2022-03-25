@@ -34,9 +34,17 @@ const transformIncludeTemplate = (htmlAST: ASTElement): IGenCode => {
     throw new Error(`页面[\`${htmlAST.__pageRoute__}\`]的include模板[\`${src}\`]不能含有 template/wxs.`);
   }
 
-  const { __pageRoute__, __pageVariable__, __pagePath__, __rootPath__ } = htmlAST;
+  const { __pageRoute__, __pageVariable__, __pagePath__, __rootPath__, __rollup__ } = htmlAST;
 
-  const ast = htmlParser(templateCont, { pageVariable: __pageVariable__, pagePath: __pagePath__, pageRoute: __pageRoute__, rootPath: __rootPath__ });
+  const ast = htmlParser(templateCont, {
+    pageVariable: __pageVariable__,
+    pagePath: __pagePath__,
+    pageRoute: __pageRoute__,
+    rootPath: __rootPath__,
+    rollup: __rollup__,
+  });
+  // 添加文件监听
+  htmlAST.__rollup__.addWatchFile(resolvePath);
 
   const codeArray = [];
   for (let index = 0; index < ast.length; index++) {

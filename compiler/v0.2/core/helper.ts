@@ -17,14 +17,18 @@ export const getTempGlobalData = (text: string) => {
 };
 
 // 解析字符串
-export const htmlParser = (htmlString: string, params: { pageVariable: string; pageRoute: string; pagePath: string; rootPath: string }) => {
-  const { pageVariable, pageRoute, pagePath, rootPath } = params;
+export const htmlParser = (
+  htmlString: string,
+  params: { pageVariable: string; pageRoute: string; pagePath: string; rootPath: string; rollup: any }
+) => {
+  const { pageVariable, pageRoute, pagePath, rootPath, rollup } = params;
   class CustomDomHandler extends DomHandler {
     addNode(node: any) {
       node.__pageVariable__ = pageVariable;
       node.__pageRoute__ = pageRoute;
       node.__pagePath__ = pagePath;
       node.__rootPath__ = rootPath;
+      node.__rollup__ = rollup;
       super.addNode(node);
     }
   }

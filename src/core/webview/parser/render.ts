@@ -94,6 +94,7 @@ export const render = (virtualDom: IVirtualDom, container: Element, hash?: strin
  * 创建虚拟dom，所有的页面元素都需要调用这个方法
  */
 export const createElement = (tag: string, props: any, ...children: any[]): IVirtualDom => {
+  children = children.flat();
   return { tag, props, children };
 };
 

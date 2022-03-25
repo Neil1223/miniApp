@@ -10,6 +10,7 @@ export interface ASTElement {
   __pagePath__: string;
   __pageRoute__: string; // 当前 page 的路由路径
   __rootPath__: string; // 入口文件的路径：app.json 的路径
+  __rollup__: any; // rollup 实例
 }
 
 export interface IDataString {
