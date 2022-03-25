@@ -37,12 +37,18 @@ const transformIncludeTemplate = (htmlAST: ASTElement): IGenCode => {
   const { __pageRoute__, __pageVariable__, __pagePath__, __rootPath__ } = htmlAST;
 
   const ast = htmlParser(templateCont, { pageVariable: __pageVariable__, pagePath: __pagePath__, pageRoute: __pageRoute__, rootPath: __rootPath__ });
-  // 默认 include 的模板里面只有1个节点
+
+  const codeArray = [];
   for (let index = 0; index < ast.length; index++) {
     if (ast[index] && ast[index].type === 'tag') {
-      return generateFromAST(ast[index] as any);
+      const _result = generateFromAST(ast[index] as any);
+      result.variates.push(..._result.variates);
+      result.conditional.push(..._result.conditional);
+      Object.assign(result.arrayElements, _result.arrayElements);
+      codeArray.push(_result.code);
     }
   }
+  result.code = codeArray.length > 1 ? `[${codeArray.join(',')}]` : codeArray[0];
 
   return result;
 };
