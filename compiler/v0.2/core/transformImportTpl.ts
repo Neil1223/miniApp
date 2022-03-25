@@ -56,12 +56,6 @@ export const saveImportedTemplate = (htmlAST: ASTElement[], inputFile: string, f
       }
     } else if (htmlAST[index] && htmlAST[index].type === 'tag') {
       pageEl = htmlAST[index];
-      // 如果节点的第一个标签是 template 同时含有 name 属性，那么将他转化为 view 标签
-      if (pageEl.name === 'template' && pageEl.attribs && pageEl.attribs.name) {
-        pageEl.name = 'view';
-        pageEl.attribs.isTemplate = '';
-      }
-
       break;
     }
   }

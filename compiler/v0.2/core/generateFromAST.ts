@@ -1,5 +1,6 @@
 import { ASTElement, IDataString, IGenCode } from '.';
 import { getGlobalData, getPrev } from './helper';
+import transformASTChildren from './transformASTChildren';
 import transformImportTemplate from './transformImportTpl';
 import transformIncludeTemplate from './transformIncludeTpl';
 
@@ -46,6 +47,13 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
   if (htmlAST.type === 'tag') {
     // 判断是 import template 模板
     if (htmlAST.name === 'template') {
+      // 模板源文件
+      if (htmlAST.attribs.name) {
+        const children: string[] = transformASTChildren(htmlAST, result);
+        result.code = children.length > 1 ? `[${children.join(',')}]` : children[0] || '';
+        return result;
+      }
+      // 页面中的 template 标签
       return transformImportTemplate(htmlAST);
     }
     // 判断是 include template 模板
@@ -81,46 +89,7 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
       return result;
     }
 
-    let children: string[] = [];
-
-    // 处理 children
-    if (htmlAST.children && htmlAST.children.length) {
-      htmlAST.children.forEach((element) => {
-        if (htmlAST.name === 'text' && element.name && element.name !== 'text') {
-          // 如果组件时 text， 那么子元素只能是文字或者 text 元素
-          return;
-        }
-        var _result = generateFromAST(element);
-        if (_result.variates.length) {
-          _result.variates.forEach((item) => {
-            if (!result.variates.includes(item)) {
-              result.variates.push(item);
-            }
-          });
-        }
-
-        // 合并子集中的含有的for循环，待会统一交给外部处理
-        if (Object.keys(_result.arrayElements)) {
-          Object.assign(result.arrayElements, _result.arrayElements);
-        }
-
-        // 合并子集中的含有的 if 语句，待会统一交给外部处理
-        if (_result.conditional.length) {
-          result.conditional.push(..._result.conditional);
-        }
-
-        // 如果 code 不存在，那么直接 return ==> 处理 html 中的注释
-        if (!_result.code) {
-          return;
-        }
-
-        if (typeof _result.code === 'string') {
-          children.push(_result.code);
-        } else if (Array.isArray(_result.code)) {
-          children.push(..._result.code);
-        }
-      });
-    }
+    const children: string[] = transformASTChildren(htmlAST, result);
 
     // 处理属性
     let attribs: null | string = null;
@@ -152,7 +121,6 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
     // 需要使用正则解析 {{data}}
     const dataString = getData(htmlAST.data.replace(/(^\s+)|(\s+$)/gi, ''));
     result.code = dataString.values.length > 1 ? `_concat(${dataString.values})` : dataString.values[0];
-    // result.code = dataString.values;
     if (dataString.variates.length) {
       dataString.variates.forEach((item) => {
         if (!result.variates.includes(item)) {

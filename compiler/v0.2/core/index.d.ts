@@ -26,12 +26,12 @@ export interface Conditional {
 
 interface IGenCode {
   variates: string[];
-  code: string | string[];
+  code: string;
   arrayElements: { [key: string]: ASTElement };
   conditional: Conditional[]; // 条件语句使用有序的数组进行存档，方便遍历的时候获取
 }
 
 interface IForCode {
   variates: string[];
-  code: string | string[];
+  code: string;
 }

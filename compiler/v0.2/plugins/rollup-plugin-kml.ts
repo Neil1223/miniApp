@@ -42,7 +42,7 @@ const parserKml = () => {
         var ${pageVariable} = (pageData) => {
           ${variates.map((item) => `var ${item} = pageData['${item}'];`).join('\n')}
           ${conditionalCodes.code}${arrayCodes.code}
-          return ${Array.isArray(code) ? code.join(',') : code}
+          return ${code}
         };
         export default ${pageVariable};
         `;
