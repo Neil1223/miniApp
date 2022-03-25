@@ -1,4 +1,6 @@
+<import src="../../../templates/header/index.kml" />
 <view class="container">
+  <template is="header" data="{{title:'view'}}" />
   <view class="page-section">
     <view class="page-section-title">
       <text>flex-direction: row\n横向布局</text>
