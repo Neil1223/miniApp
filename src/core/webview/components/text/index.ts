@@ -90,7 +90,6 @@ class Text extends Hover(Base) {
   }
 
   _updateText(events?: any) {
-    console.log('-----', events);
     const event = events ? events[0] : null;
     if (event && event.type === 'childList' && event.target && event.target.tagName === 'SPAN') {
       if (event.addedNodes[0]?.textContent !== event.removedNodes[0]?.textContent) {

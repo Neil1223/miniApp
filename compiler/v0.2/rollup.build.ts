@@ -2,7 +2,7 @@ import * as rollup from 'rollup';
 import parserCss from './plugins/rollup-plugin-css';
 import parserKml from './plugins/rollup-plugin-kml';
 import { serviceRoot, viewRoot } from './plugins/rollup-plugin-parserAppJson';
-import transformPage from './plugins/rollup-plugin-parserService';
+import transformJs from './plugins/rollup-plugin-js';
 import { resolveApp } from './utils';
 const alias = require('@rollup/plugin-alias');
 
@@ -11,7 +11,7 @@ let startTime = new Date().getTime();
 const options = [
   {
     input: 'example/app.json',
-    plugins: [serviceRoot(), transformPage()],
+    plugins: [serviceRoot(), transformJs()],
     output: {
       file: 'dist/app-service.js',
       format: 'iife',

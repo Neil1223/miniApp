@@ -3,7 +3,7 @@ import * as fs from 'fs-extra';
 import parserCss from './plugins/rollup-plugin-css';
 import parserKml from './plugins/rollup-plugin-kml';
 import { serviceRoot, viewRoot } from './plugins/rollup-plugin-parserAppJson';
-import transformPage from './plugins/rollup-plugin-parserService';
+import transformJs from './plugins/rollup-plugin-js';
 import { resolveApp } from './utils';
 const alias = require('@rollup/plugin-alias');
 const serve = require('rollup-plugin-serve');
@@ -19,7 +19,7 @@ let startTime = 0;
 const watchOptions = [
   {
     input: 'example/app.json',
-    plugins: [serviceRoot(), transformPage()],
+    plugins: [serviceRoot(), transformJs()],
     watch: {
       include: 'example/**',
     },

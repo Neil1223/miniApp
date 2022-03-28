@@ -32,10 +32,10 @@ const transformRequireCode = (requireContent: any[]) => () => {
 /**
  * 处理小程序中的所有 js,将 js 包裹在 define 中，同时生成 sourceMap
  */
-const transformPage = () => {
+const transformJs = () => {
   let inputFile = '';
   return {
-    name: 'transform-page',
+    name: 'transform-js',
     options(options: { input: string }) {
       inputFile = resolveApp(options.input);
     },
@@ -63,4 +63,4 @@ const transformPage = () => {
   };
 };
 
-export default transformPage;
+export default transformJs;

@@ -30,7 +30,7 @@ const generateConfig = (config: IConfig, fileName: string, _this: any) => {
 };
 
 /**
- * 处理 app.json，批量导入 page js 文件, 同时生成 app-config.json
+ * 处理 app.json，批量导入 page js 文件,生成 app-service.js, 同时生成 app-config.js
  */
 export const serviceRoot = () => ({
   name: 'transform-config',
@@ -50,6 +50,8 @@ export const serviceRoot = () => ({
         }
         code += `import './${item}';`;
       });
+
+      // 初始化程序
       code += `\nrequire('app.js');\ninitApp();`;
 
       // 处理小程序配置文件, 生成 app-config.js
