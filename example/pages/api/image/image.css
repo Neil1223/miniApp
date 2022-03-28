@@ -1,18 +1,3 @@
-.title {
-	padding: 34rpx;
-	text-align: center;
-}
-
-.title view {
-	font-size: 30rpx;
-	height: 80rpx;
-	line-height: 80rpx;
-	color: #bebebe;
-	padding: 0 40rpx;
-	border-bottom: 1px solid #d8d8d8;
-	display: inline-block;
-}
-
 /* 列表 */
 .uni-list {
 	background-color: #FFFFFF;

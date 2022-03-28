@@ -1,7 +1,6 @@
+<import src="/templates/header/index.kml" />
 <view>
-  <view class="title">
-    <view>Camera</view>
-  </view>
+  <template is="header" data="{{title:'Camera'}}" />
   <view class="uni-list">
     <view class="uni-list-cell cell-pd">
       <view class="uni-uploader">
