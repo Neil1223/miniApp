@@ -3,10 +3,10 @@
 ```bash
 # 编译器，运行脚本 -- 开发时
 $ npm run compiler:v2:watch
-# 编译器，运行脚本 -- 打包时
+# 编译器，运行脚本 -- 打包
 $ npm run compiler:v2
 
-# 编译框架中 html 模板的解析函数
+# 编译框架中 .tpl 模板的解析函数
 $ npm run build:template-parser
 
 # 运行时框架，运行命令
@@ -52,7 +52,7 @@ $ npm run build:app
 ```
 
 ### 基础部分
-1. 基础 API：需要提供 kiple.xxx() 供web调用native的能力
+1. 基础 API：需要提供 kiple.xxx() 供 web 调用 native 的能力
 2. 基础组件：框架仅允许内置的组件，div等组件不允许使用
 3. 框架: 整合基础组件+API,并提供整体的一些调用方式，依次进行页面的渲染
 4. 编译器：将页面编译为一个js文件
@@ -76,9 +76,9 @@ $ npm run build:app
       - 加载组件样式 webview.css(全局样式)
       - 加载组件库 webview.js(组件及组件样式，进行page.html的初始化)
       - 加载能力库 service.js(api)
-    - 加载 page-style.js(项目的样式文件,css等都会转换成js，然后使用js插入到元素的style标签中，rpx转换为number，然后根据页面大小转换为px,px不变，可以将这个文件和下一个文件合并)
-    - 加载 page-ui.js(项目的视图层代码，可以和上个文件进行合并)，这个文件中初始化页面
-    - 加载 page-server.js(项目的业务逻辑，项目配置等信息)
+    - 加载 app-config.js(项目配置等信息)
+    - 加载 app-view.js(项目的视图层代码)，这个文件中初始化页面
+    - 加载 app-server.js(项目的业务逻辑)
     ```js
     setTimeout(function () {
       if (typeof jSCore === 'object' && typeof jSCore.onDocumentReady === 'function') {
@@ -89,7 +89,7 @@ $ npm run build:app
     }, 0);
     ```
 5. 运行js的顺序
-    - 加载完page-server.js后, 开始执行App(options)，执行onDocumentReady，
+    - 加载完 app-server.js 后, 开始执行App(options)，执行 onDocumentReady，
     - 先执行全局的函数
     - 在执行页面函数，执行onLoad后，确定当前页面的data
     - 获取当前页面的渲染函数，加上初始化的data
@@ -108,10 +108,10 @@ $ npm run build:app
   ```
 
 
-### 这个阶段的任务时处理事件(4.30)
-1. 如何处理tap事件和longtap事件？触发longtap后不能触发tap
-2. 如何将tap事件绑定到元素上？
-3. 视图层触发事件后，如何将事件的结果返回到逻辑层？(暂时pending，先处理App的启动，然后开发bridge功能)
+### 这个阶段的任务时处理事件(10.29)
+1. 如何处理tap事件和longtap事件? 触发longtap后不能触发tap
+2. 如何将tap事件绑定到元素上? 
+3. 视图层触发事件后，如何将事件的结果返回到逻辑层? (暂时pending，先处理App的启动，然后开发bridge功能)
 
 ### 这个阶段需要处理下jsBridge
 1. view和service进行交互
@@ -152,7 +152,7 @@ $ npm run build:app
 6. 加载页面 css，计算 rpx.
 7. title 相关的 api
 
-### 编译器（5.25）
+### 编译器（11.13）
 1. 项目结构
     ```
     ├── page                      # 页面的目录，包含所有的页面
@@ -195,7 +195,7 @@ $ npm run build:app
     - 每个 page.js 使用 babel 进行编译，生成 code 和 source map（完美解决手动编译 source map 不好插入的问题，也解决了 webpack 方案模块化被重写的问题，性能也比较好）
 
 ### tabBar和css模块化
-1. css模块化（7.6 end）
+1. css模块化（1.5 end）
     - 获取 css 的 ast，获取到里面的 import 语法
     - 编译 css 的时候，将当前 css 模块依赖的 css 路径添加到单数末尾: ===> 还是使用postcss，直接将 import 的 css 插入到当前代码里面
       ```js
@@ -243,12 +243,15 @@ $ npm run build:app
   - 处理字符串转义
   - 目前的 text 文字处理方式是将所有文字使用 span 标签包裹起来，文字 diff 的时候修改 span 的内容，然后在 text 组件中监听文字改变，进行字符串的拼接
 
-### TODO List
+### 框架 TODO List
 - Build 时，将资源拷贝到编译目录 (completed)
 - 处理tabbar的图片 (completed)
 - 支持复杂的组件模板，比如video，swiper，需要将.html模板转换为jsx，然后绑定到自定义component中 (completed)
 - 使用 key 进行同级的diff
-- 事件绑定机制：将同一种类型的事件只绑定一个，像 react 一样进行事件合成和事件绑定，事件派发
+- 事件绑定机制：将同一种类型的事件只绑定一个，像 react 一样进行事件合成和事件绑定，事件派发，冒泡捕获
+- WXS 语法支持
+- 数据双向绑定
+- 丰富Page生命周期函数，事件处理函数
 
 ### 组件机制
 - import template: 引入模板 -> 使用模板; is 使用变量进行组合；数据只能在data里面传递 - (completed)
