@@ -16,7 +16,12 @@ export const getTempGlobalData = (text: string) => {
   return identifiers;
 };
 
-// 解析字符串
+/**
+ * 解析字符串
+ * @param {String} htmlString 需要解析的文件内容
+ * @param {Object} params 文件的相关信息，如文件路径，app.json路径，rollup实例
+ * @return 解析后的 ast 节点
+ */
 export const htmlParser = (
   htmlString: string,
   params: { pageVariable: string; pageRoute: string; pagePath: string; rootPath: string; rollup: any }

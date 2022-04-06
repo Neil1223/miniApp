@@ -4,6 +4,8 @@ import generateFromAST from './generateFromAST';
 /**
  * 处理 AST 树中的 children
  * @param htmlAST {ASTElement} 需要处理的 ast 节点
+ * @param result {IGenCode} 当前节点的父级节点处理后的 result 结果，用于将当前的 ast 节点的特殊语法/变量保存传递出去
+ * @return {Array} ast 节点处理后的 code 字符串
  */
 const transformASTChildren = (htmlAST: ASTElement, result: IGenCode): string[] => {
   const children: string[] = [];

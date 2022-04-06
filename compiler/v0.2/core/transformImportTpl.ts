@@ -11,8 +11,9 @@ const templates: ITemplateStore = {};
 
 /**
  * 保存引入的 template 模板: <import src="../../../templates/header/index.kml" />
- * @param htmlAST {ASTElement} 页面模板的 ast 元素
- * @param pagePath {String} 页面路径
+ * @param {ASTElement} htmlAST 页面模板的 ast 元素
+ * @param {String} inputFile app.json 路径
+ * @param {String} fileName 页面路径
  */
 export const saveImportedTemplate = (htmlAST: ASTElement[], inputFile: string, fileName: string) => {
   const pagePath = getRelativePath(inputFile, fileName);
@@ -80,8 +81,8 @@ export const saveImportedTemplate = (htmlAST: ASTElement[], inputFile: string, f
 };
 
 /**
- * 处理页面中的 template 标签: <template is="header" data="{{title:'view'}}" />
- * @param htmlAST {ASTElement} 需要处理的template节点
+ * 处理页面中的 template 标签: `<template is="header" data="{{title:'view'}}" />`
+ * @param {ASTElement} htmlAST 需要处理的template节点
  */
 const transformImportTemplate = (htmlAST: ASTElement): IGenCode => {
   let result: IGenCode = { variates: [], code: '', arrayElements: {}, conditional: [] };

@@ -2,7 +2,6 @@ import * as fs from 'fs-extra';
 import { IConfig, IPageModule } from '.';
 import { fileIsExist, getFileContent, getHashCode, getResolvePath, getUpperCasePath, resolveApp } from '../utils';
 
-// 还需要处理下 json 的删除和创建导致的编译失败
 /**
  * 生成 app-config.js
  */

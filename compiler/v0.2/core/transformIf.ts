@@ -67,10 +67,10 @@ const getElseCode = (variateName: string, ast?: ASTElement, indexKey?: string, i
 };
 
 /**
- * 处理 k:if,k:else, k:elif
- * @param data {Array} 需要进行条件渲染的 ast 元素
- * @param indexKey {String} 当前逻辑如果处于一个列表循环里面, 需要传入 indexKey, 以确保当前逻辑结束, 上个循环的 index 变量没有发生变化
- * @param itemKey {String} 当前逻辑如果处于一个列表循环里面, 需要传入 itemKey, 以确保当前逻辑结束, 上个循环的 item 变量没有发生变化
+ * 处理 k:if, k:else, k:elif
+ * @param {Array} data 需要进行条件渲染的 ast 元素
+ * @param {String} indexKey 当前逻辑如果处于一个列表循环里面, 需要传入 indexKey, 以确保当前逻辑结束, 上个循环的 index 变量没有发生变化
+ * @param {String} itemKey 当前逻辑如果处于一个列表循环里面, 需要传入 itemKey, 以确保当前逻辑结束, 上个循环的 item 变量没有发生变化
  */
 const transformIf = (data: IGenCode['conditional'], indexKey?: string, itemKey?: string): IForCode => {
   const result: IForCode = { code: '', variates: [] };

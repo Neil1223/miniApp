@@ -3,10 +3,10 @@ import generateFromAST, { getData } from './generateFromAST';
 import transformIf from './transformIf';
 
 /**
- * 处理k:for的元素
- * @param arrayElements {Object} 需要循环渲染的 ast 元素
- * @param indexKey {String} 当前逻辑如果处于一个列表循环里面, 需要传入 indexKey, 以确保当前逻辑结束, 上个循环的 index 变量没有发生变化
- * @param itemKey {String} 当前逻辑如果处于一个列表循环里面, 需要传入 itemKey, 以确保当前逻辑结束, 上个循环的 item 变量没有发生变化
+ * 处理 k:for 的元素
+ * @param {Object} arrayElements 需要循环渲染的 ast 元素
+ * @param {String} indexKey 当前逻辑如果处于一个列表循环里面, 需要传入 indexKey, 以确保当前逻辑结束, 上个循环的 index 变量没有发生变化
+ * @param {String} itemKey 当前逻辑如果处于一个列表循环里面, 需要传入 itemKey, 以确保当前逻辑结束, 上个循环的 item 变量没有发生变化
  */
 const transformFor = (arrayElements: IGenCode['arrayElements'], indexKey?: string, itemKey?: string): IForCode => {
   const result: IForCode = { code: '', variates: [] };

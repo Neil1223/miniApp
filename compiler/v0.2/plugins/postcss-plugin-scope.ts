@@ -1,7 +1,7 @@
 import { Rule } from 'postcss';
 
 /**
- * 给每个选择器加上scope
+ * 给每个选择器加上 scope
  */
 const postcssScope = (scope: string) => {
   return {

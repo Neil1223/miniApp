@@ -5,6 +5,7 @@ import transformIf from './transformIf';
 
 /**
  * 负责解析框架的所有模板 .html 文件, 导出文件在 webpack 中调用
+ * @param {String} source 文件内容
  */
 const parserKml = (source: any) => {
   const ast = htmlparser2.parseDOM(source);

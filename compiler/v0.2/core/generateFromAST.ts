@@ -34,13 +34,13 @@ export const getData = (text: string): IDataString => {
   return result;
 };
 
+let arrayCount = 0;
+let conditionalCount = 0;
 /**
- * 根据 ast 生成 render 所需的 code.
+ * 解析小程序模板语法的主入口，根据 ast 生成 render 所需的 code.
  *
  * 如果 属性中含有 k:for="{{}}" 那么需要将当前的节点使用函数返回结果
  */
-let arrayCount = 0;
-let conditionalCount = 0;
 const generateFromAST = (htmlAST: ASTElement): IGenCode => {
   let result: IGenCode = { variates: [], code: '', arrayElements: {}, conditional: [] };
 
