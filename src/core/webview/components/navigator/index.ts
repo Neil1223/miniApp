@@ -26,8 +26,6 @@ class Navigator extends Hover(Base) {
   constructor() {
     super();
     this.addEventListener('click', () => {
-      // KipleViewJSBridge.publishHandler('navigateBack', null, 0);
-      console.log('========================');
       const { openType, url, delta } = this as any;
       KipleViewJSBridge.publishHandler('onRouteChange', { type: types[openType], options: { url, delta } }, 0);
     });

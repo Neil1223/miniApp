@@ -35,7 +35,14 @@ interface IRouteChange {
   };
 }
 
+// 需要校验当前页面返回时，页面集合中时候还有其他页面，如果没有，说明当前页面时第一个页面，点击back时需要进入首页
 const navigateBack = (delta: number = 1) => {
+  const lastPage = PageFactory.getLastPage(1);
+  if (!lastPage) {
+    history.replace('/');
+    return;
+  }
+
   navigateBackByAPI = true;
   history.go(0 - delta);
   PageFactory.replacePage(delta);
