@@ -21,9 +21,9 @@ class App extends Base {
     // 处理 onShow/onHide 的监听
     document.addEventListener('visibilitychange', function () {
       if (document.visibilityState === 'visible') {
-        KipleViewJSBridge.publishHandler('onAppEnterForeground', {}, 1);
+        KipleViewJSBridge.publishHandler('onAppEnterForeground', {}, 0);
       } else {
-        KipleViewJSBridge.publishHandler('onAppEnterBackground', {}, 1);
+        KipleViewJSBridge.publishHandler('onAppEnterBackground', {}, 0);
       }
     });
   }

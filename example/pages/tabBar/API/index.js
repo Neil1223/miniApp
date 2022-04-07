@@ -8,7 +8,7 @@ Page({
         pages: [
           {
             name: '设置导航条',
-            url: 'set-navigation-bar-title',
+            url: 'set-navigation-bar',
           },
           {
             name: '页面跳转',

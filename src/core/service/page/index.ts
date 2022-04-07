@@ -21,18 +21,18 @@ class WrapperApp {
       }
     }
     this.init();
-    this.__callPageLifeTime__('onLaunch');
-    this.__callPageLifeTime__('onShow');
+    this.__callAppLifeTime__('onLaunch');
+    this.__callAppLifeTime__('onShow');
   }
-  __callPageLifeTime__(name: string) {
+  __callAppLifeTime__(name: string) {
     this[name] && this[name]();
   }
   init() {
     KipleServiceJSBridge.on('onAppEnterBackground', () => {
-      this.__callPageLifeTime__('onHide');
+      this.__callAppLifeTime__('onHide');
     });
     KipleServiceJSBridge.on('onAppEnterForeground', () => {
-      this.__callPageLifeTime__('onShow');
+      this.__callAppLifeTime__('onShow');
     });
   }
 }

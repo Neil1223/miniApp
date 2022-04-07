@@ -10,6 +10,7 @@
     "pages/component/navigator/navigator",
     "pages/logs/logs",
     "pages/transparent/index",
+    "pages/api/set-navigation-bar/set-navigation-bar",
     "pages/api/image/image",
     "pages/api/pull-down-refresh/pull-down-refresh"
   ],
