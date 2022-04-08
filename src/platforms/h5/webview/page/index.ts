@@ -5,6 +5,7 @@ import { diff } from '@/core/webview/parser/diff/diff';
 import { patch } from '@/core/webview/parser/diff/patch';
 import { createDomTree } from '@/core/webview/parser/render';
 import initScrollEvent from './scroll';
+import { WrapperPage } from '@/core/service/page';
 
 /**
  * 记录已经在 View 层创建的Page
@@ -49,12 +50,12 @@ export class Page {
       this.webviewBody.enablePullDownRefresh = true;
     }
   };
-  render = (options: { [key: string]: any }) => {
+  render = (options: WrapperPage) => {
     const curWindowStyle = this.pageConfig;
-    if (options.onPageScroll) {
+    if ((options as any).onPageScroll) {
       this.enablePageScroll = true;
     }
-    if (options.onReachBottom) {
+    if ((options as any).onReachBottom) {
       this.enablePageReachBottom = true;
     }
     if (curWindowStyle.navigationStyle === 'transparent') {
@@ -200,7 +201,7 @@ export const PageFactory = {
   },
 };
 
-export const renderPage = (args: { options: Object; route: string }, webviewId: number) => {
+export const renderPage = (args: { options: WrapperPage; route: string }, webviewId: number) => {
   const { options, route } = args;
   const page = PageFactory.getPage(webviewId);
   if (!page) {
