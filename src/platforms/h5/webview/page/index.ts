@@ -12,12 +12,16 @@ import initScrollEvent from './scroll';
 const AppPages: Page[] = [];
 let __webviewId__ = 0;
 
+// TODO: 需要将这个类拆开，只有h5独有的才放到这里
 export class Page {
   __webviewId__: number;
   __route__: string = '';
   __DOMTree__: HTMLElement | Text | Comment | null = null;
   __VirtualDom__: IVirtualDom | null = null;
   __isTabBar__: boolean = false;
+  pageConfig: IWindow;
+  ext: any; // {customComponents,allComponentsAliasName}
+  customComponents: any; // {'pages/component/xxx':{data:{},xxx:{}}}
   enableTransparentTitle: boolean = false;
   enablePageScroll: boolean = false;
   enablePageReachBottom: boolean = false;
@@ -27,6 +31,7 @@ export class Page {
   webviewBody: PageBodyElement;
   constructor(__webviewId__: number) {
     this.__webviewId__ = __webviewId__;
+    this.pageConfig = window.__wxConfig.global.window;
     // 创建容器
     const pageContainer = document.createElement('wx-page');
     this.navigationBar = document.createElement('wx-page-head') as PageHeadElement;
@@ -37,8 +42,7 @@ export class Page {
   }
   initScrollEvent = () => initScrollEvent(this);
   resetBackground = () => {
-    const curWindowStyle = Object.assign({}, window.__wxConfig.global.window, window.__wxConfig.page[this.__route__]);
-    this.pageContainer.style.backgroundColor = curWindowStyle.backgroundColor || '#ffffff';
+    this.pageContainer.style.backgroundColor = this.pageConfig.backgroundColor || '#ffffff';
   };
   setPullDownRefresh = (options: { [key: string]: any }, webviewConfig: IWindow) => {
     if (options.onPullDownRefresh && webviewConfig.enablePullDownRefresh) {
@@ -46,8 +50,7 @@ export class Page {
     }
   };
   render = (options: { [key: string]: any }) => {
-    // 获取当前 webview 的 config
-    const curWindowStyle = Object.assign({}, window.__wxConfig.global.window, window.__wxConfig.page[this.__route__]);
+    const curWindowStyle = this.pageConfig;
     if (options.onPageScroll) {
       this.enablePageScroll = true;
     }
@@ -69,7 +72,9 @@ export class Page {
     // 修改 document title
     document.title = this.navigationBar.navigationBarTitleText;
 
+    // this.renderPending = true; // 用来在create 组件的时候知道这个组件挂载到哪里，然后将组件保存到Page对象的一个数组中
     this.__VirtualDom__ = window.app[this.__route__].render(options.data);
+    // this.renderPending = false;
     // 生成页面 Dom 树
     this.__DOMTree__ = createDomTree(this.__VirtualDom__, window.app[this.__route__].hash);
     if (this.__DOMTree__) {
@@ -201,38 +206,15 @@ export const renderPage = (args: { options: Object; route: string }, webviewId: 
   if (!page) {
     throw Error(`Page not register for webviewId:${webviewId}`);
   }
-  page.__route__ = route;
+
   if (!page.__DOMTree__) {
+    page.__route__ = route;
+    page.pageConfig = Object.assign({}, window.__wxConfig.global.window, window.__wxConfig.page[route]);
     __AppCssCode__[route] && __AppCssCode__[route](page.pageContainer);
     page.render(options);
   } else {
     page.reRender(options);
   }
-};
-
-/**
- * 初始化 App，在 wx-app 中处理 app.css, tabBar
- */
-export const initApp = (route?: string) => {
-  route = route ? route : location.pathname;
-  route = route.replace(/^\//, '');
-
-  // 处理部署时含有html的情况
-  if (/\.html/.test(route)) {
-    const splitGroup = route.split('/');
-    splitGroup.pop();
-    route = splitGroup.join('/');
-  }
-
-  // 初始化App，使用 wx-app 替换 div#app 元素
-  const rootEl: any = document.getElementById('app');
-  if (!rootEl) {
-    throw Error('No Root Element');
-  }
-  rootEl.parentNode.replaceChild(document.createElement('wx-app'), rootEl);
-
-  // 初始化 page
-  initPage(route);
 };
 
 /**

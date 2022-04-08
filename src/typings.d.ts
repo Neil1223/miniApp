@@ -1,7 +1,7 @@
 declare module '*.tpl';
 declare module '*.html';
 declare module 'kiple-platform/*';
-declare module 'kiple-lib';
+declare module 'kiple-lib/*';
 
 declare const VERSION: string;
 declare const __AppCssCode__: { [key: string]: Function };
@@ -16,7 +16,10 @@ declare interface HTMLElement {
 
 interface IVirtualDom {
   tag: string | CreateIVirtualDomFunc;
-  props: { [key: string]: any };
+  props: {
+    isComponent?: boolean;
+    [key: string]: any;
+  };
   children: IVirtualDom[];
 }
 
@@ -29,6 +32,9 @@ interface IWindow {
   navigationStyle: 'default' | 'custom' | 'transparent'; // custom 是取消原生导航栏,transparent 是透明渐变导航
   enablePullDownRefresh: boolean; // 开启下拉刷新
   onReachBottomDistance: number; // 页面上拉触底事件触发时距页面底部距离, 默认 50px
+  usingComponents: {
+    [key: string]: string;
+  };
 }
 
 interface Window {
@@ -45,6 +51,7 @@ interface Window {
   define: Function;
   require: Function;
   app: { [key: string]: { render: (data: Object) => IVirtualDom; hash?: string } };
+  components: { [key: string]: { render: (data: Object) => IVirtualDom; hash?: string } };
   __wxConfig: {
     entryPagePath: string;
     pages: string[];

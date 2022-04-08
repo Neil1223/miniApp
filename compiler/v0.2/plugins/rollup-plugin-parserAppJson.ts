@@ -51,7 +51,7 @@ export const serviceRoot = () => ({
       });
 
       // 初始化程序
-      code += `\nrequire('app.js');\ninitApp();`;
+      code += `\ninitApp();`;
 
       // 处理小程序配置文件, 生成 app-config.js
       generateConfig(config, fileName, this);

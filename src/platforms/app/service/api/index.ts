@@ -1,4 +1,4 @@
-import apiNames from 'kiple-lib';
+import apiNames from 'kiple-lib/apis';
 import { promisify } from '@/core/service/helpers/promise';
 import { wrapperUnimplemented } from '@/core/service/helpers/api';
 import { wrapper } from './wrapper';

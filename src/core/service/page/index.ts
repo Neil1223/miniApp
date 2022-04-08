@@ -1,41 +1,12 @@
 import { isPlainObject, parserUrl } from '@/util/util';
 import { require as customRequire } from '../helpers/require';
-import { IPageOptions, IAppOptions, IAppPage } from './index.d';
+import { IPageOptions, IAppPage } from './index.d';
 
 const PageConfig = {};
 let globPageRegisterPath = '';
-let globApp: WrapperApp;
 const AppPages: IAppPage[] = [];
 let topWebviewId = 0; // 用于表示在顶部的 webview
 
-class WrapperApp {
-  [x: string]: any;
-  constructor(options: IAppOptions) {
-    for (const key in options) {
-      if (key !== 'globalData') {
-        if (typeof options[key] === 'function') {
-          this[key] = options[key];
-        }
-      } else {
-        this[key] = JSON.parse(JSON.stringify(options[key]));
-      }
-    }
-    this.init();
-    this.__callAppLifeTime__('onLaunch');
-    this.__callAppLifeTime__('onShow');
-  }
-  __callAppLifeTime__(name: string) {
-    this[name] && this[name]();
-  }
-  init() {
-    KipleServiceJSBridge.on('onAppEnterBackground', () => {
-      this.__callAppLifeTime__('onHide');
-    });
-    KipleServiceJSBridge.on('onAppEnterForeground', () => {
-      this.__callAppLifeTime__('onShow');
-    });
-  }
-}
 
 export class WrapperPage {
   __webviewId__: number;
@@ -68,14 +39,6 @@ export class WrapperPage {
 }
 
 /**
- * 注册小程序。接受一个 Object 参数，其指定小程序的生命周期回调，全局data等
- * @param {IAppOptions} Options
- */
-export const App = (options: IAppOptions) => {
-  globApp = new WrapperApp(options);
-};
-
-/**
  * 用于注册一个小程序页面，接受一个 object 作为属性，用来指定页面的初始数据、生命周期回调、事件处理等。
  * @param {IPageOptions} Options
  */
@@ -89,8 +52,6 @@ export const Page = (options: IPageOptions) => {
   console.info(`Add page: ${globPageRegisterPath}`);
   PageConfig[globPageRegisterPath] = options;
 };
-
-export const getApp = () => globApp;
 
 // 如果是多个tab页面的时候，只返回最后一个 tab 的 page 实例
 export const getCurrentPages = () => AppPages.map((item) => item.page);

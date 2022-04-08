@@ -1,4 +1,5 @@
-import { renderPage, initApp } from '../page';
+import { renderPage } from '../page';
+import { initApp } from '../page/app';
 import onNavigationBarChange from '../page/navigationBar';
 import onRouteChange from '../page/route';
 
