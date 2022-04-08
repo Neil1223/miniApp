@@ -1,23 +1,53 @@
 import * as fs from 'fs-extra';
 import { IConfig, IPageModule } from '.';
-import { fileIsExist, getFileContent, getHashCode, getResolvePath, getUpperCasePath, resolveApp } from '../utils';
+import { fileIsExist, getFileContent, getHashCode, getRelativePath, getResolvePath, getUpperCasePath, resolveApp } from '../utils';
 
 /**
  * 生成 app-config.js
  */
-const generateConfig = (config: IConfig, fileName: string, _this: any) => {
+const generateConfigAndComponents = (config: IConfig, appJsonPath: string, _this: any) => {
+  const components: string[] = [];
   config.page = {};
   for (let index = 0; index < config.pages.length; index++) {
     const page = config.pages[index];
-    const targetPath = getResolvePath(fileName, '../', page);
+    const pageJsonPath = getResolvePath(appJsonPath, '../', page + '.json');
 
-    if (fileIsExist(targetPath + '.json')) {
-      const pageJson = getFileContent(targetPath + '.json');
-      config.page[page] = pageJson ? JSON.parse(pageJson) : {};
+    if (fileIsExist(pageJsonPath)) {
+      const pageJsonStringData = getFileContent(pageJsonPath);
+      const pageJson = pageJsonStringData ? JSON.parse(pageJsonStringData) : {};
+      // 处理自定义组件
+      if (pageJson.usingComponents) {
+        for (const componentName in pageJson.usingComponents) {
+          if (Object.prototype.hasOwnProperty.call(pageJson.usingComponents, componentName)) {
+            const componentPath = pageJson.usingComponents[componentName];
+            let componentJsonPath;
+            if (componentPath[0] === '/') {
+              componentJsonPath = getResolvePath(appJsonPath, '..' + componentPath + '.json');
+            } else {
+              componentJsonPath = getResolvePath(pageJsonPath, '../', componentPath + '.json');
+            }
+            // 处理 component.json
+            if (!fileIsExist(componentJsonPath)) {
+              throw new Error(`[ ${page}.json 文件内容错误] ${page}.json: ["usingComponents"]["${componentName}"]: "${componentPath}" 未找到`);
+            }
+            const componentJsonStringData = getFileContent(componentJsonPath);
+            const componentJson = componentJsonStringData ? JSON.parse(componentJsonStringData) : {};
+            const relativePath = getRelativePath(appJsonPath, componentJsonPath).replace('.json', '');
+            config.page[relativePath] = componentJson;
+            // 监听页面 json 配置的变化
+            _this.addWatchFile(componentJsonPath);
+            // 将组件路径统一转化为绝对路径, 方便渲染时查询
+            pageJson.usingComponents[componentName] = '/' + relativePath;
+            // 处理 component.js
+            components.push(relativePath);
+          }
+        }
+      }
+      config.page[page] = pageJson;
     }
 
     // 监听页面 json 配置的变化
-    _this.addWatchFile(getResolvePath(fileName, '../', page + '.json'));
+    _this.addWatchFile(pageJsonPath);
   }
 
   config.entryPagePath = config.entryPagePath ? config.entryPagePath : config.pages[0];
@@ -26,6 +56,8 @@ const generateConfig = (config: IConfig, fileName: string, _this: any) => {
 
   const source = `window.__wxConfig = ${JSON.stringify(config)}`;
   _this.emitFile({ type: 'asset', fileName: 'app-config.js', source });
+
+  return components;
 };
 
 /**
@@ -37,11 +69,14 @@ export const serviceRoot = () => ({
     if (/app\.json$/.test(fileName)) {
       const config: IConfig = JSON.parse(source);
 
+      // 处理小程序配置文件, 生成 app-config.js, 添加 page.json 中的自定义组件
+      const components = generateConfigAndComponents(config, fileName, this);
+
       // 处理 page js 文件
       var code = `import './app.js';`;
-      config.pages.forEach((item) => {
+      config.pages.concat(components).forEach((item) => {
         const targetPath = getResolvePath(fileName, '../', item);
-        (this as any).addWatchFile(targetPath + '.kml');
+        (this as any).addWatchFile(targetPath + '.kml'); // 监听模板文件，这样模板文件发生变化，会触发js的编译
 
         if (!fileIsExist(targetPath + '.js')) {
           (this as any).addWatchFile(targetPath + '.js');
@@ -52,9 +87,6 @@ export const serviceRoot = () => ({
 
       // 初始化程序
       code += `\ninitApp();`;
-
-      // 处理小程序配置文件, 生成 app-config.js
-      generateConfig(config, fileName, this);
 
       // 拷贝 index.html 到 dist 目录
       fs.copyFileSync(resolveApp('compiler/v0.2/injects/index.html'), resolveApp('dist/index.html'));
