@@ -2,15 +2,22 @@ import * as fs from 'fs-extra';
 import { IConfig, IPageModule } from '.';
 import { fileIsExist, getFileContent, getHashCode, getRelativePath, getResolvePath, getUpperCasePath, resolveApp } from '../utils';
 
+// 保存所有页面的路径信息
+let allPages: { [path: string]: { type: 'page' | 'component'; enterPath: string } } = {};
+
 /**
  * 生成 app-config.js
  */
 const generateConfigAndComponents = (config: IConfig, appJsonPath: string, _this: any) => {
-  const components: string[] = [];
   config.page = {};
   for (let index = 0; index < config.pages.length; index++) {
     const page = config.pages[index];
     const pageJsonPath = getResolvePath(appJsonPath, '../', page + '.json');
+
+    // 当页面不存在，或者页面保存时是以组件形式保存的才进行添加
+    if (!allPages[page] || allPages[page].type === 'component') {
+      allPages[page] = { type: 'page', enterPath: 'app.json' };
+    }
 
     if (fileIsExist(pageJsonPath)) {
       const pageJsonStringData = getFileContent(pageJsonPath);
@@ -28,8 +35,9 @@ const generateConfigAndComponents = (config: IConfig, appJsonPath: string, _this
             }
             // 处理 component.json
             if (!fileIsExist(componentJsonPath)) {
-              throw new Error(`[ ${page}.json 文件内容错误] ${page}.json: ["usingComponents"]["${componentName}"]: "${componentPath}" 未找到`);
+              throw new Error(`${page}.json 文件内容错误: ["usingComponents"]["${componentName}"]: "${componentPath}" 未找到`);
             }
+
             const componentJsonStringData = getFileContent(componentJsonPath);
             const componentJson = componentJsonStringData ? JSON.parse(componentJsonStringData) : {};
             const relativePath = getRelativePath(appJsonPath, componentJsonPath).replace('.json', '');
@@ -38,8 +46,10 @@ const generateConfigAndComponents = (config: IConfig, appJsonPath: string, _this
             _this.addWatchFile(componentJsonPath);
             // 将组件路径统一转化为绝对路径, 方便渲染时查询
             pageJson.usingComponents[componentName] = '/' + relativePath;
-            // 处理 component.js
-            components.push(relativePath);
+            // 处理 component 路径
+            if (!allPages[relativePath]) {
+              allPages[relativePath] = { type: 'component', enterPath: `${page}.json` };
+            }
           }
         }
       }
@@ -56,8 +66,6 @@ const generateConfigAndComponents = (config: IConfig, appJsonPath: string, _this
 
   const source = `window.__wxConfig = ${JSON.stringify(config)}`;
   _this.emitFile({ type: 'asset', fileName: 'app-config.js', source });
-
-  return components;
 };
 
 /**
@@ -65,22 +73,25 @@ const generateConfigAndComponents = (config: IConfig, appJsonPath: string, _this
  */
 export const serviceRoot = () => ({
   name: 'transform-config',
+  buildStart() {
+    // 初次进入，重置页面路径
+    allPages = {};
+  },
   transform(source: string, fileName: string) {
     if (/app\.json$/.test(fileName)) {
       const config: IConfig = JSON.parse(source);
 
       // 处理小程序配置文件, 生成 app-config.js, 添加 page.json 中的自定义组件
-      const components = generateConfigAndComponents(config, fileName, this);
+      generateConfigAndComponents(config, fileName, this);
 
       // 处理 page js 文件
       var code = `import './app.js';`;
-      config.pages.concat(components).forEach((item) => {
-        const targetPath = getResolvePath(fileName, '../', item);
-        (this as any).addWatchFile(targetPath + '.kml'); // 监听模板文件，这样模板文件发生变化，会触发js的编译
+      Object.keys(allPages).forEach((item) => {
+        const targetPath = getResolvePath(fileName, '../', item + '.js');
 
-        if (!fileIsExist(targetPath + '.js')) {
-          (this as any).addWatchFile(targetPath + '.js');
-          (this as any).error(`未找到 app.json 中的定义的 pages "${item}" 对应的 .js 文件`);
+        if (!fileIsExist(targetPath)) {
+          (this as any).addWatchFile(targetPath);
+          throw new Error(`未找到 ${allPages[item].enterPath} 中的定义的 ${allPages[item].type} "${item}" 对应的 .js 文件`);
         }
         code += `import './${item}';`;
       });
@@ -105,28 +116,24 @@ export const viewRoot = () => ({
   name: 'transform-config',
   transform(source: string, fileName: string) {
     if (/app\.json$/.test(fileName)) {
-      const config: IConfig = JSON.parse(source);
-
       var code = "import {__AppCssCode__,setCssToHead} from  'inject/view.js';import AppStyle from './app.css';";
       const result: IPageModule[] = [];
 
       // 获取页面的模板和样式
-      config.pages.forEach((item) => {
+      Object.keys(allPages).forEach((item) => {
         const moduleName = getUpperCasePath(item);
         let cssModuleName = moduleName + 'Style';
         const targetPath = getResolvePath(fileName, '../', item);
 
-        (this as any).addWatchFile(targetPath + '.js');
-
         // 只有当page必要的文件都存在时，才进行导入 .kml
         if (!fileIsExist(targetPath + '.kml')) {
           (this as any).addWatchFile(targetPath + '.kml');
-          (this as any).error(`未找到 app.json 中的定义的 pages "${item}" 对应的 .kml 文件`);
+          throw new Error(`未找到 ${allPages[item].enterPath} 中的定义的 ${allPages[item].type} "${item}" 对应的 .kml 文件`);
         }
 
         code += `import ${moduleName} from './${item}.kml';`;
 
-        // 判断 .css 文件是否存在，存在的话才进行导入，不存在的话加如监听
+        // 判断 .css 文件是否存在，存在的话才进行导入，不存在的话加上监听
         if (fileIsExist(targetPath + '.css')) {
           code += `import ${cssModuleName} from './${item}.css';`;
         } else {
@@ -139,7 +146,6 @@ export const viewRoot = () => ({
 
       const pages: string[] = [];
       result.forEach((item) => {
-        // const hash = getHashCode(item.resolvePath, curTime);
         const hash = getHashCode(getResolvePath(fileName, '../', item.path), curTime);
         pages.push(`${JSON.stringify(item.path)}:{render: ${item.moduleName}, hash: "${hash}"} `);
       });
