@@ -3,8 +3,9 @@ import { define, require } from '@/core/service/helpers/require';
 import { Page, getCurrentPages } from '@/core/service/page';
 import { App, getApp } from '@/core/service/page/app';
 import initApp from '@/core/service/helpers/initApp';
+import { Component } from '@/core/service/page/component';
 
-const pageFunction = { App, Page, getApp, getCurrentPages };
+const pageFunction = { App, Page, Component, getApp, getCurrentPages };
 
 class KipleApp {
   constructor() {

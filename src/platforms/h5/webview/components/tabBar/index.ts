@@ -1,6 +1,6 @@
 import { publishPageEvent } from '../../bridge';
 import Base from '@/core/webview/mixin/base';
-import { PageFactory } from '../../page';
+import { PageFactory } from '../../page/page';
 import template from './template.tpl';
 import { history } from '../../page/route';
 

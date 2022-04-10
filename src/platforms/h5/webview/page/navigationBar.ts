@@ -1,5 +1,5 @@
 import { INavigationBarParams } from '../../service/api/ui';
-import { PageFactory } from '.';
+import { PageFactory } from './page';
 
 const onNavigationBarChange = (data: INavigationBarParams, webviewId: number) => {
   const { backgroundColor, color, titleText, loading } = data;

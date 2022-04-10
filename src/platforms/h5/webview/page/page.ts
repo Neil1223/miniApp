@@ -21,8 +21,7 @@ export class Page {
   __VirtualDom__: IVirtualDom | null = null;
   __isTabBar__: boolean = false;
   pageConfig: IWindow;
-  ext: any; // {customComponents,allComponentsAliasName}
-  customComponents: any; // {'pages/component/xxx':{data:{},xxx:{}}}
+  pendingRender = false;
   enableTransparentTitle: boolean = false;
   enablePageScroll: boolean = false;
   enablePageReachBottom: boolean = false;
@@ -73,11 +72,11 @@ export class Page {
     // 修改 document title
     document.title = this.navigationBar.navigationBarTitleText;
 
-    // this.renderPending = true; // 用来在create 组件的时候知道这个组件挂载到哪里，然后将组件保存到Page对象的一个数组中
     this.__VirtualDom__ = window.app[this.__route__].render(options.data);
-    // this.renderPending = false;
     // 生成页面 Dom 树
+    this.pendingRender = true; // 用来在create 组件的时候知道这个组件挂载到哪里，然后将组件保存到Page对象的一个数组中
     this.__DOMTree__ = createDomTree(this.__VirtualDom__, window.app[this.__route__].hash);
+    this.pendingRender = false;
     if (this.__DOMTree__) {
       this.webviewBody.appendChild(this.__DOMTree__);
       const lastPage = AppPages[AppPages.length - 2];
@@ -157,6 +156,10 @@ export const PageFactory = {
   },
   getPage: (webviewId: number) => {
     const page = AppPages.find((page) => page.__webviewId__ === webviewId);
+    return page || null;
+  },
+  getPendingPage: () => {
+    const page = AppPages.find((page) => page.pendingRender === true);
     return page || null;
   },
   getPageByRoute: (route: string) => {

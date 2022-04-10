@@ -1,6 +1,6 @@
 import { isStr } from '@/util';
 import { getRealRoute } from '@/util/path';
-import { setGlobPageRegisterPath } from '../page';
+import { setGlobPageRegisterPath } from '../page/app';
 
 const modules = {};
 

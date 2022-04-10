@@ -30,3 +30,9 @@ export interface IAppPage {
   route: string; // 页面路径
   webviewId: number;
 }
+
+export interface IRegisterComponent {
+  route: string;
+  componentId: number;
+  props: object;
+}

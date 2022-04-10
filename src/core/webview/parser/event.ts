@@ -1,6 +1,6 @@
 import { isFn } from '@/util';
 import { publishPageEvent } from 'kiple-platform/webview/bridge';
-import { PageFactory } from 'kiple-platform/webview/page';
+import { PageFactory } from 'kiple-platform/webview/page/page';
 
 const EventNames = ['tap', 'longtap', 'load', 'error'];
 const PrivateEventNames = ['click'];

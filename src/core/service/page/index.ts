@@ -1,18 +1,20 @@
 import { isPlainObject, parserUrl } from '@/util/util';
 import { require as customRequire } from '../helpers/require';
+import { checkPageInPagesJson, getGlobPageRegisterPath } from './app';
+import { WrapperComponent } from './component';
 import { IPageOptions, IAppPage } from './index.d';
 
 const PageConfig = {};
-let globPageRegisterPath = '';
 const AppPages: IAppPage[] = [];
 let topWebviewId = 0; // 用于表示在顶部的 webview
-
 
 export class WrapperPage {
   __webviewId__: number;
   __route__: string;
   data: any;
   __isTabBar__: boolean = false;
+  __usingComponents__: { [path: string]: WrapperComponent } = {}; // 每个页面引用的自定义组件的集合，来自于page.json,页面中如果实例化后，需要 new WrapperComponent
+  __components__: string[] = [];
   constructor(options: IPageOptions, route: string, __webviewId__: number) {
     this.__webviewId__ = __webviewId__;
     this.__route__ = route;
@@ -34,7 +36,7 @@ export class WrapperPage {
     // TODO: 1. 需要合并 setDate??是否会影响webview之间通讯的性能 2. 进行diff render
     Object.assign(this.data, data);
     const sendData = { options: { data: this.data }, route: this.__route__ };
-    KipleServiceJSBridge.publishHandler('RENDER_PAGE', sendData, this.__webviewId__);
+    KipleServiceJSBridge.publishHandler('RE_RENDER_PAGE', sendData, this.__webviewId__);
   }
 }
 
@@ -43,6 +45,7 @@ export class WrapperPage {
  * @param {IPageOptions} Options
  */
 export const Page = (options: IPageOptions) => {
+  const globPageRegisterPath = getGlobPageRegisterPath();
   if (!checkPageInPagesJson(globPageRegisterPath)) {
     throw new Error(`Page register error. ${globPageRegisterPath} has not been declared in pages.json.`);
   }
@@ -58,8 +61,6 @@ export const getCurrentPages = () => AppPages.map((item) => item.page);
 
 export const getPageByRoute = (route: string) => AppPages.find((item) => item.route === route);
 export const getPageById = (webviewId: number) => AppPages.find((item) => item.webviewId === webviewId);
-
-export const checkPageInPagesJson = (e: string) => window.__wxConfig.pages.includes(e);
 
 export const checkPageInTabList = (e: string) => {
   const list = window.__wxConfig.tabBar ? window.__wxConfig.tabBar.list.map((item) => item.pagePath) : [];
@@ -82,16 +83,6 @@ const deleteLastPage = (delta: number = 1, tabPageLength: number, ignoreTab: Boo
   delta -= 1;
   if (delta > 0) {
     deleteLastPage(delta, tabPageLength, ignoreTab);
-  }
-};
-
-/**
- * 修改当前的正在注册的page的路由路径
- * 需要判断当前路径是否是已经在config的pages里面，存在的话才进行修改
- */
-export const setGlobPageRegisterPath = (e: string) => {
-  if (checkPageInPagesJson(e)) {
-    globPageRegisterPath = e;
   }
 };
 
@@ -159,7 +150,7 @@ export const callPageRouteHook = (type: string, options: any) => {
 };
 
 export const registerPage = (route: string, webviewId: number, query: Object) => {
-  console.log('create page start.');
+  console.log('create page start......');
   if (!PageConfig[route]) {
     customRequire(route);
   }

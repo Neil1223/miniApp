@@ -1,5 +1,5 @@
 import { createBrowserHistory } from 'history';
-import { initPage, PageFactory } from './index';
+import { initPage, PageFactory } from './page';
 
 export const history = createBrowserHistory();
 

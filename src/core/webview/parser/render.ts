@@ -1,3 +1,4 @@
+import { initComponent } from '@/platforms/h5/webview/page/component';
 import { isFn, isPlainObject, isStr } from '@/util';
 import { addEvent, applyEvent } from './event';
 import { CreateIVirtualDomFunc } from './render.d';
@@ -38,12 +39,18 @@ export const setProperty = (dom: HTMLElement, key: string, value: any) => {
 /**
  * 根据虚拟dom，生成真实dom
  * @param virtualDom 虚拟DOM树
+ * @param hash 每个页面的hash值，用于区分css的样式隔离
+ * @returns 真实 dom 树
  */
 export const createDomTree = (virtualDom: IVirtualDom | null, hash?: string): HTMLElement | Text | Comment | null => {
   const paramType = typeof virtualDom;
   if (virtualDom && isPlainObject(virtualDom)) {
     if (isStr(virtualDom.tag)) {
       const dom = document.createElement(virtualDom.tag as string);
+      if (virtualDom.props && virtualDom.props.__isComponent__) {
+        console.log('========需要init组件======');
+        initComponent(virtualDom, dom);
+      }
       if (hash) {
         dom.setAttribute(hash, '');
       }

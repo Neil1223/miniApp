@@ -1,6 +1,6 @@
 import PageRefresh from './index';
 import { publishPageEvent } from '../../bridge';
-import { PageFactory } from '../../page';
+import { PageFactory } from '../../page/page';
 
 interface RefreshData {
   state: null | 'pulling' | 'reached' | 'aborting' | 'refreshing' | 'restoring';

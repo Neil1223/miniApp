@@ -1,5 +1,6 @@
-import { callPageRouteHook, checkPageInPagesJson, checkPageInTabList } from '@/core/service/page';
+import { callPageRouteHook, checkPageInTabList } from '@/core/service/page';
 import { parserUrl } from '@/util';
+import { checkPageInPagesJson } from '../../page';
 
 interface IRouteParams {
   url?: string;

@@ -17,7 +17,8 @@ declare interface HTMLElement {
 interface IVirtualDom {
   tag: string | CreateIVirtualDomFunc;
   props: {
-    isComponent?: boolean;
+    __isComponent__?: boolean; // 自定义组件特有属性，表示标签是自定义组件
+    __route__?: string; // 自定义组件特有属性，保存组件路径，eg: '/components/test/test'
     [key: string]: any;
   };
   children: IVirtualDom[];

@@ -1,4 +1,4 @@
-import { initPage } from './index';
+import { initPage } from './page';
 
 /**
  * 初始化 App，在 wx-app 中处理 app.css, tabBar
