@@ -3,12 +3,18 @@ import { getGlobalData, getPrev } from './helper';
 import transformASTChildren from './transformASTChildren';
 import transformImportTemplate from './transformImportTpl';
 import transformIncludeTemplate from './transformIncludeTpl';
+import componentNames from '../../../lib/components';
+import { allPages } from '../plugins/rollup-plugin-parserAppJson';
 
 /**
  * 根据字符串，返回字符串中的静态字符和变量
  */
 export const getData = (text: string): IDataString => {
   const result: IDataString = { values: [], variates: [] };
+
+  if (!text) {
+    return result;
+  }
 
   const reg = /{{.+?}}/gi;
   const matchData = text.match(reg);
@@ -113,6 +119,19 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
         }
       }
     }
+
+    // 校验标签是内置组件、自定义组件(在编译项目的时候校验)
+    if (!process.env.BUILD_TYPE && process.env.BUILD_TYPE !== 'framework') {
+      if (!componentNames.includes(htmlAST.name)) {
+        const pageConfig = allPages[htmlAST.__pageRoute__.replace('.kml', '')].config;
+        if (!pageConfig.usingComponents || !pageConfig.usingComponents[htmlAST.name]) {
+          throw new Error(`${htmlAST.__pageRoute__} 文件内容错误: "${htmlAST.name}" 未定义`);
+        }
+        const extra = `__isComponent__:true,__route__:'${pageConfig.usingComponents[htmlAST.name]}'`;
+        attribs = attribs ? `,${extra}` : extra;
+      }
+    }
+
     // 如果是 build 框架，那么不需要加 wx 前缀，如果是 build 项目需要加上 wx 前缀
     const prefix = process.env.BUILD_TYPE && process.env.BUILD_TYPE === 'framework' ? '' : 'wx-';
     attribs = attribs ? `{${attribs}}` : null;

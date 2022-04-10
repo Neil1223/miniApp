@@ -3,7 +3,7 @@ import { IConfig, IPageModule } from '.';
 import { fileIsExist, getFileContent, getHashCode, getRelativePath, getResolvePath, getUpperCasePath, resolveApp } from '../utils';
 
 // 保存所有页面的路径信息
-let allPages: { [path: string]: { type: 'page' | 'component'; enterPath: string } } = {};
+export let allPages: { [path: string]: { type: 'page' | 'component'; enterPath: string; config: any } } = {};
 
 /**
  * 生成 app-config.js
@@ -13,11 +13,6 @@ const generateConfigAndComponents = (config: IConfig, appJsonPath: string, _this
   for (let index = 0; index < config.pages.length; index++) {
     const page = config.pages[index];
     const pageJsonPath = getResolvePath(appJsonPath, '../', page + '.json');
-
-    // 当页面不存在，或者页面保存时是以组件形式保存的才进行添加
-    if (!allPages[page] || allPages[page].type === 'component') {
-      allPages[page] = { type: 'page', enterPath: 'app.json' };
-    }
 
     if (fileIsExist(pageJsonPath)) {
       const pageJsonStringData = getFileContent(pageJsonPath);
@@ -44,13 +39,18 @@ const generateConfigAndComponents = (config: IConfig, appJsonPath: string, _this
             config.page[relativePath] = componentJson;
             // 监听页面 json 配置的变化
             _this.addWatchFile(componentJsonPath);
-            // 将组件路径统一转化为绝对路径, 方便渲染时查询
-            pageJson.usingComponents[componentName] = '/' + relativePath;
+            // 将组件路径统一, 方便渲染时查询
+            pageJson.usingComponents[componentName] = relativePath;
             // 处理 component 路径
             if (!allPages[relativePath]) {
-              allPages[relativePath] = { type: 'component', enterPath: `${page}.json` };
+              allPages[relativePath] = { type: 'component', enterPath: `${page}.json`, config: componentJson };
             }
           }
+        }
+
+        // 当页面不存在，或者页面保存时是以组件形式保存的才进行添加
+        if (!allPages[page] || allPages[page].type === 'component') {
+          allPages[page] = { type: 'page', enterPath: 'app.json', config: pageJson };
         }
       }
       config.page[page] = pageJson;
