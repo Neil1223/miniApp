@@ -60,7 +60,7 @@ export class WrapperComponent {
   public setData(data: Object) {
     Object.assign(this.data, data);
     const mergeDataProps = Object.assign({}, this.data, this.properties);
-    const sendData = { options: { data: mergeDataProps }, route: this.__route__ };
+    const sendData = { options: { data: mergeDataProps, __componentId__: this.__componentId__ }, route: this.__route__ };
     KipleServiceJSBridge.publishHandler('RE_RENDER_COMPONENT', sendData, this.__webviewId__);
   }
 }
@@ -91,7 +91,7 @@ export const registerComponent = (args: IRegisterComponent, webviewId: number) =
   const appPage = { page: componentInstance, route: args.route, webviewId: webviewId };
   AppComponents.push(appPage as any);
   const mergeDataProps = Object.assign({}, componentInstance.data, componentInstance.properties);
-  const options = { options: Object.assign({}, componentInstance, { data: mergeDataProps }), route: args.route };
+  const options = { options: { data: mergeDataProps, __componentId__: componentInstance.__componentId__ }, route: args.route };
 
   KipleServiceJSBridge.publishHandler('RENDER_COMPONENT', options, webviewId);
   console.log('create component end.');

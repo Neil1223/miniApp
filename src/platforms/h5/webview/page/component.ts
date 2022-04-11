@@ -84,9 +84,9 @@ export const initComponent = (virtualDom: IVirtualDom, parentNode: HTMLElement) 
 
 export const renderComponent = (args: { options: WrapperComponent; route: string }, webviewId: number) => {
   const { options, route } = args;
-  const component = ComponentFactory.getComById(webviewId);
+  const component = ComponentFactory.getComById(options.__componentId__);
   if (!component) {
-    throw Error(`Component not register for webviewId:${webviewId}`);
+    throw Error(`Component not register for componentId:${options.__componentId__}`);
   }
 
   if (!component.__DOMTree__) {
