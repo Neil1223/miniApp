@@ -6,7 +6,7 @@ import { createDomTree } from '@/core/webview/parser/render';
 import { PageFactory } from './page';
 
 let __componentId__ = 0;
-// TODO: 在 h5 中可以直接保存在这里数组中，但是在app中，组件实例是保存在对应view层的webview中的，查找也是应该先查找到对应的webview，然后在找到对应的component
+// TODO: 在 h5 中可以直接保存在这里数组中，但是在app中，组件实例是保存在对应的 webview 中的，查找也是应该先查找到对应的webview，然后在找到对应的component
 const AppComponents: Component[] = [];
 
 export class Component {

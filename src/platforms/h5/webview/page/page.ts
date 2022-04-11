@@ -73,8 +73,9 @@ export class Page {
     document.title = this.navigationBar.navigationBarTitleText;
 
     this.__VirtualDom__ = window.app[this.__route__].render(options.data);
+    // 用来在 create 组件的时候知道这个组件挂载到哪里，然后将组件保存到Page对象的一个数组中，TODO: 需要有更加优雅的实现方式
+    this.pendingRender = true;
     // 生成页面 Dom 树
-    this.pendingRender = true; // 用来在create 组件的时候知道这个组件挂载到哪里，然后将组件保存到Page对象的一个数组中
     this.__DOMTree__ = createDomTree(this.__VirtualDom__, window.app[this.__route__].hash);
     this.pendingRender = false;
     if (this.__DOMTree__) {

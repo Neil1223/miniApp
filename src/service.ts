@@ -20,8 +20,6 @@ class KipleApp {
       publishHandler: KipleServiceJSBridge.publishHandler,
       subscribeHandler: KipleServiceJSBridge.subscribeHandler,
     };
-
-    // TODO save some config.
   }
 }
 new KipleApp();

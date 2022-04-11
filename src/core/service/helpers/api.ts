@@ -6,7 +6,7 @@ interface IInvokeCallback {
     name: string; //  `api.${apiName}.${callbackId}`
     keepAlive?: boolean; // TODO 是否保持存活
     callback: Function;
-    start?: string; // TODO 打点记录API的性能
+    start?: string; // TODO 需要打点记录API的性能?
     end?: string;
   };
 }

@@ -89,7 +89,7 @@ export const addListener = (element: HTMLElement, eventName: string, callback: F
 
 /**
  * 给每个元素绑定事件
- * TODO: 后续应该是和 react 一样，使用统一的事件分发机制
+ * TODO: 应该是和 react 一样，使用统一的事件分发机制，避免遍历 dom 树
  */
 export const applyEvent = (element: HTMLElement, key: string, eventHandleName: string) => {
   const eventNames = /(bind|catch):?(.+)/.exec(key);

@@ -48,7 +48,6 @@ export const createDomTree = (virtualDom: IVirtualDom | null, hash?: string): HT
     if (isStr(virtualDom.tag)) {
       const dom = document.createElement(virtualDom.tag as string);
       if (virtualDom.props && virtualDom.props.__isComponent__) {
-        console.log('========需要init组件======');
         initComponent(virtualDom, dom);
       }
       if (hash) {

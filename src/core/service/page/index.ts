@@ -33,7 +33,7 @@ export class WrapperPage {
     this[name] && this[name](query);
   }
   public setData(data: Object) {
-    // TODO: 1. 需要合并 setDate??是否会影响webview之间通讯的性能 2. 进行diff render
+    // TODO: 1. 需要更优雅的 merge 函数
     Object.assign(this.data, data);
     const sendData = { options: { data: this.data }, route: this.__route__ };
     KipleServiceJSBridge.publishHandler('RE_RENDER_PAGE', sendData, this.__webviewId__);
