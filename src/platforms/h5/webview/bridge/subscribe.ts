@@ -9,9 +9,14 @@ export default function initSubscribe(subscribe: ViewJSBridge['subscribe']) {
     console.log('通过api触发页面返回顶部', e);
   });
 
+  console.log('--这里的引入模式有问题，循环引用，导致这里的renderPage为undefined，而函数里面的renderPage却又存在--', renderPage);
   subscribe('CREATE_APP', initApp);
-  subscribe('RENDER_PAGE', renderPage);
-  subscribe('RE_RENDER_PAGE', renderPage);
+  subscribe('RENDER_PAGE', (args: any, webviewId: number) => {
+    renderPage(args, webviewId);
+  });
+  subscribe('RE_RENDER_PAGE', (args: any, webviewId: number) => {
+    renderPage(args, webviewId);
+  });
   subscribe('RENDER_COMPONENT', (options: any, webviewId: number) => {
     renderComponent(options, webviewId);
   });

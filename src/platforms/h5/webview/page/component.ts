@@ -3,7 +3,7 @@ import { IRegisterComponent } from '@/core/service/page/index.d';
 import { diff } from '@/core/webview/parser/diff/diff';
 import { patch } from '@/core/webview/parser/diff/patch';
 import { createDomTree } from '@/core/webview/parser/render';
-// import { PageFactory } from './page';
+import { PageFactory } from './page';
 
 let __componentId__ = 0;
 const AppComponents: Component[] = [];
@@ -67,8 +67,7 @@ export const ComponentFactory = {
 export const initComponent = (virtualDom: IVirtualDom, parentNode: HTMLElement) => {
   __componentId__++;
 
-  const parentWebview: any = {};
-  // const parentWebview = PageFactory.getPendingPage();
+  const parentWebview = PageFactory.getPendingPage();
   const __webviewId__ = parentWebview?.__webviewId__ || 1;
   const component = ComponentFactory.createCom(parentNode, __webviewId__, __componentId__);
   const __route__ = virtualDom.props.__route__ || '';
@@ -84,7 +83,6 @@ export const initComponent = (virtualDom: IVirtualDom, parentNode: HTMLElement) 
 };
 
 export const renderComponent = (args: { options: WrapperComponent; route: string }, webviewId: number) => {
-  console.log('===================渲染组件');
   const { options, route } = args;
   const component = ComponentFactory.getComById(webviewId);
   if (!component) {

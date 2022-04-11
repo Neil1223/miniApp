@@ -128,7 +128,7 @@ const generateFromAST = (htmlAST: ASTElement): IGenCode => {
           throw new Error(`${htmlAST.__pageRoute__} 文件内容错误: "${htmlAST.name}" 未定义`);
         }
         const extra = `__isComponent__:true,__route__:'${pageConfig.usingComponents[htmlAST.name]}'`;
-        attribs = attribs ? `,${extra}` : extra;
+        attribs = attribs ? `${attribs},${extra}` : extra;
       }
     }
 
