@@ -29,6 +29,7 @@ export class Component {
     this.__DOMTree__ = createDomTree(this.__VirtualDom__, window.app[this.__route__].hash);
     if (this.__DOMTree__) {
       this.parentNode.appendChild(this.__DOMTree__);
+      // TODO: 触发生命周期函数 attached，ready
     }
   };
   // 组件内部出发更新事件
