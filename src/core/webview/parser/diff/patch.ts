@@ -27,6 +27,11 @@ function setPatch(node: Node, patches: IPatches, patchHelper: IPatchHelper, hash
     return;
   }
 
+  // 如果当前节点是 自定义组件，需要跳过自定义组件 children 的 diff
+  if ((node as any).__isComponent__) {
+    return;
+  }
+
   let length = node.childNodes.length;
   if (currentPatch && currentPatch[0].type === PATCHES_TYPE.ADD && currentPatch[0].nodeList) {
     // 如果是 add，那么需要减去增加的长度，以免循环时 Index 发生变化，导致后面的其他节点不能正确的匹配到

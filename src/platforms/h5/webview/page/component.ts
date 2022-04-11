@@ -71,12 +71,13 @@ export const initComponent = (virtualDom: IVirtualDom, parentNode: HTMLElement) 
   const __webviewId__ = parentWebview?.__webviewId__ || 1;
   const component = ComponentFactory.createCom(parentNode, __webviewId__, __componentId__);
   const __route__ = virtualDom.props.__route__ || '';
-  delete virtualDom.props.__route__;
-  delete virtualDom.props.__isComponent__;
+  const props = { ...virtualDom.props };
+  delete props.__route__;
+  delete props.__isComponent__;
 
   component.__route__ = __route__;
 
-  const args: IRegisterComponent = { componentId: __componentId__, route: __route__, props: virtualDom.props };
+  const args: IRegisterComponent = { componentId: __componentId__, route: __route__, props };
 
   // 通知 service 层，执行 Component 的初始化
   KipleViewJSBridge.publishHandler('registerComponent', args, __webviewId__);
