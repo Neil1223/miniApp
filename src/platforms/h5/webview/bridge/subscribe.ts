@@ -20,7 +20,9 @@ export default function initSubscribe(subscribe: ViewJSBridge['subscribe']) {
   subscribe('RENDER_COMPONENT', (options: any, webviewId: number) => {
     renderComponent(options, webviewId);
   });
-  subscribe('RE_RENDER_COMPONENT', renderComponent);
+  subscribe('RE_RENDER_COMPONENT', (options: any, webviewId: number) => {
+    renderComponent(options, webviewId);
+  });
 
   subscribe('onRouteChange', onRouteChange);
   subscribe('onNavigationBarChange', onNavigationBarChange);

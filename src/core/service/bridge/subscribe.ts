@@ -1,18 +1,22 @@
 import { getCurrentPages, registerPage } from '@/core/service/page';
 import { onAppRoute } from 'kiple-platform/service/api/route';
-import { registerComponent } from '@/core/service/page/component';
+import { getComponentById, registerComponent } from '@/core/service/page/component';
 
 interface PageEvent {
   eventName: string;
   data: Object;
+  componentId?: number;
 }
 
-const onWebviewEvent = (args: PageEvent, pageId: number) => {
-  console.log(`Invoke event \`${args.eventName}\` in page: ${pageId}`);
+const onWebviewEvent = ({ eventName, data, componentId }: PageEvent, pageId: number) => {
+  console.log(`Invoke event \`${eventName}\` in page: ${pageId}${componentId ? ', component: ' + componentId : ''}`);
   const pages = getCurrentPages();
   const curPage = pages.find((item) => item.__webviewId__ === pageId);
-  if (curPage) {
-    curPage[args.eventName] && curPage[args.eventName].call(curPage, args.data);
+  if (curPage && !componentId) {
+    curPage[eventName] && curPage[eventName].call(curPage, data);
+  } else if (componentId) {
+    const component = getComponentById(componentId);
+    component && component.page.__triggerElementEvent__(eventName, data);
   }
 };
 

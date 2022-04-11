@@ -87,6 +87,10 @@ export const addListener = (element: HTMLElement, eventName: string, callback: F
   }
 };
 
+/**
+ * 给每个元素绑定事件
+ * TODO: 后续应该是和 react 一样，使用统一的事件分发机制
+ */
 export const applyEvent = (element: HTMLElement, key: string, eventHandleName: string) => {
   const eventNames = /(bind|catch):?(.+)/.exec(key);
   if (eventNames && EventNames.includes(eventNames[2])) {
@@ -96,7 +100,20 @@ export const applyEvent = (element: HTMLElement, key: string, eventHandleName: s
       if (element.getAttribute('disabled')) {
         return;
       }
-      publishPageEvent(eventHandleName, res, currentPageId);
+      // 判断当前元素是否自定义组件里面
+      let componentId = 0;
+      let parentNode = res.target.parentNode;
+      while (parentNode) {
+        if (parentNode.tagName && parentNode.tagName.toLocaleLowerCase() === 'wx-page-body') {
+          break;
+        }
+        if (parentNode.__isComponent__) {
+          componentId = parentNode.__componentId__;
+          break;
+        }
+        parentNode = parentNode.parentNode;
+      }
+      publishPageEvent(eventHandleName, res, currentPageId, componentId);
     });
   }
 };

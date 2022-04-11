@@ -33,8 +33,8 @@ export const subscribeHandler = (event: string, args: any, pageId: number) => {
  * @param data
  * @param nodeId
  */
-export const publishPageEvent = (eventName: string, data: any, nodeId: number) => {
-  publishHandler('PAGE_EVENT', { eventName, data }, nodeId);
+export const publishPageEvent = (eventName: string, data: any, pageId: number, componentId?: number) => {
+  publishHandler('PAGE_EVENT', { eventName, data, componentId }, pageId);
 };
 
 // 订阅事件，传递callback

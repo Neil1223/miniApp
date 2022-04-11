@@ -1,4 +1,5 @@
 import { WrapperPage } from './index';
+import { WrapperComponent } from './component';
 
 export interface IPageOptions {
   data?: { [key: string]: any };
@@ -27,6 +28,12 @@ export interface IAppOptions {
 
 export interface IAppPage {
   page: WrapperPage; // 页面逻辑
+  route: string; // 页面路径
+  webviewId: number;
+}
+
+export interface IAppComponent {
+  page: WrapperComponent; // 页面逻辑
   route: string; // 页面路径
   webviewId: number;
 }

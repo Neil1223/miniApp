@@ -1,10 +1,10 @@
 import { isPlainObject } from '@/util/util';
 import { require as customRequire } from '../helpers/require';
 import { checkPageInPagesJson, getGlobPageRegisterPath } from './app';
-import { IAppPage, IPageOptions, IRegisterComponent } from './index.d';
+import { IAppComponent, IPageOptions, IRegisterComponent } from './index.d';
 
 const ComponentConfig = {};
-const AppComponents: IAppPage[] = [];
+const AppComponents: IAppComponent[] = [];
 
 export class WrapperComponent {
   __webviewId__: number;
@@ -13,6 +13,7 @@ export class WrapperComponent {
   data: any;
   properties: any = {};
   lifetimes: object = {};
+  methods: object = {};
   constructor(args: IRegisterComponent, webviewId: number) {
     this.__webviewId__ = webviewId;
     this.__componentId__ = args.componentId;
@@ -26,10 +27,10 @@ export class WrapperComponent {
         }
         continue;
       }
-      if (key === 'lifetimes') {
-        for (const lifetimeName in options[key]) {
-          if (typeof options[key][lifetimeName] === 'function') {
-            this.lifetimes[lifetimeName] = options[key][lifetimeName].bind(this);
+      if (['lifetimes', 'methods'].includes(key)) {
+        for (const name in options[key]) {
+          if (typeof options[key][name] === 'function') {
+            this[key][name] = options[key][name];
           }
         }
         continue;
@@ -53,8 +54,13 @@ export class WrapperComponent {
   }
 
   __callPageLifeTime__(name: string, query?: any) {
-    this.lifetimes[name] && this.lifetimes[name](query);
+    this.lifetimes[name] && this.lifetimes[name].call(this, query);
     this[name] && this[name](query);
+  }
+
+  // 触发组件内，元素注册的事件，eg: bindtap
+  __triggerElementEvent__(eventName: string, data: any) {
+    this.methods[eventName] && this.methods[eventName].call(this, data);
   }
 
   public setData(data: Object) {
@@ -64,6 +70,8 @@ export class WrapperComponent {
     KipleServiceJSBridge.publishHandler('RE_RENDER_COMPONENT', sendData, this.__webviewId__);
   }
 }
+
+export const getComponentById = (componentId: number) => AppComponents.find((item) => item.page.__componentId__ === componentId);
 
 /**
  * 用于注册一个小程序组件，接受一个 object 作为属性，用来指定页面的初始数据、生命周期回调、事件处理等。
