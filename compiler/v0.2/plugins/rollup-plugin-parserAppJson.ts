@@ -47,13 +47,12 @@ const generateConfigAndComponents = (config: IConfig, appJsonPath: string, _this
             }
           }
         }
-
-        // 当页面不存在，或者页面保存时是以组件形式保存的才进行添加
-        if (!allPages[page] || allPages[page].type === 'component') {
-          allPages[page] = { type: 'page', enterPath: 'app.json', config: pageJson };
-        }
       }
       config.page[page] = pageJson;
+      // 当页面不存在，或者页面保存时是以组件形式保存的才进行添加
+      if (!allPages[page] || allPages[page].type === 'component') {
+        allPages[page] = { type: 'page', enterPath: 'app.json', config: pageJson };
+      }
     }
 
     // 监听页面 json 配置的变化
