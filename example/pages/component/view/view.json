@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "view"
+  "navigationBarTitleText": "view",
+  "usingComponents": {
+    "my-component": "../../../templates/aa/aa"
+  }
 }

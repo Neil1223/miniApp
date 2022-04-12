@@ -1,5 +1,6 @@
 Page({
-  onLoad(e) {
-    console.log('=========', e);
+  data: { a: 22 },
+  test() {
+    this.setData({ a: 200 });
   },
 });
