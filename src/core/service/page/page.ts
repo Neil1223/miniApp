@@ -1,5 +1,6 @@
 import { isPlainObject, parserUrl } from '@/util/util';
 import { require as customRequire } from '../helpers/require';
+import { createPreloadWebview } from '../initApp';
 import { checkPageInPagesJson, getGlobPageRegisterPath } from './app';
 import { WrapperComponent } from './component';
 import { IPageOptions, IAppPage } from './index.d';
@@ -14,7 +15,6 @@ export class WrapperPage {
   data: any;
   __isTabBar__: boolean = false;
   __usingComponents__: { [path: string]: WrapperComponent } = {}; // 每个页面引用的自定义组件的集合，来自于page.json,页面中如果实例化后，需要 new WrapperComponent
-  __components__: string[] = [];
   constructor(options: IPageOptions, route: string, __webviewId__: number) {
     this.__webviewId__ = __webviewId__;
     this.__route__ = route;
@@ -154,10 +154,13 @@ export const registerPage = (route: string, webviewId: number, query: object | u
   if (!PageConfig[route]) {
     customRequire(route);
   }
-  // 需要check路由是否在pages里面
+  // 创建Page实例
   const pageInstance = new WrapperPage(PageConfig[route], route, webviewId);
   const appPage = { page: pageInstance, route, webviewId: webviewId };
   AppPages.push(appPage);
+  // 创建新的空白页面
+  createPreloadWebview();
+  // 执行页面onLoad
   pageInstance.__callPageLifeTime__('onLoad', query);
   topWebviewId = webviewId;
   const data = { options: pageInstance, route };

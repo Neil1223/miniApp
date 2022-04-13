@@ -111,3 +111,26 @@ export const urlStringify = (params: { [key: string]: any }) => {
   }
   return argString;
 };
+
+// H5 href：https://www.kiple.com/aaa/bbb?xx=11&bb=22
+export const getH5EntryData = () => {
+  let route = location.pathname.replace(/^\//, '');
+  const query = parserUrlSearch(location.search);
+  // 处理部署H5时含有 .html 的情况
+  if (/\.html/.test(route)) {
+    const splitGroup = route.split('/');
+    splitGroup.pop();
+    route = splitGroup.join('/');
+  }
+
+  return { route, query };
+};
+
+// App href: file://_www/service.html?microAppId=xxx&route=aaa/bbb
+export const getAppEntryData = () => {
+  const AppQuery = parserUrlSearch(location.search);
+  let route = AppQuery.route ? AppQuery.route.replace(/^\//, '') : '';
+  const query = AppQuery.query ? AppQuery.query : undefined;
+
+  return { route, query };
+};

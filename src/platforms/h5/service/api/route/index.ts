@@ -9,7 +9,6 @@ interface IRouteParams {
 
 const shouldCheckUrlTypes = ['navigateTo', 'redirectTo', 'switchTab', 'reLaunch'];
 
-// 我需要在这里触发page的hide，show的生命周期
 export const onAppRoute = (type: string, args?: IRouteParams) => {
   const { url } = args || {};
   let { route } = parserUrl(url || '');

@@ -1,4 +1,4 @@
-import { getCurrentPages, registerPage } from '@/core/service/page/page';
+import { getCurrentPages } from '@/core/service/page/page';
 import { onAppRoute } from 'kiple-platform/service/api/route';
 import { getComponentById, registerComponent } from '@/core/service/page/component';
 
@@ -23,11 +23,6 @@ const onWebviewEvent = ({ eventName, data, componentId }: PageEvent, pageId: num
 export default function initSubscribe(subscribe: ServiceJSBridge['subscribe']) {
   // 监听到页面触发事件
   subscribe('PAGE_EVENT', onWebviewEvent);
-
-  // 监听到注册页面
-  subscribe('registerPage', (args: { route: string; query: object }, pageId: number) => {
-    registerPage(args.route, pageId, args.query);
-  });
 
   // 监听到注册组件
   subscribe('registerComponent', registerComponent);
