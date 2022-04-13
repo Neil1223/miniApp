@@ -1,17 +1,15 @@
-import { parserUrl } from '@/util';
 import { PageBodyElement } from '../components/body';
 import { PageHeadElement } from '../components/header';
 import { diff } from '@/core/webview/parser/diff/diff';
 import { patch } from '@/core/webview/parser/diff/patch';
 import { createDomTree } from '@/core/webview/parser/render';
 import initScrollEvent from './scroll';
-import { WrapperPage } from '@/core/service/page';
+import { WrapperPage } from '@/core/service/page/page';
 
 /**
  * 记录已经在 View 层创建的Page
  */
 const AppPages: Page[] = [];
-let __webviewId__ = 0;
 
 // TODO: 需要将这个类拆开，只有h5独有的才放到这里
 export class Page {
@@ -108,7 +106,6 @@ export const PageFactory = {
   createPage: (webviewId: number) => {
     var page = new Page(webviewId);
     AppPages.push(page);
-    window.scrollTo(0, 0);
     return page;
   },
   removePage: (pageIndex: number) => {
@@ -200,22 +197,31 @@ export const PageFactory = {
     }
     return { index, length: AppPages.length };
   },
-  setCurrentWebviewId: (webviewId: number) => {
-    __webviewId__ = webviewId;
-  },
 };
 
 export const renderPage = (args: { options: WrapperPage; route: string }, webviewId: number) => {
   const { options, route } = args;
   const page = PageFactory.getPage(webviewId);
   if (!page) {
-    throw Error(`Page not register for webviewId:${webviewId}`);
+    throw Error(`Page not register for webviewId: ${webviewId}`);
   }
 
   if (!page.__DOMTree__) {
     page.__route__ = route;
     page.pageConfig = Object.assign({}, window.__wxConfig.global.window, window.__wxConfig.page[route]);
     __AppCssCode__[route] && __AppCssCode__[route](page.pageContainer);
+    window.scrollTo(0, 0);
+
+    // 如果事首页，那么需要移除返回按钮 || 页面是 tab 的时候，也需要移除返回按钮
+    const tabList = window.__wxConfig.tabBar?.list.map((item) => item.pagePath) || [];
+    if (route === window.__wxConfig.entryPagePath || tabList.includes(route)) {
+      page.navigationBar.showBackButton = false;
+    }
+
+    if (tabList.includes(route)) {
+      page.__isTabBar__ = true;
+    }
+
     page.render(options);
   } else {
     page.reRender(options);
@@ -223,24 +229,8 @@ export const renderPage = (args: { options: WrapperPage; route: string }, webvie
 };
 
 /**
- * 专用于创建page
+ * 专用于创建空白 page
  */
-export const initPage = (route?: string) => {
-  __webviewId__++;
-  const page = PageFactory.createPage(__webviewId__);
-  const pagePath = route ? route.split('?')[0] : window.__wxConfig.entryPagePath;
-  route = route ? route : pagePath;
-
-  // 如果事首页，那么需要移除返回按钮 || 页面是 tab 的时候，也需要移除返回按钮
-  const tabList = window.__wxConfig.tabBar?.list.map((item) => item.pagePath) || [];
-  if (pagePath === window.__wxConfig.entryPagePath || tabList.includes(pagePath)) {
-    page.navigationBar.showBackButton = false;
-  }
-
-  if (tabList.includes(pagePath)) {
-    page.__isTabBar__ = true;
-  }
-
-  // 通知 service 层，执行 page 的初始化
-  KipleViewJSBridge.publishHandler('registerPage', parserUrl(route || ''), __webviewId__);
+export const createPage = (webviewId: number) => {
+  PageFactory.createPage(webviewId);
 };

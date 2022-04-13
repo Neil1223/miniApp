@@ -66,5 +66,6 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: '[name].css',
     }),
+    new webpack.DefinePlugin({ PLATFORM: JSON.stringify(process.env.PLATFORM) }),
   ],
 };

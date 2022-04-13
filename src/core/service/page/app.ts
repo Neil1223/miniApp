@@ -1,5 +1,4 @@
 import { IAppOptions } from './index.d';
-import { require as customRequire } from '../helpers/require';
 
 let globApp: WrapperApp;
 let globPageRegisterPath = '';
@@ -56,9 +55,3 @@ export const App = (options: IAppOptions) => {
 };
 
 export const getApp = () => globApp;
-
-// 小程序的入口，初始化小程序
-export const initApp = () => {
-  customRequire('app.js');
-  KipleServiceJSBridge.publishHandler('CREATE_APP', null, 0);
-};

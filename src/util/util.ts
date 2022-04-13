@@ -75,21 +75,24 @@ export function guid() {
 
 export const parserUrl = (route: string): { route: string; query: Object } => {
   const queryIndex = route.indexOf('?');
-  const query = {};
   if (queryIndex === -1) {
-    return { route, query };
+    return { route, query: {} };
   }
   const queryString = route.slice(queryIndex + 1, route.length);
-  if (queryString) {
-    const data = queryString.split('&');
-    if (data.length) {
-      data.forEach((item) => {
-        const queryItem = item.split('=');
-        query[queryItem[0]] = queryItem[1];
-      });
-    }
-  }
+  const query = parserUrlSearch(queryString);
   return { query, route: route.slice(0, queryIndex) };
+};
+
+export const parserUrlSearch = (queryString: string): { [key: string]: any } => {
+  const query = {};
+  const data = queryString.replace('?', '').split('&');
+  if (data.length) {
+    data.forEach((item) => {
+      const queryItem = item.split('=');
+      query[queryItem[0]] = queryItem[1];
+    });
+  }
+  return query;
 };
 
 export const getHashPath = (url: string) => {

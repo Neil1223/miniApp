@@ -3,10 +3,12 @@ declare module '*.html';
 declare module 'kiple-platform/*';
 declare module 'kiple-lib/*';
 
+declare const PLATFORM: 'h5' | 'App';
 declare const VERSION: string;
 declare const __AppCssCode__: { [key: string]: Function };
 
 declare const KipleViewJSBridge: ViewJSBridge;
+declare const plus: any;
 declare const KipleServiceJSBridge: ServiceJSBridge;
 declare const getCurrentPages: () => { __webviewId__: number }[];
 
@@ -53,6 +55,7 @@ interface Window {
   require: Function;
   app: { [key: string]: { render: (data: Object) => IVirtualDom; hash?: string } };
   components: { [key: string]: { render: (data: Object) => IVirtualDom; hash?: string } };
+  createWebview: (webviewId: number) => Page;
   __wxConfig: {
     entryPagePath: string;
     pages: string[];

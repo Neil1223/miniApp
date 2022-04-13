@@ -1,4 +1,4 @@
-import { renderPage } from '../page/page';
+import { createPage, renderPage } from '../page/page';
 import { initApp } from '../page/app';
 import onNavigationBarChange from '../page/navigationBar';
 import onRouteChange from '../page/route';
@@ -11,6 +11,9 @@ export default function initSubscribe(subscribe: ViewJSBridge['subscribe']) {
 
   console.log('--这里的引入模式有问题，循环引用，导致这里的renderPage为undefined，而函数里面的renderPage却又存在--', renderPage);
   subscribe('CREATE_APP', initApp);
+  subscribe('CREATE_PAGE', (args: any, webviewId: number) => {
+    createPage(webviewId);
+  });
   subscribe('RENDER_PAGE', (args: any, webviewId: number) => {
     renderPage(args, webviewId);
   });

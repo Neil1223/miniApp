@@ -10,6 +10,7 @@ class App extends Base {
   connectedCallback() {
     // 处理全局样式
     __AppCssCode__['app'] && __AppCssCode__['app']();
+    console.log('---')
 
     // 处理 tabBar 组件
     if (window.__wxConfig.tabBar && window.__wxConfig.tabBar.list.length) {

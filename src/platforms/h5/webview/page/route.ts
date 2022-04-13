@@ -1,5 +1,5 @@
 import { createBrowserHistory } from 'history';
-import { initPage, PageFactory } from './page';
+import { createPage, PageFactory } from './page';
 
 export const history = createBrowserHistory();
 
@@ -24,7 +24,7 @@ history.listen(({ location, action }) => {
     }
   }
 
-  initPage(pagePath + location.search);
+  createPage(8);
 });
 
 interface IRouteChange {

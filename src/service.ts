@@ -1,7 +1,8 @@
 import kiple from 'kiple-platform/service/api/index';
 import { define, require } from '@/core/service/helpers/require';
-import { Page, getCurrentPages } from '@/core/service/page';
-import { App, getApp, initApp } from '@/core/service/page/app';
+import { Page, getCurrentPages } from '@/core/service/page/page';
+import { App, getApp } from '@/core/service/page/app';
+import { initApp } from 'kiple-platform/service/initApp';
 import { Component } from '@/core/service/page/component';
 
 const pageFunction = { App, Page, Component, getApp, getCurrentPages };

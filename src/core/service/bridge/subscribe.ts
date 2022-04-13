@@ -1,4 +1,4 @@
-import { getCurrentPages, registerPage } from '@/core/service/page';
+import { getCurrentPages, registerPage } from '@/core/service/page/page';
 import { onAppRoute } from 'kiple-platform/service/api/route';
 import { getComponentById, registerComponent } from '@/core/service/page/component';
 

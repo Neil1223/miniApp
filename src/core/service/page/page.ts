@@ -149,7 +149,7 @@ export const callPageRouteHook = (type: string, options: any) => {
   }
 };
 
-export const registerPage = (route: string, webviewId: number, query: Object) => {
+export const registerPage = (route: string, webviewId: number, query: object | undefined) => {
   console.log('create page start......');
   if (!PageConfig[route]) {
     customRequire(route);
