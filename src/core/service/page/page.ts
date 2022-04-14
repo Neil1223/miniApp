@@ -15,6 +15,7 @@ export class WrapperPage {
   __route__: string;
   data: any;
   __isTabBar__: boolean = false;
+  __isFirstRender__: boolean = true;
   __usingComponents__: { [path: string]: WrapperComponent } = {}; // 每个页面引用的自定义组件的集合，来自于page.json,页面中如果实例化后，需要 new WrapperComponent
   constructor(options: IPageOptions, route: string, __webviewId__: number) {
     this.__webviewId__ = __webviewId__;
@@ -34,10 +35,12 @@ export class WrapperPage {
     this[name] && this[name](query);
   }
   public setData(data: Object) {
-    // TODO: 1. 需要更优雅的 merge 函数
+    // TODO: 需要更优雅的 merge 函数
     Object.assign(this.data, data);
     const sendData = { options: { data: this.data }, route: this.__route__ };
-    KipleServiceJSBridge.publishHandler('RE_RENDER_PAGE', sendData, this.__webviewId__);
+    if (!this.__isFirstRender__) {
+      KipleServiceJSBridge.publishHandler('RE_RENDER_PAGE', sendData, this.__webviewId__);
+    }
   }
 }
 
@@ -104,6 +107,7 @@ export const registerPage = (route: string, webviewId: number, query: object | u
   // 执行页面onLoad
   pageInstance.__callPageLifeTime__('onLoad', query);
   topWebviewId = webviewId;
+  pageInstance.__isFirstRender__ = false;
   const data = { options: pageInstance, route };
   KipleServiceJSBridge.publishHandler('RENDER_PAGE', data, webviewId);
   pageInstance.__callPageLifeTime__('onShow');

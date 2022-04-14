@@ -60,9 +60,9 @@ const navigateBack = (delta: number = 1) => {
 
 // 处理 url 变化，删除多余的页面
 const onRouteChange = (data: IRouteChange) => {
-  const url = data.options.url;
-  let { route } = parserUrl(url || '');
-  route = route && route[0] !== '/' ? '/' + route : route;
+  let url = data.options.url;
+  url = url && url[0] !== '/' ? '/' + url : url;
+  const { route } = parserUrl(url || '');
 
   switch (data.type) {
     case 'navigateBack':
