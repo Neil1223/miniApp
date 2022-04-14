@@ -27,7 +27,7 @@ export default function initSubscribe(subscribe: ServiceJSBridge['subscribe']) {
   // 监听到注册组件
   subscribe('registerComponent', registerComponent);
 
-  // 监听 view 层触发的路由跳转事件,一般是tab切换，或者是直接进入某个页面
+  // 监听 view 层触发的路由跳转事件,一般由tab切换，或者 navigate 组件触发
   subscribe('onRouteChange', (args: { type: string; options: any }) => {
     onAppRoute(args.type, args.options);
   });

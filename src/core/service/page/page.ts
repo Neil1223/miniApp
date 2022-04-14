@@ -1,6 +1,7 @@
+import { IRouteParams } from '@/platforms/h5/service/api/route';
 import { isPlainObject, parserUrl } from '@/util/util';
 import { require as customRequire } from '../helpers/require';
-import { createPreloadWebview } from '../initApp';
+import { createPreloadWebview, getPreloadWebviewId } from '../initApp';
 import { checkPageInPagesJson, getGlobPageRegisterPath } from './app';
 import { WrapperComponent } from './component';
 import { IPageOptions, IAppPage } from './index.d';
@@ -87,15 +88,52 @@ const deleteLastPage = (delta: number = 1, tabPageLength: number, ignoreTab: Boo
 };
 
 /**
- * 路由跳转后，触发page的生命周期函数. 路由跳转前的暂未处理
+ * 注册页面，同时预加载新的空白页面
  */
-export const callPageRouteHook = (type: string, options: any) => {
+export const registerPage = (route: string, webviewId: number, query: object | undefined) => {
+  console.log('create page start......');
+  if (!PageConfig[route]) {
+    customRequire(route);
+  }
+  // 创建Page实例
+  const pageInstance = new WrapperPage(PageConfig[route], route, webviewId);
+  const appPage = { page: pageInstance, route, webviewId: webviewId };
+  AppPages.push(appPage);
+  // 创建新的空白页面
+  createPreloadWebview();
+  // 执行页面onLoad
+  pageInstance.__callPageLifeTime__('onLoad', query);
+  topWebviewId = webviewId;
+  const data = { options: pageInstance, route };
+  KipleServiceJSBridge.publishHandler('RENDER_PAGE', data, webviewId);
+  pageInstance.__callPageLifeTime__('onShow');
+  console.log('create page end.');
+};
+
+/**
+ * 路由切换：创建新的Page实例，处理路由栈
+ */
+export const onRouteChange = (type: string, options: IRouteParams) => {
   const { delta = 1, url } = options;
-  let { route } = parserUrl(url || '');
+  let { route, query } = parserUrl(url || '');
   route = route.replace(/^\//, '');
   const currentPages: WrapperPage[] = getCurrentPages();
   const fromPage = currentPages[currentPages.length - 2];
 
+  let shouldCreatePage = ['navigateTo', 'redirectTo', 'reLaunch'].includes(type);
+  if (type === 'switchTab') {
+    const tabPage = getPageByRoute(route);
+    if (!tabPage) {
+      shouldCreatePage = true;
+    }
+  }
+  // 创建新页面
+  if (shouldCreatePage) {
+    const viewId = getPreloadWebviewId();
+    registerPage(route, viewId, query);
+  }
+
+  // 触发 Page 的生命周期函数，并删除内存的多余的 Page
   switch (type) {
     case 'navigateTo': // 前一个页面触发 onHide
       fromPage && fromPage.__callPageLifeTime__('onHide');
@@ -105,11 +143,12 @@ export const callPageRouteHook = (type: string, options: any) => {
       deletePages(1);
       break;
     case 'reLaunch': // 所有页面触发 onUnload，删除所有页面
-      for (let index = 0; index < AppPages.length; index++) {
+      const deleteLength = AppPages.length - 1;
+      for (let index = 0; index < deleteLength; index++) {
         const lastPage = AppPages[index]?.page;
         lastPage && lastPage.__callPageLifeTime__('onUnload');
       }
-      deleteLastPage(AppPages.length, 0, false);
+      deleteLastPage(deleteLength, 0, false);
       break;
     case 'switchTab': // 前一个页面时 tabBar 页面, 则触发 onHide 事件，非 tabBar 触发 onUnload
       // 所有非 tab 页面触发 onUnload事件
@@ -147,24 +186,4 @@ export const callPageRouteHook = (type: string, options: any) => {
     default:
       break;
   }
-};
-
-export const registerPage = (route: string, webviewId: number, query: object | undefined) => {
-  console.log('create page start......');
-  if (!PageConfig[route]) {
-    customRequire(route);
-  }
-  // 创建Page实例
-  const pageInstance = new WrapperPage(PageConfig[route], route, webviewId);
-  const appPage = { page: pageInstance, route, webviewId: webviewId };
-  AppPages.push(appPage);
-  // 创建新的空白页面
-  createPreloadWebview();
-  // 执行页面onLoad
-  pageInstance.__callPageLifeTime__('onLoad', query);
-  topWebviewId = webviewId;
-  const data = { options: pageInstance, route };
-  KipleServiceJSBridge.publishHandler('RENDER_PAGE', data, webviewId);
-  pageInstance.__callPageLifeTime__('onShow');
-  console.log('create page end.');
 };

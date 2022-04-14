@@ -1,5 +1,6 @@
+import { parserUrl } from '@/util';
 import { createBrowserHistory } from 'history';
-import { createPage, PageFactory } from './page';
+import { PageFactory } from './page';
 
 export const history = createBrowserHistory();
 
@@ -23,8 +24,6 @@ history.listen(({ location, action }) => {
       return;
     }
   }
-
-  createPage(8);
 });
 
 interface IRouteChange {
@@ -48,8 +47,9 @@ const navigateBack = (delta: number = 1) => {
   PageFactory.replacePage(delta);
 };
 
+// 处理 url 变化，删除多余的页面
 const onRouteChange = (data: IRouteChange) => {
-  let route = data.options.url || '';
+  let { route } = parserUrl(data.options.url || '');
   route = route && route[0] !== '/' ? '/' + route : route;
 
   switch (data.type) {
@@ -60,9 +60,9 @@ const onRouteChange = (data: IRouteChange) => {
       history.push(route);
       break;
     case 'redirectTo':
-      const { index } = PageFactory.getPageIndex();
+      const curPageIndexInfo = PageFactory.getPageIndex();
       history.replace(route);
-      PageFactory.removePage(index);
+      PageFactory.removePage(curPageIndexInfo.index - 1);
       break;
     case 'reLaunch':
       history.replace(route);
@@ -82,13 +82,12 @@ const onRouteChange = (data: IRouteChange) => {
         PageFactory.replacePage(length - index - 1, curPage.__webviewId__);
         // 切换内存中Page的顺序, 获取最后一个tab，如果和next page的id不一样，那么需要和最后面的那么tab进行地址交换
         const lastIndex = PageFactory.getPageIndex(nextPage.__webviewId__).index;
-        const firstIndex = PageFactory.getLastTablePageIndex();
+        const firstIndex = PageFactory.getLastTabPageIndex();
         if (lastIndex !== firstIndex && firstIndex !== -1 && lastIndex !== -1) {
           PageFactory.replacePageIndex(lastIndex, firstIndex);
         }
       }
       location.search = '';
-      route = route.replace(/\?.*/, ''); // switchTab 不允许携带参数
       if (isTabPage) {
         history.push(route);
       } else {

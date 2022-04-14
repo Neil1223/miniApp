@@ -78,7 +78,7 @@ export class Page {
     this.pendingRender = false;
     if (this.__DOMTree__) {
       this.webviewBody.appendChild(this.__DOMTree__);
-      const lastPage = AppPages[AppPages.length - 2];
+      const lastPage = AppPages[AppPages.length - 3]; // 最后一个页面是预加载页面，倒数第二个页面是当前页面，倒数第三个页面才是 lastPage
       // 初次渲染 page， 如果存在上个page，那么就replace
       if (lastPage && lastPage.pageContainer) {
         this.root.replaceChild(this.pageContainer, lastPage.pageContainer);
@@ -133,7 +133,7 @@ export const PageFactory = {
   },
   /* 移除指定长度的页面 */
   deleteLastPage: (delta: number = 1, tabPageLength: number, ignoreTab: Boolean = true) => {
-    const index = AppPages.length - tabPageLength - 1;
+    const index = AppPages.length - tabPageLength - 2;
     if (index < 0) {
       return;
     }
@@ -169,7 +169,7 @@ export const PageFactory = {
     return page;
   },
   getLastPage: (lastIndex: number) => {
-    const page = AppPages[AppPages.length - lastIndex - 1];
+    const page = AppPages[AppPages.length - lastIndex - 2];
     return page || null;
   },
   getCurrentWebviewRoute: () => {
@@ -180,7 +180,7 @@ export const PageFactory = {
     const page = PageFactory.getCurrentPage();
     return page.__webviewId__;
   },
-  getLastTablePageIndex: () => {
+  getLastTabPageIndex: () => {
     for (let index = AppPages.length - 1; index >= 0; index--) {
       if (AppPages[index].__isTabBar__) {
         return index;
@@ -193,9 +193,10 @@ export const PageFactory = {
     if (webviewId) {
       index = AppPages.findIndex((item) => item.__webviewId__ === webviewId);
     } else {
-      index = AppPages.length - 1;
+      index = AppPages.length - 2; // 获取当前 Page 的 index
     }
-    return { index, length: AppPages.length };
+    // AppPages 的长度需要移除最后一个预加载的页面
+    return { index, length: AppPages.length - 1 };
   },
 };
 

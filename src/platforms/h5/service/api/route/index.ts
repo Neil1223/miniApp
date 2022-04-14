@@ -1,8 +1,10 @@
-import { callPageRouteHook, checkPageInTabList } from '@/core/service/page/page';
+import { onRouteChange, checkPageInTabList } from '@/core/service/page/page';
 import { checkPageInPagesJson } from '@/core/service/page/app';
 import { parserUrl } from '@/util';
 
-interface IRouteParams {
+// TODO: 这个api实现理论上应该是 h5 和 app 通用的，暂时先放到这里，后面在进行文件调整
+
+export interface IRouteParams {
   url?: string;
   delta?: number;
 }
@@ -36,10 +38,10 @@ export const onAppRoute = (type: string, args?: IRouteParams) => {
       break;
   }
 
-  // 通知 service 触发 Page 的生命周期函数，并删除内存的多余的 Page
-  callPageRouteHook(type, args || {});
+  // 新开页面/处理页面栈/处理生命周期
+  onRouteChange(type, args || {});
 
-  // 通知 view 层进行路由处理
+  // 通知 view 层进行路由处理，主要是webview栈的顺序调整和删除多余的Page（H5的url还需要改变）
   KipleServiceJSBridge.publishHandler('onRouteChange', { type, options: args || {} }, 0);
 
   return {
