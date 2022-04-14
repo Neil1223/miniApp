@@ -8,6 +8,15 @@ export const location = history.location;
 
 let navigateBackByAPI = false;
 
+// 当执行back操作时，上一个页面又不存在，认为初次进入的二级页面，back到首页
+const createEntryPage = () => {
+  history.replace('/');
+  // 通知service层创建页面
+  const route = window.__wxConfig.entryPagePath;
+  const navigateType = window.__wxConfig.tabBar && window.__wxConfig.tabBar.list.length > 0 ? 'switchTab' : 'redirectTo';
+  KipleViewJSBridge.publishHandler('onRouteChange', { type: navigateType, options: { url: route } }, 0);
+};
+
 // 监听路由变化，init 页面内容
 history.listen(({ location, action }) => {
   // 如果是通过api的方式进行路由返回的，那么不需要重新 init 页面
@@ -22,6 +31,8 @@ history.listen(({ location, action }) => {
     if (lastPage && lastPage.__route__ === pagePath) {
       PageFactory.replacePage(1);
       return;
+    } else if (!lastPage) {
+      createEntryPage();
     }
   }
 });
@@ -38,7 +49,7 @@ interface IRouteChange {
 const navigateBack = (delta: number = 1) => {
   const lastPage = PageFactory.getLastPage(1);
   if (!lastPage) {
-    history.replace('/');
+    createEntryPage();
     return;
   }
 
@@ -49,7 +60,8 @@ const navigateBack = (delta: number = 1) => {
 
 // 处理 url 变化，删除多余的页面
 const onRouteChange = (data: IRouteChange) => {
-  let { route } = parserUrl(data.options.url || '');
+  const url = data.options.url;
+  let { route } = parserUrl(url || '');
   route = route && route[0] !== '/' ? '/' + route : route;
 
   switch (data.type) {
@@ -57,15 +69,15 @@ const onRouteChange = (data: IRouteChange) => {
       navigateBack(data.options.delta);
       break;
     case 'navigateTo':
-      history.push(route);
+      history.push(url);
       break;
     case 'redirectTo':
       const curPageIndexInfo = PageFactory.getPageIndex();
-      history.replace(route);
+      history.replace(url);
       PageFactory.removePage(curPageIndexInfo.index - 1);
       break;
     case 'reLaunch':
-      history.replace(route);
+      history.replace(url);
       PageFactory.deleteLastPage(PageFactory.getPageIndex().length, 1, false);
       break;
     case 'switchTab':
